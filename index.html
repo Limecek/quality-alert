@@ -373,8 +373,8 @@
 
         /* ── FOTO SEKCE ── */
         .doc-imgs {
-            display: grid;
-            grid-template-columns: 1fr;  /* bylo 1fr 1fr */
+            display: flex !important;
+            flex-direction: column !important;
             gap: 10px;
             padding: 10px;
             background: white;
@@ -385,6 +385,7 @@
             flex-direction: column;
             align-items: center;
             background: white;
+            width: 100%;
         }
 
         .doc-img-label-bar {
@@ -395,19 +396,13 @@
             padding: 4px 10px;
             letter-spacing: 1px;
             display: block;
+            width: 100%;
+            text-align: center;
         }
 
-        .nok-cell .doc-img-label-bar {
-            background: #cc0000;
-            text-align: left;
-        }
+        .nok-cell .doc-img-label-bar { background: #cc0000; }
+        .ok-cell .doc-img-label-bar { background: #009900; }
 
-        .ok-cell .doc-img-label-bar {
-            background: #009900;
-            text-align: right;
-        }
-
-        /* Ohraničení přímo na img */
         .nok-cell img {
             display: block;
             width: 100%;
@@ -559,8 +554,14 @@
             .doc { font-size: 11px !important; }
 
             .doc-imgs {
+                display: flex !important;
+                flex-direction: column !important;
                 gap: 8px !important;
                 padding: 8px !important;
+            }
+
+            .doc-img-cell {
+                width: 100% !important;
             }
 
             .nok-cell img {
@@ -789,8 +790,7 @@
             <div class="doc-alert" id="d-alert">—</div>
 
             <!-- FOTKY -->
-            <div class="doc-imgs" style="display:flex;flex-direction:column;gap:10px;padding:10px;">
-
+            <div class="doc-imgs">
                 <div class="doc-img-cell nok-cell">
                     <div class="doc-img-label-bar">NOK</div>
                     <div id="nok-doc-img">
@@ -804,7 +804,6 @@
                         <div class="doc-img-placeholder">📷</div>
                     </div>
                 </div>
-
             </div>
 
         </div>
