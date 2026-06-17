@@ -229,7 +229,9 @@
 
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
-        /* ── DOCUMENT ── */
+        /* ══════════════════════════════
+           DOCUMENT STYLES
+        ══════════════════════════════ */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -239,205 +241,315 @@
 
         .doc {
             font-family: Arial, sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             color: #000;
             background: white;
+            padding: 8px;
         }
 
-        /* Hlavička */
-        .doc-head {
+        /* TOP HEADER */
+        .doc-top {
             display: grid;
-            grid-template-columns: 70px 1fr 60px 100px;
-            border-bottom: 2px solid #000;
+            grid-template-columns: 100px 1fr 90px;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
         }
 
-        .doc-logo {
-            padding: 6px 4px;
-            border-right: 1px solid #000;
+        .doc-logo-box {
+            background: #cc0000;
+            padding: 6px 8px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        .doc-logo-text { font-size: 10px; font-weight: 900; color: #cc0000; line-height: 1.2; }
-        .doc-logo-sub { font-size: 6px; color: #666; letter-spacing: 0.5px; }
-
-        .doc-title-box {
-            background: #cc0000;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .doc-logo-main {
             font-size: 16px;
-            font-weight: 700;
-            border-right: 1px solid #000;
-            padding: 6px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .doc-logo-sub {
+            font-size: 5px;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.5px;
+            margin-top: 1px;
+        }
+
+        .doc-title-center {
+            text-align: center;
+        }
+
+        .doc-title-main {
+            font-size: 20px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+
+        .doc-title-sub {
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 2px;
         }
 
         .doc-num-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-right: 1px solid #000;
-            padding: 4px;
-            font-size: 8px;
-            gap: 1px;
+            background: #000;
+            color: white;
+            padding: 6px 8px;
+            text-align: center;
         }
 
-        .doc-num-val { font-size: 11px; font-weight: 700; }
+        .doc-num-label {
+            font-size: 6px;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
 
-        .doc-proj-box { display: flex; flex-direction: column; }
+        .doc-num-val {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: white;
+        }
 
-        .doc-proj-row {
+        /* INFO GRID */
+        .doc-info-section {
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+
+        .doc-info-row {
             display: grid;
-            grid-template-columns: 45px 1fr;
-            flex: 1;
-            border-bottom: 1px solid #000;
+            border-bottom: 1px solid #ccc;
         }
 
-        .doc-proj-row:last-child { border-bottom: none; }
+        .doc-info-row:last-child { border-bottom: none; }
 
-        .doc-proj-lbl {
-            background: #f0f0f0;
-            padding: 3px 4px;
-            font-weight: 700;
-            font-size: 7px;
-            border-right: 1px solid #000;
-            display: flex;
-            align-items: center;
-        }
-
-        .doc-proj-val {
-            padding: 3px 4px;
-            font-weight: 700;
-            font-size: 8px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Info řádky */
-        .doc-info-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            border-bottom: 1px solid #000;
-        }
+        .doc-info-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .doc-info-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .doc-info-row-32 { grid-template-columns: 1fr 1fr 2fr; }
 
         .doc-info-cell {
-            padding: 3px 4px;
-            text-align: center;
-            border-right: 1px solid #000;
+            padding: 4px 6px;
+            border-right: 1px solid #ccc;
         }
 
         .doc-info-cell:last-child { border-right: none; }
-        .doc-info-lbl { font-size: 7px; font-weight: 700; color: #cc0000; }
-        .doc-info-val { font-size: 8px; margin-top: 1px; min-height: 12px; }
 
-        /* Druhý řádek info */
-        .doc-info-grid2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            border-bottom: 1px solid #000;
+        .doc-cell-label {
+            font-size: 6px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
 
-        /* Oddělení */
-        .doc-dept {
-            display: flex;
-            gap: 6px;
+        .doc-cell-val {
+            font-size: 9px;
+            font-weight: 700;
+            color: #000;
+            min-height: 12px;
+        }
+
+        /* TYP QA + PROCES */
+        .doc-typqa-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            gap: 0;
+        }
+
+        .doc-typqa-left {
             padding: 4px 6px;
-            border-bottom: 1px solid #000;
+            border-right: 1px solid #ccc;
+        }
+
+        .doc-typqa-right {
+            padding: 4px 6px;
+            min-width: 80px;
+        }
+
+        .doc-typqa-label {
+            font-size: 6px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .doc-typqa-items {
+            display: flex;
+            gap: 4px;
             flex-wrap: wrap;
         }
 
-        .doc-dept-item { display: flex; align-items: center; gap: 3px; font-size: 8px; }
-
-        .doc-dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            border: 1.5px solid #000;
-            display: inline-block;
-        }
-
-        .doc-dot.on { background: #000; }
-
-        /* Popis */
-        .doc-desc {
-            display: grid;
-            grid-template-columns: 40px 1fr;
-            border-bottom: 1px solid #000;
-            padding: 3px 5px;
-        }
-
-        .doc-desc-lbl { font-weight: 700; font-size: 8px; }
-        .doc-desc-val { font-size: 8px; }
-
-        /* Alert */
-        .doc-alert {
-            background: #ffff00;
-            padding: 5px 6px;
+        .doc-typqa-item {
+            border: 1px solid #999;
+            padding: 2px 6px;
+            font-size: 7px;
             font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .doc-typqa-item.active {
+            background: #000;
+            color: white;
+            border-color: #000;
+        }
+
+        /* POPIS DEFEKTU */
+        .doc-defect-section {
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            background: #ffff00;
+        }
+
+        .doc-defect-label {
+            font-size: 6px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 6px 0;
+        }
+
+        .doc-defect-val {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 6px 5px;
+        }
+
+        .doc-defect-icon {
+            font-size: 14px;
+            color: #cc0000;
+        }
+
+        .doc-defect-text {
+            font-size: 12px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        /* POPIS KONTROLY */
+        .doc-control-section {
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            background: #f9f9f9;
+        }
+
+        .doc-control-label {
+            font-size: 6px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 6px 0;
+        }
+
+        .doc-control-val {
             font-size: 9px;
-            border-bottom: 2px solid #000;
+            color: #000;
+            padding: 3px 6px 5px;
             line-height: 1.4;
         }
 
-        .doc-alert .nok { color: #cc0000; }
-        .doc-alert .ok { color: #009900; }
-
-        /* Fotky */
+        /* FOTKY */
         .doc-imgs {
-            display: flex !important;
-            flex-direction: column !important;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 6px;
-            padding: 6px;
-            background: white;
+            margin-bottom: 5px;
         }
 
         .doc-img-cell {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            background: white;
-            width: 100%;
+            overflow: hidden;
         }
 
-        .doc-img-label-bar {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
+        /* OK - zelená */
+        .ok-cell {
+            border: 2.5px solid #009900;
+        }
+
+        /* NOK - červená */
+        .nok-cell {
+            border: 2.5px solid #cc0000;
+        }
+
+        .doc-img-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 5px;
+            font-size: 11px;
             font-weight: 900;
             color: white;
-            padding: 3px 10px;
             letter-spacing: 1px;
-            display: block;
-            width: 100%;
-            text-align: center;
         }
 
-        .nok-cell .doc-img-label-bar { background: #cc0000; }
-        .ok-cell .doc-img-label-bar { background: #009900; }
+        .ok-cell .doc-img-header { background: #009900; }
+        .nok-cell .doc-img-header { background: #cc0000; }
 
-        .nok-cell img {
-            display: block;
-            width: 100%;
+        .doc-img-body {
+            background: #f0fff0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            padding: 8px;
+        }
+
+        .nok-cell .doc-img-body { background: #fff0f0; }
+
+        .doc-img-body img {
+            max-width: 100%;
             height: auto;
-            border: 3.5px solid #cc0000;
-        }
-
-        .ok-cell img {
+            object-fit: contain;
             display: block;
-            width: 100%;
-            height: auto;
-            border: 3.5px solid #009900;
         }
 
-        .doc-img-placeholder {
-            color: #ddd;
-            font-size: 30px;
-            padding: 20px;
-            text-align: center;
+        .doc-img-placeholder-icon {
+            font-size: 28px;
+            color: #ccc;
         }
 
+        /* SPODNÍ ČÁST */
+        .doc-footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+
+        .doc-footer-cell {
+            padding: 4px 6px;
+            border-right: 1px solid #ccc;
+            min-height: 35px;
+        }
+
+        .doc-footer-cell:last-child { border-right: none; }
+
+        .doc-footer-label {
+            font-size: 6px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .doc-footer-val {
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        /* PDF BTN */
         .pdf-btn {
             width: 100%;
             padding: 16px;
@@ -530,7 +642,9 @@
 
         .toast.show { opacity: 1; }
 
-        /* ── PRINT ── */
+        /* ══════════════════════════════
+           PRINT
+        ══════════════════════════════ */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -565,44 +679,25 @@
                 border-radius: 0 !important;
             }
 
-            .doc { font-size: 9px !important; }
+            .doc { padding: 4px !important; }
 
             .doc-imgs {
-                display: flex !important;
-                flex-direction: column !important;
                 gap: 4px !important;
-                padding: 4px !important;
             }
 
-            .doc-img-cell {
-                width: 100% !important;
-                align-items: center !important;
+            .doc-img-body {
+                min-height: 100mm !important;
             }
 
-            .doc-img-label-bar {
-                padding: 2px 8px !important;
-                font-size: 10px !important;
-                text-align: center !important;
-            }
-
-            .nok-cell img {
-                border: 3.5px solid #cc0000 !important;
-                max-height: 100mm !important;
-                max-width: 100% !important;
+            .doc-img-body img {
+                max-height: 95mm !important;
                 width: auto !important;
-                height: auto !important;
-                object-fit: contain !important;
-                display: block !important;
+                max-width: 100% !important;
             }
 
-            .ok-cell img {
-                border: 3.5px solid #009900 !important;
-                max-height: 100mm !important;
-                max-width: 100% !important;
-                width: auto !important;
-                height: auto !important;
-                object-fit: contain !important;
-                display: block !important;
+            /* Podpisová stránka */
+            .signature-page {
+                page-break-before: always !important;
             }
         }
     </style>
@@ -622,7 +717,7 @@
         <div class="card-header">📋 Hlavička dokumentu</div>
         <div class="form-row">
             <span class="form-label">Číslo Nº</span>
-            <input class="form-input" type="text" id="f-number" placeholder="001" oninput="liveUpdate()">
+            <input class="form-input" type="text" id="f-number" placeholder="QABMW001" oninput="liveUpdate()">
         </div>
         <div class="form-row">
             <span class="form-label">Zákazník</span>
@@ -633,20 +728,20 @@
             <input class="form-input" type="text" id="f-project" value="G2x/G8x" oninput="liveUpdate()">
         </div>
         <div class="form-row">
-            <span class="form-label">Proces</span>
-            <input class="form-input" type="text" id="f-process" value="BMW" oninput="liveUpdate()">
+            <span class="form-label">Pracoviště</span>
+            <input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Díl</span>
+            <input class="form-input" type="text" id="f-dil" placeholder="Název dílu" oninput="liveUpdate()">
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">📅 Datum a autor</div>
         <div class="form-row">
-            <span class="form-label">Datum</span>
-            <input class="form-input" type="date" id="f-datum" oninput="liveUpdate()">
-        </div>
-        <div class="form-row">
             <span class="form-label">Vydal</span>
-            <input class="form-input" type="text" id="f-vydal" placeholder="Jméno" oninput="liveUpdate()">
+            <input class="form-input" type="text" id="f-vydal" placeholder="Jméno Příjmení" oninput="liveUpdate()">
         </div>
         <div class="form-row">
             <span class="form-label">Počátek</span>
@@ -654,84 +749,91 @@
         </div>
         <div class="form-row">
             <span class="form-label">Konec</span>
-            <input class="form-input" type="text" id="f-konec" placeholder="dle přehledu" oninput="liveUpdate()">
+            <input class="form-input" type="date" id="f-konec" oninput="liveUpdate()">
         </div>
         <div class="form-row">
-            <span class="form-label">Díl</span>
-            <input class="form-input" type="text" id="f-dil" placeholder="Název dílu" oninput="liveUpdate()">
+            <span class="form-label">Datum vystavení</span>
+            <input class="form-input" type="date" id="f-datum" oninput="liveUpdate()">
         </div>
         <div class="form-row">
-            <span class="form-label">Pracovník</span>
-            <input class="form-input" type="text" id="f-pracovnik" placeholder="Jméno" oninput="liveUpdate()">
+            <span class="form-label">Autor</span>
+            <input class="form-input" type="text" id="f-autor" placeholder="J. Leško" oninput="liveUpdate()">
         </div>
         <div class="form-row">
-            <span class="form-label">Typ QA</span>
-            <input class="form-input" type="text" id="f-typqa" placeholder="Typ" oninput="liveUpdate()">
-        </div>
-        <div class="form-row">
-            <span class="form-label">Remark</span>
-            <input class="form-input" type="text" id="f-remark" placeholder="Poznámka" oninput="liveUpdate()">
-        </div>
-        <div class="form-row">
-            <span class="form-label">Dle přehledu QA</span>
-            <input class="form-input" type="text" id="f-dleqa" placeholder="Dle přehledu QA" oninput="liveUpdate()">
-        </div>
-        <div class="form-row">
-            <span class="form-label">Podpis QA</span>
-            <input class="form-input" type="text" id="f-podpisqa" placeholder="Podpis" oninput="liveUpdate()">
+            <span class="form-label">Důvod vystavení</span>
+            <input class="form-input" type="text" id="f-duvod" placeholder="Customer claim" oninput="liveUpdate()">
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header">🏭 Oddělení</div>
-        <div class="toggle-row">
-            <span>Výroba</span>
-            <label class="toggle">
-                <input type="checkbox" id="d-vyroba" checked onchange="liveUpdate()">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        <div class="toggle-row">
-            <span>Kvalita</span>
-            <label class="toggle">
-                <input type="checkbox" id="d-kvalita" checked onchange="liveUpdate()">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
+        <div class="card-header">🏭 Typ QA</div>
         <div class="toggle-row">
             <span>Engineering</span>
             <label class="toggle">
-                <input type="checkbox" id="d-engineering" onchange="liveUpdate()">
+                <input type="checkbox" id="qa-engineering" onchange="liveUpdate()">
                 <span class="toggle-slider"></span>
             </label>
         </div>
         <div class="toggle-row">
-            <span>Údržba</span>
+            <span>Maintenance</span>
             <label class="toggle">
-                <input type="checkbox" id="d-udrzba" onchange="liveUpdate()">
+                <input type="checkbox" id="qa-maintenance" onchange="liveUpdate()">
                 <span class="toggle-slider"></span>
             </label>
         </div>
         <div class="toggle-row">
-            <span>Logistika</span>
+            <span>Logistics</span>
             <label class="toggle">
-                <input type="checkbox" id="d-logistika" onchange="liveUpdate()">
+                <input type="checkbox" id="qa-logistics" onchange="liveUpdate()">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="toggle-row">
+            <span>Production</span>
+            <label class="toggle">
+                <input type="checkbox" id="qa-production" checked onchange="liveUpdate()">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="toggle-row">
+            <span>Quality</span>
+            <label class="toggle">
+                <input type="checkbox" id="qa-quality" onchange="liveUpdate()">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="toggle-row">
+            <span>EOL</span>
+            <label class="toggle">
+                <input type="checkbox" id="qa-eol" onchange="liveUpdate()">
                 <span class="toggle-slider"></span>
             </label>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header">📝 Popis problému</div>
+        <div class="card-header">⚠️ Popis defektu</div>
         <div class="form-row">
-            <textarea class="form-input" id="f-popis" oninput="liveUpdate()">Kontrola vypolstrované opěry</textarea>
+            <input class="form-input" type="text" id="f-defect" placeholder="Kontrola zajištění KST" style="text-align:left;" oninput="liveUpdate()">
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header">⚠️ Text alertu</div>
+        <div class="card-header">📝 Popis kontroly / pracovní postup</div>
         <div class="form-row">
-            <textarea class="form-input" id="f-alert" oninput="liveUpdate()">Zkontroluj zda je správně vypolstrovaný roh STV viz NOK a OK foto.</textarea>
+            <textarea class="form-input" id="f-control" oninput="liveUpdate()" placeholder="Proveď manuální kontrolu..."></textarea>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">✍️ Podpisy</div>
+        <div class="form-row">
+            <span class="form-label">Podpis QA</span>
+            <input class="form-input" type="text" id="f-podpisqa" placeholder="Originál" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Schválení výroby</span>
+            <input class="form-input" type="text" id="f-schvaleni" placeholder="Production approval" oninput="liveUpdate()">
         </div>
     </div>
 
@@ -775,123 +877,165 @@
     <div id="doc-wrapper">
         <div class="doc" id="document">
 
-            <!-- HLAVIČKA -->
-            <div class="doc-head">
-                <div class="doc-logo">
-                    <div class="doc-logo-text">🔴 LEAR</div>
-                    <div class="doc-logo-sub">CORPORATION</div>
+            <!-- TOP HEADER -->
+            <div class="doc-top">
+                <div class="doc-logo-box">
+                    <div class="doc-logo-main">LEAR</div>
+                    <div class="doc-logo-sub">MAKING EVERY DRIVE BETTER™</div>
                 </div>
-                <div class="doc-title-box">Quality Alert</div>
+                <div class="doc-title-center">
+                    <div class="doc-title-main">QUALITY ALERT</div>
+                    <div class="doc-title-sub">PROCESS QUALITY NOTICE</div>
+                </div>
                 <div class="doc-num-box">
-                    <span>N°</span>
-                    <span class="doc-num-val" id="d-number">—</span>
-                    <span id="d-customer" style="font-weight:700;">BMW</span>
-                </div>
-                <div class="doc-proj-box">
-                    <div class="doc-proj-row">
-                        <div class="doc-proj-lbl">Projekt</div>
-                        <div class="doc-proj-val" id="d-project">G2x/G8x</div>
-                    </div>
-                    <div class="doc-proj-row">
-                        <div class="doc-proj-lbl">Proces</div>
-                        <div class="doc-proj-val" id="d-process">BMW</div>
-                    </div>
+                    <div class="doc-num-label">N°</div>
+                    <div class="doc-num-val" id="d-number">—</div>
                 </div>
             </div>
 
             <!-- INFO ŘÁDEK 1 -->
-            <div class="doc-info-grid">
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Datum</div>
-                    <div class="doc-info-val" id="d-datum">—</div>
+            <div class="doc-info-section">
+                <div class="doc-info-row doc-info-row-4">
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Důvod vystavení / Reason</div>
+                        <div class="doc-cell-val" id="d-duvod">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Vydal / Issued by</div>
+                        <div class="doc-cell-val" id="d-vydal">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Počátek / Start</div>
+                        <div class="doc-cell-val" id="d-pocatek">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Konec / End</div>
+                        <div class="doc-cell-val" id="d-konec">—</div>
+                    </div>
                 </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Vydal</div>
-                    <div class="doc-info-val" id="d-vydal">—</div>
-                </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Počátek</div>
-                    <div class="doc-info-val" id="d-pocatek">—</div>
-                </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Konec</div>
-                    <div class="doc-info-val" id="d-konec">dle přehledu</div>
-                </div>
-            </div>
-
-            <!-- INFO ŘÁDEK 2 -->
-            <div class="doc-info-grid">
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Díl</div>
-                    <div class="doc-info-val" id="d-dil">—</div>
-                </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Pracovník</div>
-                    <div class="doc-info-val" id="d-pracovnik">—</div>
-                </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Typ QA</div>
-                    <div class="doc-info-val" id="d-typqa">—</div>
-                </div>
-                <div class="doc-info-cell">
-                    <div class="doc-info-lbl">Remark</div>
-                    <div class="doc-info-val" id="d-remark">—</div>
-                </div>
-            </div>
-
-            <!-- INFO ŘÁDEK 3 -->
-            <div class="doc-info-grid">
-                <div class="doc-info-cell" style="grid-column: span 2;">
-                    <div class="doc-info-lbl">Dle přehledu QA</div>
-                    <div class="doc-info-val" id="d-dleqa">—</div>
-                </div>
-                <div class="doc-info-cell" style="grid-column: span 2;">
-                    <div class="doc-info-lbl">Podpis QA</div>
-                    <div class="doc-info-val" id="d-podpisqa">—</div>
+                <div class="doc-info-row doc-info-row-4">
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Projekt / Project</div>
+                        <div class="doc-cell-val" id="d-project">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Pracoviště / Workplace</div>
+                        <div class="doc-cell-val" id="d-pracoviste">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Díl / Part</div>
+                        <div class="doc-cell-val" id="d-dil">—</div>
+                    </div>
+                    <div class="doc-info-cell">
+                        <div class="doc-cell-label">Datum vystavení / Date</div>
+                        <div class="doc-cell-val" id="d-datum">—</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- ODDĚLENÍ -->
-            <div class="doc-dept">
-                <div class="doc-dept-item">
-                    <span class="doc-dot" id="dd-vyroba"></span> Výroba
+            <!-- TYP QA + PROCES -->
+            <div class="doc-typqa-section">
+                <div class="doc-typqa-left">
+                    <div class="doc-typqa-label">Typ QA / Type of QA</div>
+                    <div class="doc-typqa-items">
+                        <div class="doc-typqa-item" id="dqa-engineering">Engineering</div>
+                        <div class="doc-typqa-item" id="dqa-maintenance">Maintenance</div>
+                        <div class="doc-typqa-item" id="dqa-logistics">Logistics</div>
+                        <div class="doc-typqa-item" id="dqa-production">Production</div>
+                        <div class="doc-typqa-item" id="dqa-quality">Quality</div>
+                    </div>
                 </div>
-                <div class="doc-dept-item">
-                    <span class="doc-dot" id="dd-kvalita"></span> Kvalita
-                </div>
-                <div class="doc-dept-item">
-                    <span class="doc-dot" id="dd-engineering"></span> Engineering
-                </div>
-                <div class="doc-dept-item">
-                    <span class="doc-dot" id="dd-udrzba"></span> Údržba
-                </div>
-                <div class="doc-dept-item">
-                    <span class="doc-dot" id="dd-logistika"></span> Logistika
+                <div class="doc-typqa-right">
+                    <div class="doc-typqa-label">Proces / Process</div>
+                    <div class="doc-typqa-items">
+                        <div class="doc-typqa-item" id="dqa-eol">EOL</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- POPIS -->
-            <div class="doc-desc">
-                <div class="doc-desc-lbl">Popis:</div>
-                <div class="doc-desc-val" id="d-popis">—</div>
+            <!-- POPIS DEFEKTU -->
+            <div class="doc-defect-section">
+                <div class="doc-defect-label">⚠ Popis defektu / Defect</div>
+                <div class="doc-defect-val">
+                    <span class="doc-defect-icon">⚠</span>
+                    <span class="doc-defect-text" id="d-defect">—</span>
+                </div>
             </div>
 
-            <!-- ALERT -->
-            <div class="doc-alert" id="d-alert">—</div>
+            <!-- POPIS KONTROLY -->
+            <div class="doc-control-section">
+                <div class="doc-control-label">Popis kontroly / Pracovní postup / Description of checks</div>
+                <div class="doc-control-val" id="d-control">—</div>
+            </div>
 
             <!-- FOTKY -->
             <div class="doc-imgs">
-                <div class="doc-img-cell nok-cell">
-                    <div class="doc-img-label-bar">NOK</div>
-                    <div id="nok-doc-img">
-                        <div class="doc-img-placeholder">📷</div>
+                <!-- OK -->
+                <div class="doc-img-cell ok-cell">
+                    <div class="doc-img-header">✓ OK</div>
+                    <div class="doc-img-body" id="ok-doc-img">
+                        <div class="doc-img-placeholder-icon">📷</div>
                     </div>
                 </div>
-                <div class="doc-img-cell ok-cell">
-                    <div class="doc-img-label-bar">OK</div>
-                    <div id="ok-doc-img">
-                        <div class="doc-img-placeholder">📷</div>
+                <!-- NOK -->
+                <div class="doc-img-cell nok-cell">
+                    <div class="doc-img-header">✕ NOK</div>
+                    <div class="doc-img-body" id="nok-doc-img">
+                        <div class="doc-img-placeholder-icon">📷</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="doc-footer">
+                <div class="doc-footer-cell">
+                    <div class="doc-footer-label">Autor / Author</div>
+                    <div class="doc-footer-val" id="d-autor">—</div>
+                </div>
+                <div class="doc-footer-cell">
+                    <div class="doc-footer-label">Podpis QA (originál) / QA Approval</div>
+                    <div class="doc-footer-val" id="d-podpisqa">—</div>
+                </div>
+                <div class="doc-footer-cell">
+                    <div class="doc-footer-label">Schválení výroby / Production Approval</div>
+                    <div class="doc-footer-val" id="d-schvaleni">—</div>
+                </div>
+            </div>
+
+            <!-- PODPISOVÁ STRÁNKA -->
+            <div class="signature-page" style="margin-top: 10px;">
+                <div style="font-family: Arial, sans-serif; font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0; border-top: 2px solid #000;">
+                    Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem. Pokud nerozumím, zeptám se svého nadřízeného.
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <!-- Tabulka 1 -->
+                    <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 8px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Datum</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Jméno</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Osobní č.</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Podpis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array(15).fill('<tr><td style="border:1px solid #000;padding:4px;height:16px;"></td><td style="border:1px solid #000;padding:4px;"></td><td style="border:1px solid #000;padding:4px;"></td><td style="border:1px solid #000;padding:4px;"></td></tr>').join('')}
+                        </tbody>
+                    </table>
+                    <!-- Tabulka 2 -->
+                    <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 8px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Datum</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Jméno</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Osobní č.</th>
+                                <th style="border: 1px solid #000; padding: 3px; text-align: center; background: #f0f0f0;">Podpis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array(15).fill('<tr><td style="border:1px solid #000;padding:4px;height:16px;"></td><td style="border:1px solid #000;padding:4px;"></td><td style="border:1px solid #000;padding:4px;"></td><td style="border:1px solid #000;padding:4px;"></td></tr>').join('')}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1004,37 +1148,32 @@ function goToPreview() {
 function fmtDate(val) {
     if (!val) return '—';
     const [y, m, d] = val.split('-');
-    return `${parseInt(d)}/${parseInt(m)}/${y}`;
+    return `${parseInt(d)}. ${parseInt(m)}. ${y}`;
 }
 
 function liveUpdate() {
     document.getElementById('d-number').textContent = document.getElementById('f-number').value || '—';
-    document.getElementById('d-customer').textContent = document.getElementById('f-customer').value || '—';
     document.getElementById('d-project').textContent = document.getElementById('f-project').value || '—';
-    document.getElementById('d-process').textContent = document.getElementById('f-process').value || '—';
-    document.getElementById('d-datum').textContent = fmtDate(document.getElementById('f-datum').value);
+    document.getElementById('d-pracoviste').textContent = document.getElementById('f-pracoviste').value || '—';
+    document.getElementById('d-dil').textContent = document.getElementById('f-dil').value || '—';
     document.getElementById('d-vydal').textContent = document.getElementById('f-vydal').value || '—';
     document.getElementById('d-pocatek').textContent = fmtDate(document.getElementById('f-pocatek').value);
-    document.getElementById('d-konec').textContent = document.getElementById('f-konec').value || 'dle přehledu';
-    document.getElementById('d-dil').textContent = document.getElementById('f-dil').value || '—';
-    document.getElementById('d-pracovnik').textContent = document.getElementById('f-pracovnik').value || '—';
-    document.getElementById('d-typqa').textContent = document.getElementById('f-typqa').value || '—';
-    document.getElementById('d-remark').textContent = document.getElementById('f-remark').value || '—';
-    document.getElementById('d-dleqa').textContent = document.getElementById('f-dleqa').value || '—';
+    document.getElementById('d-konec').textContent = fmtDate(document.getElementById('f-konec').value);
+    document.getElementById('d-datum').textContent = fmtDate(document.getElementById('f-datum').value);
+    document.getElementById('d-autor').textContent = document.getElementById('f-autor').value || '—';
+    document.getElementById('d-duvod').textContent = document.getElementById('f-duvod').value || '—';
+    document.getElementById('d-defect').textContent = document.getElementById('f-defect').value || '—';
+    document.getElementById('d-control').textContent = document.getElementById('f-control').value || '—';
     document.getElementById('d-podpisqa').textContent = document.getElementById('f-podpisqa').value || '—';
+    document.getElementById('d-schvaleni').textContent = document.getElementById('f-schvaleni').value || '—';
 
-    const depts = ['vyroba','kvalita','engineering','udrzba','logistika'];
-    depts.forEach(d => {
-        const on = document.getElementById('d-' + d).checked;
-        document.getElementById('dd-' + d).className = 'doc-dot' + (on ? ' on' : '');
+    // Typ QA
+    const qaTypes = ['engineering','maintenance','logistics','production','quality','eol'];
+    qaTypes.forEach(t => {
+        const checked = document.getElementById('qa-' + t).checked;
+        const el = document.getElementById('dqa-' + t);
+        if (el) el.className = 'doc-typqa-item' + (checked ? ' active' : '');
     });
-
-    document.getElementById('d-popis').textContent = document.getElementById('f-popis').value || '—';
-
-    let txt = document.getElementById('f-alert').value || '—';
-    txt = txt.replace(/NOK/g, '<span class="nok">NOK</span>');
-    txt = txt.replace(/\bOK\b/g, '<span class="ok">OK</span>');
-    document.getElementById('d-alert').innerHTML = txt;
 }
 
 function loadImg(inputId, uploadId, previewId, docId) {
@@ -1045,7 +1184,6 @@ function loadImg(inputId, uploadId, previewId, docId) {
     reader.onload = e => {
         const src = e.target.result;
         const type = inputId.startsWith('nok') ? 'nok' : 'ok';
-        const color = type === 'nok' ? '#cc0000' : '#009900';
 
         const preview = document.getElementById(previewId);
         preview.src = src;
@@ -1057,7 +1195,7 @@ function loadImg(inputId, uploadId, previewId, docId) {
         document.getElementById(type + '-upload').classList.add('has-image');
 
         document.getElementById(docId).innerHTML =
-            `<img src="${src}" style="display:block;width:100%;height:auto;border:3.5px solid ${color};">`;
+            `<img src="${src}" style="max-width:100%;height:auto;object-fit:contain;display:block;">`;
 
         showToast('✅ Fotka nahrána!');
     };
@@ -1074,7 +1212,7 @@ function removeImg(e, type) {
     document.getElementById(type + '-upload').classList.remove('has-image');
     document.getElementById(type + '-file').value = '';
     document.getElementById(type + '-doc-img').innerHTML =
-        '<div class="doc-img-placeholder">📷</div>';
+        '<div class="doc-img-placeholder-icon">📷</div>';
 }
 
 function savePDF() {
