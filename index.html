@@ -371,7 +371,6 @@
         .doc-alert .nok { color: #cc0000; }
         .doc-alert .ok { color: #009900; }
 
-        /* ── FOTO SEKCE ── */
         .doc-imgs {
             display: flex !important;
             flex-direction: column !important;
@@ -407,14 +406,14 @@
             display: block;
             width: 100%;
             height: auto;
-            border: 2.5px solid #cc0000;
+            border: 3.5px solid #cc0000;
         }
 
         .ok-cell img {
             display: block;
             width: 100%;
             height: auto;
-            border: 2.5px solid #009900;
+            border: 3.5px solid #009900;
         }
 
         .doc-img-placeholder {
@@ -516,7 +515,6 @@
 
         .toast.show { opacity: 1; }
 
-        /* ── PRINT ── */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -556,8 +554,8 @@
             .doc-imgs {
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 6px !important;
-                padding: 6px !important;
+                gap: 3px !important;
+                padding: 4px !important;
             }
 
             .doc-img-cell {
@@ -566,21 +564,22 @@
             }
 
             .doc-img-label-bar {
-                width: 100% !important;
+                padding: 2px 10px !important;
+                font-size: 11px !important;
                 text-align: center !important;
             }
 
             .nok-cell img {
-                border: 2.5px solid #cc0000 !important;
-                max-height: 110mm !important;
+                border: 3.5px solid #cc0000 !important;
+                max-height: 70mm !important;
                 width: auto !important;
                 max-width: 100% !important;
                 display: block !important;
             }
 
             .ok-cell img {
-                border: 2.5px solid #009900 !important;
-                max-height: 110mm !important;
+                border: 3.5px solid #009900 !important;
+                max-height: 70mm !important;
                 width: auto !important;
                 max-width: 100% !important;
                 display: block !important;
@@ -596,7 +595,6 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- PAGE 1: FORMULÁŘ -->
 <div class="page active" id="page-form">
 
     <div class="card">
@@ -726,7 +724,6 @@
 
 </div>
 
-<!-- PAGE 2: NÁHLED -->
 <div class="page" id="page-preview">
 
     <div id="doc-wrapper">
@@ -799,7 +796,6 @@
 
             <div class="doc-alert" id="d-alert">—</div>
 
-            <!-- FOTKY -->
             <div class="doc-imgs">
                 <div class="doc-img-cell nok-cell">
                     <div class="doc-img-label-bar">NOK</div>
@@ -807,7 +803,6 @@
                         <div class="doc-img-placeholder">📷</div>
                     </div>
                 </div>
-
                 <div class="doc-img-cell ok-cell">
                     <div class="doc-img-label-bar">OK</div>
                     <div id="ok-doc-img">
@@ -833,7 +828,6 @@
 
 </div>
 
-<!-- PAGE 3: INFO -->
 <div class="page" id="page-install">
 
     <div class="install-card">
@@ -881,7 +875,6 @@
 
 </div>
 
-<!-- TAB BAR -->
 <div class="tabbar">
     <button class="tab-btn active" onclick="showPage('form',this)">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -983,7 +976,7 @@ function loadImg(inputId, uploadId, previewId, docId) {
         document.getElementById(type + '-upload').classList.add('has-image');
 
         document.getElementById(docId).innerHTML =
-            `<img src="${src}" style="display:block;width:100%;height:auto;border:2.5px solid ${color};">`;
+            `<img src="${src}" style="display:block;width:100%;height:auto;border:3.5px solid ${color};">`;
 
         showToast('✅ Fotka nahrána!');
     };
