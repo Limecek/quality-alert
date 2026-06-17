@@ -103,7 +103,7 @@
         }
 
         .form-row:last-child { border-bottom: none; }
-        .form-label { font-size: 15px; color: var(--text); min-width: 90px; }
+        .form-label { font-size: 15px; color: var(--text); min-width: 110px; }
 
         .form-input {
             flex: 1;
@@ -229,6 +229,7 @@
 
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
+        /* ── DOCUMENT ── */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -243,14 +244,15 @@
             background: white;
         }
 
+        /* Hlavička */
         .doc-head {
             display: grid;
-            grid-template-columns: 80px 1fr 70px 110px;
+            grid-template-columns: 70px 1fr 60px 100px;
             border-bottom: 2px solid #000;
         }
 
         .doc-logo {
-            padding: 8px 5px;
+            padding: 6px 4px;
             border-right: 1px solid #000;
             display: flex;
             flex-direction: column;
@@ -258,7 +260,7 @@
             justify-content: center;
         }
 
-        .doc-logo-text { font-size: 11px; font-weight: 900; color: #cc0000; line-height: 1.2; }
+        .doc-logo-text { font-size: 10px; font-weight: 900; color: #cc0000; line-height: 1.2; }
         .doc-logo-sub { font-size: 6px; color: #666; letter-spacing: 0.5px; }
 
         .doc-title-box {
@@ -267,10 +269,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             border-right: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
         }
 
         .doc-num-box {
@@ -279,12 +281,13 @@
             align-items: center;
             justify-content: center;
             border-right: 1px solid #000;
-            padding: 5px;
-            font-size: 9px;
-            gap: 2px;
+            padding: 4px;
+            font-size: 8px;
+            gap: 1px;
         }
 
-        .doc-num-val { font-size: 12px; font-weight: 700; }
+        .doc-num-val { font-size: 11px; font-weight: 700; }
+
         .doc-proj-box { display: flex; flex-direction: column; }
 
         .doc-proj-row {
@@ -298,42 +301,51 @@
 
         .doc-proj-lbl {
             background: #f0f0f0;
-            padding: 4px 5px;
+            padding: 3px 4px;
             font-weight: 700;
-            font-size: 8px;
+            font-size: 7px;
             border-right: 1px solid #000;
             display: flex;
             align-items: center;
         }
 
         .doc-proj-val {
-            padding: 4px 5px;
+            padding: 3px 4px;
             font-weight: 700;
-            font-size: 9px;
+            font-size: 8px;
             display: flex;
             align-items: center;
         }
 
-        .doc-info {
+        /* Info řádky */
+        .doc-info-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             border-bottom: 1px solid #000;
         }
 
         .doc-info-cell {
-            padding: 4px 5px;
+            padding: 3px 4px;
             text-align: center;
             border-right: 1px solid #000;
         }
 
         .doc-info-cell:last-child { border-right: none; }
         .doc-info-lbl { font-size: 7px; font-weight: 700; color: #cc0000; }
-        .doc-info-val { font-size: 9px; margin-top: 1px; }
+        .doc-info-val { font-size: 8px; margin-top: 1px; min-height: 12px; }
 
+        /* Druhý řádek info */
+        .doc-info-grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-bottom: 1px solid #000;
+        }
+
+        /* Oddělení */
         .doc-dept {
             display: flex;
-            gap: 8px;
-            padding: 5px 8px;
+            gap: 6px;
+            padding: 4px 6px;
             border-bottom: 1px solid #000;
             flex-wrap: wrap;
         }
@@ -341,7 +353,7 @@
         .doc-dept-item { display: flex; align-items: center; gap: 3px; font-size: 8px; }
 
         .doc-dot {
-            width: 10px; height: 10px;
+            width: 9px; height: 9px;
             border-radius: 50%;
             border: 1.5px solid #000;
             display: inline-block;
@@ -349,19 +361,21 @@
 
         .doc-dot.on { background: #000; }
 
+        /* Popis */
         .doc-desc {
             display: grid;
-            grid-template-columns: 45px 1fr;
+            grid-template-columns: 40px 1fr;
             border-bottom: 1px solid #000;
-            padding: 4px 6px;
+            padding: 3px 5px;
         }
 
-        .doc-desc-lbl { font-weight: 700; font-size: 9px; }
-        .doc-desc-val { font-size: 9px; }
+        .doc-desc-lbl { font-weight: 700; font-size: 8px; }
+        .doc-desc-val { font-size: 8px; }
 
+        /* Alert */
         .doc-alert {
             background: #ffff00;
-            padding: 6px 8px;
+            padding: 5px 6px;
             font-weight: 700;
             font-size: 9px;
             border-bottom: 2px solid #000;
@@ -371,11 +385,12 @@
         .doc-alert .nok { color: #cc0000; }
         .doc-alert .ok { color: #009900; }
 
+        /* Fotky */
         .doc-imgs {
             display: flex !important;
             flex-direction: column !important;
-            gap: 10px;
-            padding: 10px;
+            gap: 6px;
+            padding: 6px;
             background: white;
         }
 
@@ -392,7 +407,7 @@
             font-size: 12px;
             font-weight: 900;
             color: white;
-            padding: 4px 10px;
+            padding: 3px 10px;
             letter-spacing: 1px;
             display: block;
             width: 100%;
@@ -515,6 +530,7 @@
 
         .toast.show { opacity: 1; }
 
+        /* ── PRINT ── */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -523,7 +539,7 @@
 
             @page {
                 size: A4 portrait;
-                margin: 8mm;
+                margin: 6mm;
             }
 
             body {
@@ -549,12 +565,12 @@
                 border-radius: 0 !important;
             }
 
-            .doc { font-size: 11px !important; }
+            .doc { font-size: 9px !important; }
 
             .doc-imgs {
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 3px !important;
+                gap: 4px !important;
                 padding: 4px !important;
             }
 
@@ -564,14 +580,14 @@
             }
 
             .doc-img-label-bar {
-                padding: 2px 10px !important;
-                font-size: 11px !important;
+                padding: 2px 8px !important;
+                font-size: 10px !important;
                 text-align: center !important;
             }
 
             .nok-cell img {
                 border: 3.5px solid #cc0000 !important;
-                max-height: 50mm !important;
+                max-height: 100mm !important;
                 max-width: 100% !important;
                 width: auto !important;
                 height: auto !important;
@@ -581,7 +597,7 @@
 
             .ok-cell img {
                 border: 3.5px solid #009900 !important;
-                max-height: 50mm !important;
+                max-height: 100mm !important;
                 max-width: 100% !important;
                 width: auto !important;
                 height: auto !important;
@@ -599,6 +615,7 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- PAGE 1: FORMULÁŘ -->
 <div class="page active" id="page-form">
 
     <div class="card">
@@ -638,6 +655,30 @@
         <div class="form-row">
             <span class="form-label">Konec</span>
             <input class="form-input" type="text" id="f-konec" placeholder="dle přehledu" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Díl</span>
+            <input class="form-input" type="text" id="f-dil" placeholder="Název dílu" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Pracovník</span>
+            <input class="form-input" type="text" id="f-pracovnik" placeholder="Jméno" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Typ QA</span>
+            <input class="form-input" type="text" id="f-typqa" placeholder="Typ" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Remark</span>
+            <input class="form-input" type="text" id="f-remark" placeholder="Poznámka" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Dle přehledu QA</span>
+            <input class="form-input" type="text" id="f-dleqa" placeholder="Dle přehledu QA" oninput="liveUpdate()">
+        </div>
+        <div class="form-row">
+            <span class="form-label">Podpis QA</span>
+            <input class="form-input" type="text" id="f-podpisqa" placeholder="Podpis" oninput="liveUpdate()">
         </div>
     </div>
 
@@ -728,11 +769,13 @@
 
 </div>
 
+<!-- PAGE 2: NÁHLED -->
 <div class="page" id="page-preview">
 
     <div id="doc-wrapper">
         <div class="doc" id="document">
 
+            <!-- HLAVIČKA -->
             <div class="doc-head">
                 <div class="doc-logo">
                     <div class="doc-logo-text">🔴 LEAR</div>
@@ -740,7 +783,7 @@
                 </div>
                 <div class="doc-title-box">Quality Alert</div>
                 <div class="doc-num-box">
-                    <span>Nº</span>
+                    <span>N°</span>
                     <span class="doc-num-val" id="d-number">—</span>
                     <span id="d-customer" style="font-weight:700;">BMW</span>
                 </div>
@@ -756,7 +799,8 @@
                 </div>
             </div>
 
-            <div class="doc-info">
+            <!-- INFO ŘÁDEK 1 -->
+            <div class="doc-info-grid">
                 <div class="doc-info-cell">
                     <div class="doc-info-lbl">Datum</div>
                     <div class="doc-info-val" id="d-datum">—</div>
@@ -775,6 +819,39 @@
                 </div>
             </div>
 
+            <!-- INFO ŘÁDEK 2 -->
+            <div class="doc-info-grid">
+                <div class="doc-info-cell">
+                    <div class="doc-info-lbl">Díl</div>
+                    <div class="doc-info-val" id="d-dil">—</div>
+                </div>
+                <div class="doc-info-cell">
+                    <div class="doc-info-lbl">Pracovník</div>
+                    <div class="doc-info-val" id="d-pracovnik">—</div>
+                </div>
+                <div class="doc-info-cell">
+                    <div class="doc-info-lbl">Typ QA</div>
+                    <div class="doc-info-val" id="d-typqa">—</div>
+                </div>
+                <div class="doc-info-cell">
+                    <div class="doc-info-lbl">Remark</div>
+                    <div class="doc-info-val" id="d-remark">—</div>
+                </div>
+            </div>
+
+            <!-- INFO ŘÁDEK 3 -->
+            <div class="doc-info-grid">
+                <div class="doc-info-cell" style="grid-column: span 2;">
+                    <div class="doc-info-lbl">Dle přehledu QA</div>
+                    <div class="doc-info-val" id="d-dleqa">—</div>
+                </div>
+                <div class="doc-info-cell" style="grid-column: span 2;">
+                    <div class="doc-info-lbl">Podpis QA</div>
+                    <div class="doc-info-val" id="d-podpisqa">—</div>
+                </div>
+            </div>
+
+            <!-- ODDĚLENÍ -->
             <div class="doc-dept">
                 <div class="doc-dept-item">
                     <span class="doc-dot" id="dd-vyroba"></span> Výroba
@@ -793,13 +870,16 @@
                 </div>
             </div>
 
+            <!-- POPIS -->
             <div class="doc-desc">
                 <div class="doc-desc-lbl">Popis:</div>
                 <div class="doc-desc-val" id="d-popis">—</div>
             </div>
 
+            <!-- ALERT -->
             <div class="doc-alert" id="d-alert">—</div>
 
+            <!-- FOTKY -->
             <div class="doc-imgs">
                 <div class="doc-img-cell nok-cell">
                     <div class="doc-img-label-bar">NOK</div>
@@ -832,6 +912,7 @@
 
 </div>
 
+<!-- PAGE 3: INFO -->
 <div class="page" id="page-install">
 
     <div class="install-card">
@@ -844,7 +925,7 @@
             </div>
             <div class="install-step">
                 <div class="step-num">2</div>
-                <div>Klikni na ikonu <strong>Sdílet</strong> (čtverec se šipkou nahoru)</div>
+                <div>Klikni na ikonu <strong>Sdílet</strong></div>
             </div>
             <div class="install-step">
                 <div class="step-num">3</div>
@@ -852,11 +933,11 @@
             </div>
             <div class="install-step">
                 <div class="step-num">4</div>
-                <div>Klikni <strong>"Přidat"</strong> vpravo nahoře</div>
+                <div>Klikni <strong>"Přidat"</strong></div>
             </div>
             <div class="install-step">
                 <div class="step-num">5</div>
-                <div>Hotovo! Ikona se objeví na ploše 🎉</div>
+                <div>Hotovo! 🎉</div>
             </div>
         </div>
     </div>
@@ -865,7 +946,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">1.0.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.0.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -879,6 +960,7 @@
 
 </div>
 
+<!-- TAB BAR -->
 <div class="tabbar">
     <button class="tab-btn active" onclick="showPage('form',this)">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -926,33 +1008,28 @@ function fmtDate(val) {
 }
 
 function liveUpdate() {
-    document.getElementById('d-number').textContent =
-        document.getElementById('f-number').value || '—';
-    document.getElementById('d-customer').textContent =
-        document.getElementById('f-customer').value || '—';
-    document.getElementById('d-project').textContent =
-        document.getElementById('f-project').value || '—';
-    document.getElementById('d-process').textContent =
-        document.getElementById('f-process').value || '—';
-
-    document.getElementById('d-datum').textContent =
-        fmtDate(document.getElementById('f-datum').value);
-    document.getElementById('d-vydal').textContent =
-        document.getElementById('f-vydal').value || '—';
-    document.getElementById('d-pocatek').textContent =
-        fmtDate(document.getElementById('f-pocatek').value);
-    document.getElementById('d-konec').textContent =
-        document.getElementById('f-konec').value || 'dle přehledu';
+    document.getElementById('d-number').textContent = document.getElementById('f-number').value || '—';
+    document.getElementById('d-customer').textContent = document.getElementById('f-customer').value || '—';
+    document.getElementById('d-project').textContent = document.getElementById('f-project').value || '—';
+    document.getElementById('d-process').textContent = document.getElementById('f-process').value || '—';
+    document.getElementById('d-datum').textContent = fmtDate(document.getElementById('f-datum').value);
+    document.getElementById('d-vydal').textContent = document.getElementById('f-vydal').value || '—';
+    document.getElementById('d-pocatek').textContent = fmtDate(document.getElementById('f-pocatek').value);
+    document.getElementById('d-konec').textContent = document.getElementById('f-konec').value || 'dle přehledu';
+    document.getElementById('d-dil').textContent = document.getElementById('f-dil').value || '—';
+    document.getElementById('d-pracovnik').textContent = document.getElementById('f-pracovnik').value || '—';
+    document.getElementById('d-typqa').textContent = document.getElementById('f-typqa').value || '—';
+    document.getElementById('d-remark').textContent = document.getElementById('f-remark').value || '—';
+    document.getElementById('d-dleqa').textContent = document.getElementById('f-dleqa').value || '—';
+    document.getElementById('d-podpisqa').textContent = document.getElementById('f-podpisqa').value || '—';
 
     const depts = ['vyroba','kvalita','engineering','udrzba','logistika'];
     depts.forEach(d => {
         const on = document.getElementById('d-' + d).checked;
-        const dot = document.getElementById('dd-' + d);
-        dot.className = 'doc-dot' + (on ? ' on' : '');
+        document.getElementById('dd-' + d).className = 'doc-dot' + (on ? ' on' : '');
     });
 
-    document.getElementById('d-popis').textContent =
-        document.getElementById('f-popis').value || '—';
+    document.getElementById('d-popis').textContent = document.getElementById('f-popis').value || '—';
 
     let txt = document.getElementById('f-alert').value || '—';
     txt = txt.replace(/NOK/g, '<span class="nok">NOK</span>');
