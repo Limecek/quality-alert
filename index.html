@@ -305,9 +305,6 @@
 
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
-        /* ══════════════════════════════
-           DOCUMENT
-        ══════════════════════════════ */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -592,7 +589,7 @@
             display: block;
         }
 
-        /* ── ZMĚNA 2: automatická výška podle textu ── */
+        /* Automatická výška podle textu */
         .doc-control-val {
             font-size: 13px;
             font-weight: 900;
@@ -600,10 +597,8 @@
             padding: 8px 8px 10px;
             line-height: 1.6;
             background: #ffff00;
-            min-height: 30px;  /* ← malé minimum, roste s textem */
         }
 
-        /* FOTKY */
         .doc-imgs {
             display: grid;
             gap: 5px;
@@ -621,6 +616,7 @@
             overflow: hidden;
         }
 
+        /* Rámečky */
         .qa-cell-ok  { border: 2.5px solid #009900; }
         .qa-cell-nok { border: 2.5px solid #cc0000; }
         .wi-cell     { border: 2.5px solid #ffaa00; }
@@ -633,7 +629,6 @@
             padding: 4px 5px;
             font-size: 9px;
             font-weight: 900;
-            color: white;
             letter-spacing: 0.5px;
             flex-shrink: 0;
         }
@@ -834,7 +829,6 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- PAGE 1: FORMULÁŘ -->
 <div class="page active" id="page-form">
 
     <div class="card">
@@ -1007,7 +1001,6 @@
 
 </div>
 
-<!-- PAGE 2: NÁHLED -->
 <div class="page" id="page-preview">
 
     <div id="doc-wrapper">
@@ -1101,11 +1094,9 @@
 
             <div class="doc-control-section">
                 <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
-                <!-- ZMĚNA 2: výška se přizpůsobí textu automaticky -->
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
 
-            <!-- FOTKY – dynamicky generované s automatickou barvou -->
             <div class="doc-imgs cols-2" id="doc-imgs-grid"></div>
 
             <div class="doc-spacer"></div>
@@ -1164,7 +1155,6 @@
 
 </div>
 
-<!-- PAGE 3: INFO -->
 <div class="page" id="page-install">
     <div class="install-card">
         <h3>📱 Přidat na plochu</h3>
@@ -1181,7 +1171,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">3.1.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">3.2.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -1194,7 +1184,6 @@
     </div>
 </div>
 
-<!-- TAB BAR -->
 <div class="tabbar">
     <button class="tab-btn active" onclick="showPage('form',this)">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1230,6 +1219,43 @@
             return `Detail ${index}`;
         } else {
             return `Krok ${index + 1}`;
+        }
+    }
+
+    /* ══════════════════════════════
+       ZMĚNA 1: Barva rámečku podle názvu
+       Pravidla:
+       - obsahuje přesně "NOK" jako slovo → červená
+       - obsahuje přesně "OK" jako slovo  → zelená
+       - cokoliv jiného (Krok 1-6 atd.)   → žlutá
+    ══════════════════════════════ */
+    function getPhotoStyle(name) {
+        const n = (name || '').trim();
+
+        // \b = hranice slova – "krok" neobsahuje \bOK\b ani \bNOK\b
+        const isNok = /\bNOK\b/i.test(n);
+        const isOk  = /\bOK\b/i.test(n);
+
+        // NOK musí být zkontrolováno PŘED OK
+        if (isNok) {
+            return {
+                cellClass: 'qa-cell-nok',
+                headerStyle: 'background:#cc0000;color:white;',
+                bodyStyle: 'background:#fff0f0;'
+            };
+        } else if (isOk) {
+            return {
+                cellClass: 'qa-cell-ok',
+                headerStyle: 'background:#009900;color:white;',
+                bodyStyle: 'background:#f0fff0;'
+            };
+        } else {
+            // Krok 1, Krok 2 ... Krok 6, Detail, cokoliv jiného → žlutá
+            return {
+                cellClass: 'wi-cell',
+                headerStyle: 'background:#ffaa00;color:#000;',
+                bodyStyle: 'background:#fffde7;'
+            };
         }
     }
 
@@ -1354,30 +1380,6 @@
         `;
 
         liveUpdate();
-    }
-
-    /* ── ZMĚNA 1: barva rámečku podle názvu fotky ── */
-    function getPhotoStyle(name) {
-        const n = (name || '').toLowerCase();
-        if (n.includes('nok')) {
-            return {
-                cellClass: 'qa-cell-nok',
-                headerStyle: 'background:#cc0000;color:white;',
-                bodyStyle: 'background:#fff0f0;'
-            };
-        } else if (n.includes('ok')) {
-            return {
-                cellClass: 'qa-cell-ok',
-                headerStyle: 'background:#009900;color:white;',
-                bodyStyle: 'background:#f0fff0;'
-            };
-        } else {
-            return {
-                cellClass: 'wi-cell',
-                headerStyle: 'background:#ffaa00;color:#000;',
-                bodyStyle: 'background:#fffde7;'
-            };
-        }
     }
 
     function buildDocGrid() {
