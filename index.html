@@ -252,14 +252,48 @@
             min-height: 277mm;
         }
 
+        /* ══════════════════════════════
+           STRÁNKA 2 – jedna tabulka přes celou šířku
+        ══════════════════════════════ */
         .doc-page2 {
             font-family: Arial, sans-serif;
             font-size: 9px;
             color: #000;
             background: white;
             padding: 8px;
-            border-top: 4px solid #333;
+            border-top: 3px solid #000;
             margin-top: 4px;
+        }
+
+        .doc-page2-title {
+            font-size: 9px;
+            color: #cc0000;
+            font-weight: 700;
+            padding: 6px 0 10px;
+            display: block;
+        }
+
+        .sig-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 9px;
+        }
+
+        .sig-table th {
+            background: #2c2c2c;
+            color: white;
+            padding: 5px 6px;
+            text-align: center;
+            border: 1px solid #000;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .sig-table td {
+            border: 1px solid #000;
+            padding: 0;
+            height: 22px;
         }
 
         /* TOP HEADER */
@@ -421,11 +455,7 @@
             border-color: #cc0000;
         }
 
-        /* ══════════════════════════════
-           POPIS DEFEKTU
-           label: červený pruh
-           výplň: slabě červená #ffe0e0
-        ══════════════════════════════ */
+        /* POPIS DEFEKTU */
         .doc-defect-section {
             border: 1px solid #bbb;
             margin-bottom: 5px;
@@ -449,7 +479,7 @@
             align-items: center;
             gap: 6px;
             padding: 5px 8px 6px;
-            background: #ffe0e0;  /* ← slabě červená ✅ */
+            background: #fdf0ed;
         }
 
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
@@ -460,11 +490,7 @@
             color: #000;
         }
 
-        /* ══════════════════════════════
-           POPIS KONTROLY
-           label: modrý pruh
-           výplň: žlutá #ffff00
-        ══════════════════════════════ */
+        /* POPIS KONTROLY */
         .doc-control-section {
             border: 1px solid #bbb;
             margin-bottom: 5px;
@@ -488,7 +514,7 @@
             color: #000;
             padding: 5px 8px 6px;
             line-height: 1.5;
-            background: #ffff00;  /* ← žlutá ✅ */
+            background: #ffff00;
         }
 
         /* FOTKY */
@@ -1014,7 +1040,6 @@
                 </div>
             </div>
 
-            <!-- DEFEKT: červený pruh + slabě červená výplň #ffe0e0 -->
             <div class="doc-defect-section">
                 <span class="doc-defect-label">⚠ Popis defektu / Defect description</span>
                 <div class="doc-defect-val">
@@ -1023,7 +1048,6 @@
                 </div>
             </div>
 
-            <!-- KONTROLA: modrý pruh + žlutá výplň #ffff00 -->
             <div class="doc-control-section">
                 <span class="doc-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
                 <div class="doc-control-val" id="d-control">—</div>
@@ -1063,45 +1087,26 @@
 
         </div>
 
-        <!-- ═══════════ STRÁNKA 2 – PODPISY ═══════════ -->
+        <!-- ═══════════ STRÁNKA 2 – JEDNA TABULKA PŘES CELOU ŠÍŘKU ═══════════ -->
         <div class="doc-page2">
-            <div style="font-size:9px; color:#cc0000; font-weight:700;
-                        padding:6px 0 8px; border-bottom:1px solid #ccc; margin-bottom:8px;">
+
+            <span class="doc-page2-title">
                 Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem.
                 Pokud nerozumím, zeptám se svého nadřízeného.
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <table style="width:100%; border-collapse:collapse; font-size:8px;">
-                    <thead>
-                        <tr>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:22%;">Datum</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;">Jméno</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:20%;">Osobní č.</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:25%;">Podpis</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sig-tbody-1"></tbody>
-                </table>
-                <table style="width:100%; border-collapse:collapse; font-size:8px;">
-                    <thead>
-                        <tr>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:22%;">Datum</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;">Jméno</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:20%;">Osobní č.</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#2c2c2c;color:white;width:25%;">Podpis</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sig-tbody-2"></tbody>
-                </table>
-            </div>
+            </span>
+
+            <table class="sig-table">
+                <thead>
+                    <tr>
+                        <th style="width:15%;">Datum</th>
+                        <th style="width:35%;">Jméno / Name</th>
+                        <th style="width:15%;">Osobní č.</th>
+                        <th style="width:35%;">Podpis / Signature</th>
+                    </tr>
+                </thead>
+                <tbody id="sig-tbody-1"></tbody>
+            </table>
+
         </div>
 
     </div>
@@ -1154,7 +1159,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">2.5.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.6.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -1199,12 +1204,13 @@
     const imageURLs = { ok: null, nok: null };
 
     function generateSignatureRows() {
-        return Array(15).fill(`
+        // 30 řádků – vyplní celou A4
+        return Array(30).fill(`
             <tr>
-                <td style="border:1px solid #000;padding:4px;height:18px;"></td>
-                <td style="border:1px solid #000;padding:4px;"></td>
-                <td style="border:1px solid #000;padding:4px;"></td>
-                <td style="border:1px solid #000;padding:4px;"></td>
+                <td class="sig-td"></td>
+                <td class="sig-td"></td>
+                <td class="sig-td"></td>
+                <td class="sig-td"></td>
             </tr>
         `).join('');
     }
@@ -1362,8 +1368,8 @@
     }
 
     window.onload = () => {
+        // Jedna tabulka – pouze sig-tbody-1
         document.getElementById('sig-tbody-1').innerHTML = generateSignatureRows();
-        document.getElementById('sig-tbody-2').innerHTML = generateSignatureRows();
         loadFromStorage();
         const today = new Date().toISOString().split('T')[0];
         if (!document.getElementById('f-datum').value)
