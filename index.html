@@ -241,10 +241,6 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        /* ══════════════════════════════
-           STRÁNKA 1 – v náhledu bez pevné výšky,
-           při tisku pevná výška A4
-        ══════════════════════════════ */
         .doc-page1 {
             font-family: Arial, sans-serif;
             font-size: 9px;
@@ -255,9 +251,6 @@
             flex-direction: column;
         }
 
-        /* ══════════════════════════════
-           STRÁNKA 2
-        ══════════════════════════════ */
         .doc-page2 {
             font-family: Arial, sans-serif;
             font-size: 9px;
@@ -324,9 +317,10 @@
         }
 
         .doc-num-label {
-            font-size: 6px;
+            font-size: 7px;
             letter-spacing: 1px;
             color: #aaa;
+            font-weight: 600;
         }
 
         .doc-num-val {
@@ -336,16 +330,18 @@
             color: white;
         }
 
-        /* INFO GRID */
+        /* ══════════════════════════════
+           INFO GRID – nový styl labelů
+        ══════════════════════════════ */
         .doc-info-section {
-            border: 1px solid #ccc;
+            border: 1px solid #bbb;
             margin-bottom: 5px;
             flex-shrink: 0;
         }
 
         .doc-info-row {
             display: grid;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #bbb;
         }
 
         .doc-info-row:last-child { border-bottom: none; }
@@ -353,136 +349,162 @@
         .doc-info-row-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
 
         .doc-info-cell {
-            padding: 4px 6px;
-            border-right: 1px solid #ccc;
+            border-right: 1px solid #bbb;
+            overflow: hidden;
         }
 
         .doc-info-cell:last-child { border-right: none; }
 
+        /* LABEL – tmavý pruh */
         .doc-cell-label {
-            font-size: 6px;
-            color: #888;
+            background: #2c2c2c;
+            color: #ffffff;
+            font-size: 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
+            letter-spacing: 0.4px;
+            padding: 2px 6px;
+            display: block;
         }
 
+        /* HODNOTA – bílé pozadí, velký text */
         .doc-cell-val {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
             color: #000;
-            min-height: 12px;
+            padding: 4px 6px 5px;
+            min-height: 16px;
+            background: #fff;
         }
 
-        /* TYP QA */
+        /* ══════════════════════════════
+           TYP QA
+        ══════════════════════════════ */
         .doc-typqa-section {
             display: grid;
             grid-template-columns: 1fr auto;
-            border: 1px solid #ccc;
+            border: 1px solid #bbb;
             margin-bottom: 5px;
             flex-shrink: 0;
         }
 
         .doc-typqa-left {
-            padding: 4px 6px;
-            border-right: 1px solid #ccc;
+            border-right: 1px solid #bbb;
         }
 
-        .doc-typqa-right {
-            padding: 4px 6px;
-            min-width: 80px;
-        }
+        .doc-typqa-right { }
 
+        /* Label pruhy pro TYP QA */
         .doc-typqa-label {
-            font-size: 6px;
-            color: #888;
+            background: #2c2c2c;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 3px;
+            letter-spacing: 0.4px;
+            padding: 2px 6px;
+            display: block;
         }
 
         .doc-typqa-items {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
+            padding: 5px 6px;
         }
 
         .doc-typqa-item {
-            border: 1px solid #999;
-            padding: 2px 6px;
+            border: 1.5px solid #999;
+            padding: 2px 7px;
             font-size: 7px;
             font-weight: 700;
             color: #666;
             text-transform: uppercase;
+            border-radius: 2px;
         }
 
         .doc-typqa-item.active {
-            background: #000;
+            background: #cc0000;
             color: white;
-            border-color: #000;
+            border-color: #cc0000;
         }
 
-        /* POPIS DEFEKTU */
+        /* ══════════════════════════════
+           POPIS DEFEKTU
+        ══════════════════════════════ */
         .doc-defect-section {
-            border: 1px solid #ccc;
+            border: 1px solid #bbb;
             margin-bottom: 5px;
-            background: #ffff00;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
+        /* Label pruh – červený pro defekt */
         .doc-defect-label {
-            font-size: 6px;
-            color: #888;
+            background: #cc0000;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 3px 6px 0;
+            letter-spacing: 0.4px;
+            padding: 2px 6px;
+            display: block;
         }
 
         .doc-defect-val {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 3px 6px 5px;
+            padding: 5px 8px 6px;
+            background: #ffff00;
         }
 
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
 
         .doc-defect-text {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 900;
             color: #000;
         }
 
-        /* POPIS KONTROLY */
+        /* ══════════════════════════════
+           POPIS KONTROLY
+        ══════════════════════════════ */
         .doc-control-section {
-            border: 1px solid #ccc;
+            border: 1px solid #bbb;
             margin-bottom: 5px;
-            background: #f9f9f9;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
+        /* Label pruh – modrý pro kontrolu */
         .doc-control-label {
-            font-size: 6px;
-            color: #888;
+            background: #1a4a8a;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 3px 6px 0;
+            letter-spacing: 0.4px;
+            padding: 2px 6px;
+            display: block;
         }
 
         .doc-control-val {
             font-size: 9px;
             color: #000;
-            padding: 3px 6px 5px;
-            line-height: 1.4;
+            padding: 5px 8px 6px;
+            line-height: 1.5;
+            background: #f0f4ff;
         }
 
-        /* FOTKY */
+        /* ══════════════════════════════
+           FOTKY
+        ══════════════════════════════ */
         .doc-imgs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
             margin-bottom: 5px;
-            /* V náhledu pevná výška, při tisku se přizpůsobí */
             height: 200px;
             flex-shrink: 0;
         }
@@ -536,38 +558,44 @@
             color: #ccc;
         }
 
-        /* SPACER – vyplní prostor mezi fotkami a footerem */
-        .doc-spacer {
-            flex: 1;
-        }
+        .doc-spacer { flex: 1; }
 
-        /* FOOTER */
+        /* ══════════════════════════════
+           FOOTER
+        ══════════════════════════════ */
         .doc-footer {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            border: 1px solid #ccc;
+            border: 1px solid #bbb;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
         .doc-footer-cell {
-            padding: 4px 6px;
-            border-right: 1px solid #ccc;
-            min-height: 35px;
+            border-right: 1px solid #bbb;
         }
 
         .doc-footer-cell:last-child { border-right: none; }
 
+        /* Label pruh pro footer */
         .doc-footer-label {
-            font-size: 6px;
-            color: #888;
+            background: #2c2c2c;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
+            letter-spacing: 0.4px;
+            padding: 2px 6px;
+            display: block;
         }
 
         .doc-footer-val {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
+            color: #000;
+            padding: 5px 6px 6px;
+            min-height: 28px;
+            background: #fff;
         }
 
         /* PDF BTN */
@@ -664,7 +692,7 @@
         .toast.show { opacity: 1; }
 
         /* ══════════════════════════════
-           PRINT – zde teprve pevná výška A4
+           PRINT
         ══════════════════════════════ */
         @media print {
             * {
@@ -700,7 +728,6 @@
                 border-radius: 0 !important;
             }
 
-            /* Stránka 1 – přesná výška A4 při tisku */
             .doc-page1 {
                 padding: 4px !important;
                 height: calc(297mm - 12mm) !important;
@@ -708,19 +735,14 @@
                 page-break-after: always !important;
             }
 
-            /* Fotky při tisku větší */
             .doc-imgs {
                 height: auto !important;
                 flex: 1 !important;
                 min-height: 0 !important;
             }
 
-            /* Spacer při tisku aktivní */
-            .doc-spacer {
-                flex: 1 !important;
-            }
+            .doc-spacer { flex: 1 !important; }
 
-            /* Stránka 2 */
             .doc-page2 {
                 padding: 4px !important;
                 border-top: none !important;
@@ -946,41 +968,41 @@
             <div class="doc-info-section">
                 <div class="doc-info-row doc-info-row-4">
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Důvod vystavení / Reason</div>
+                        <span class="doc-cell-label">Důvod vystavení / Reason</span>
                         <div class="doc-cell-val" id="d-duvod">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Vydal / Issued by</div>
+                        <span class="doc-cell-label">Vydal / Issued by</span>
                         <div class="doc-cell-val" id="d-vydal">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Počátek / Start</div>
+                        <span class="doc-cell-label">Počátek / Start</span>
                         <div class="doc-cell-val" id="d-pocatek">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Konec / End</div>
+                        <span class="doc-cell-label">Konec / End</span>
                         <div class="doc-cell-val" id="d-konec">—</div>
                     </div>
                 </div>
                 <div class="doc-info-row doc-info-row-5">
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Zákazník / Customer</div>
+                        <span class="doc-cell-label">Zákazník / Customer</span>
                         <div class="doc-cell-val" id="d-customer">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Projekt / Project</div>
+                        <span class="doc-cell-label">Projekt / Project</span>
                         <div class="doc-cell-val" id="d-project">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Pracoviště / Workplace</div>
+                        <span class="doc-cell-label">Pracoviště / Workplace</span>
                         <div class="doc-cell-val" id="d-pracoviste">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Díl / Part</div>
+                        <span class="doc-cell-label">Díl / Part</span>
                         <div class="doc-cell-val" id="d-dil">—</div>
                     </div>
                     <div class="doc-info-cell">
-                        <div class="doc-cell-label">Datum vystavení / Date</div>
+                        <span class="doc-cell-label">Datum vystavení / Date</span>
                         <div class="doc-cell-val" id="d-datum">—</div>
                     </div>
                 </div>
@@ -988,7 +1010,7 @@
 
             <div class="doc-typqa-section">
                 <div class="doc-typqa-left">
-                    <div class="doc-typqa-label">Typ QA / Type of QA</div>
+                    <span class="doc-typqa-label">Typ QA / Type of QA</span>
                     <div class="doc-typqa-items">
                         <div class="doc-typqa-item" id="dqa-engineering">Engineering</div>
                         <div class="doc-typqa-item" id="dqa-maintenance">Maintenance</div>
@@ -998,7 +1020,7 @@
                     </div>
                 </div>
                 <div class="doc-typqa-right">
-                    <div class="doc-typqa-label">Proces / Process</div>
+                    <span class="doc-typqa-label">Proces / Process</span>
                     <div class="doc-typqa-items">
                         <div class="doc-typqa-item" id="dqa-eol">EOL</div>
                     </div>
@@ -1006,7 +1028,7 @@
             </div>
 
             <div class="doc-defect-section">
-                <div class="doc-defect-label">⚠ Popis defektu / Defect</div>
+                <span class="doc-defect-label">⚠ Popis defektu / Defect description</span>
                 <div class="doc-defect-val">
                     <span class="doc-defect-icon">⚠</span>
                     <span class="doc-defect-text" id="d-defect">—</span>
@@ -1014,13 +1036,10 @@
             </div>
 
             <div class="doc-control-section">
-                <div class="doc-control-label">
-                    Popis kontroly / Pracovní postup / Description of checks
-                </div>
+                <span class="doc-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
 
-            <!-- FOTKY s pevnou výškou v náhledu -->
             <div class="doc-imgs">
                 <div class="doc-img-cell ok-cell">
                     <div class="doc-img-header">✓ OK</div>
@@ -1036,32 +1055,29 @@
                 </div>
             </div>
 
-            <!-- SPACER – v náhledu skrytý, při tisku vyplní prostor -->
             <div class="doc-spacer"></div>
 
-            <!-- FOOTER – vždy na spodku -->
             <div class="doc-footer">
                 <div class="doc-footer-cell">
-                    <div class="doc-footer-label">Autor / Author</div>
+                    <span class="doc-footer-label">Autor / Author</span>
                     <div class="doc-footer-val" id="d-autor">—</div>
                 </div>
                 <div class="doc-footer-cell">
-                    <div class="doc-footer-label">Podpis QA (originál) / QA Approval</div>
+                    <span class="doc-footer-label">Podpis QA (originál) / QA Approval</span>
                     <div class="doc-footer-val" id="d-podpisqa">—</div>
                 </div>
                 <div class="doc-footer-cell">
-                    <div class="doc-footer-label">Schválení výroby / Production Approval</div>
+                    <span class="doc-footer-label">Schválení výroby / Production Approval</span>
                     <div class="doc-footer-val" id="d-schvaleni">—</div>
                 </div>
             </div>
 
         </div>
-        <!-- ═══════════ KONEC STRÁNKY 1 ═══════════ -->
 
         <!-- ═══════════ STRÁNKA 2 – PODPISY ═══════════ -->
         <div class="doc-page2">
             <div style="font-size:9px; color:#cc0000; font-weight:700;
-                        padding:6px 0 8px; border-bottom: 1px solid #ccc; margin-bottom:8px;">
+                        padding:6px 0 8px; border-bottom:1px solid #ccc; margin-bottom:8px;">
                 Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem.
                 Pokud nerozumím, zeptám se svého nadřízeného.
             </div>
@@ -1070,13 +1086,13 @@
                     <thead>
                         <tr>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:22%;">Datum</th>
+                                       background:#2c2c2c;color:white;width:22%;">Datum</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;">Jméno</th>
+                                       background:#2c2c2c;color:white;">Jméno</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:20%;">Osobní č.</th>
+                                       background:#2c2c2c;color:white;width:20%;">Osobní č.</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:25%;">Podpis</th>
+                                       background:#2c2c2c;color:white;width:25%;">Podpis</th>
                         </tr>
                     </thead>
                     <tbody id="sig-tbody-1"></tbody>
@@ -1085,20 +1101,19 @@
                     <thead>
                         <tr>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:22%;">Datum</th>
+                                       background:#2c2c2c;color:white;width:22%;">Datum</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;">Jméno</th>
+                                       background:#2c2c2c;color:white;">Jméno</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:20%;">Osobní č.</th>
+                                       background:#2c2c2c;color:white;width:20%;">Osobní č.</th>
                             <th style="border:1px solid #000;padding:3px;text-align:center;
-                                       background:#f0f0f0;width:25%;">Podpis</th>
+                                       background:#2c2c2c;color:white;width:25%;">Podpis</th>
                         </tr>
                     </thead>
                     <tbody id="sig-tbody-2"></tbody>
                 </table>
             </div>
         </div>
-        <!-- ═══════════ KONEC STRÁNKY 2 ═══════════ -->
 
     </div>
 
@@ -1150,7 +1165,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">2.2.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.3.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
