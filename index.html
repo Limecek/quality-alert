@@ -305,6 +305,79 @@
 
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
+        /* ══════════════════════════════
+           NÁVOD – styly
+        ══════════════════════════════ */
+        .navod-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navod-section:last-child { border-bottom: none; }
+
+        .navod-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .navod-text {
+            font-size: 14px;
+            color: var(--subtext);
+            line-height: 1.6;
+        }
+
+        .navod-color-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .navod-color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .navod-tip-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .navod-tip-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .install-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--subtext);
+        }
+
+        .step-num {
+            background: var(--red);
+            color: white;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════
+           DOCUMENT
+        ══════════════════════════════ */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -589,7 +662,6 @@
             display: block;
         }
 
-        /* Automatická výška podle textu */
         .doc-control-val {
             font-size: 13px;
             font-weight: 900;
@@ -616,7 +688,6 @@
             overflow: hidden;
         }
 
-        /* Rámečky */
         .qa-cell-ok  { border: 2.5px solid #009900; }
         .qa-cell-nok { border: 2.5px solid #cc0000; }
         .wi-cell     { border: 2.5px solid #ffaa00; }
@@ -731,29 +802,6 @@
         }
 
         .install-card h3 { font-size: 18px; margin-bottom: 8px; color: #4fc3f7; }
-        .install-steps { text-align: left; margin-top: 12px; }
-
-        .install-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: var(--subtext);
-        }
-
-        .step-num {
-            background: var(--red);
-            color: white;
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -791,7 +839,8 @@
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
 
             .topbar, .tabbar, .pdf-btn, .share-hint,
-            .gen-btn, #page-form, #page-install, .toast {
+            .gen-btn, #page-form, #page-install,
+            #page-navod, .toast {
                 display: none !important;
             }
 
@@ -829,6 +878,7 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- PAGE 1: FORMULÁŘ -->
 <div class="page active" id="page-form">
 
     <div class="card">
@@ -1001,6 +1051,7 @@
 
 </div>
 
+<!-- PAGE 2: NÁHLED -->
 <div class="page" id="page-preview">
 
     <div id="doc-wrapper">
@@ -1155,11 +1206,12 @@
 
 </div>
 
+<!-- PAGE 3: INFO -->
 <div class="page" id="page-install">
     <div class="install-card">
         <h3>📱 Přidat na plochu</h3>
         <p style="font-size:13px; color:#90caf9;">Používej jako normální appku!</p>
-        <div class="install-steps">
+        <div style="text-align:left; margin-top:12px;">
             <div class="install-step"><div class="step-num">1</div><div>Otevři v <strong>Safari</strong></div></div>
             <div class="install-step"><div class="step-num">2</div><div>Klikni na ikonu <strong>Sdílet</strong></div></div>
             <div class="install-step"><div class="step-num">3</div><div>Vyber <strong>"Přidat na plochu"</strong></div></div>
@@ -1171,7 +1223,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">3.2.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">3.3.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -1184,6 +1236,126 @@
     </div>
 </div>
 
+<!-- PAGE 4: NÁVOD -->
+<div class="page" id="page-navod">
+
+    <div class="card">
+        <div class="card-header">📖 Typy dokumentů</div>
+        <div class="navod-section">
+            <div class="navod-title" style="color:var(--red);">🔴 Quality Alert</div>
+            <div class="navod-text">
+                Dokument pro hlášení kvality. Obsahuje popis defektu,
+                popis kontroly a fotky s rámečky OK/NOK.
+                Výchozí názvy fotek jsou <strong style="color:white;">OK</strong> a <strong style="color:white;">NOK</strong>.
+            </div>
+        </div>
+        <div class="navod-section">
+            <div class="navod-title" style="color:#ffaa00;">🟡 Pracovní instrukce</div>
+            <div class="navod-text">
+                Dokument pro pracovní postupy. Fotky jsou automaticky
+                pojmenovány <strong style="color:white;">Krok 1</strong> až <strong style="color:white;">Krok 6</strong>
+                s žlutým rámečkem.
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">📷 Barvy rámečků fotek</div>
+        <div class="navod-section">
+            <div class="navod-text">
+                Barva rámečku se nastaví automaticky podle názvu fotky:
+            </div>
+            <div class="navod-color-row" style="margin-top:12px;">
+                <div class="navod-color-dot" style="background:#009900;"></div>
+                <span class="navod-text">
+                    Název obsahuje <strong style="color:white;">OK</strong> → zelený rámeček
+                </span>
+            </div>
+            <div class="navod-color-row">
+                <div class="navod-color-dot" style="background:#cc0000;"></div>
+                <span class="navod-text">
+                    Název obsahuje <strong style="color:white;">NOK</strong> → červený rámeček
+                </span>
+            </div>
+            <div class="navod-color-row">
+                <div class="navod-color-dot" style="background:#ffaa00;"></div>
+                <span class="navod-text">
+                    Cokoliv jiného (Krok 1–6, Detail...) → žlutý rámeček
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">🖨️ Jak uložit PDF</div>
+        <div class="navod-section">
+            <div class="install-step">
+                <div class="step-num">1</div>
+                <div class="navod-text">Vyplň formulář a klikni <strong style="color:white;">"Zobrazit náhled"</strong></div>
+            </div>
+            <div class="install-step">
+                <div class="step-num">2</div>
+                <div class="navod-text">Klikni <strong style="color:white;">"Uložit jako PDF"</strong></div>
+            </div>
+            <div class="install-step">
+                <div class="step-num">3</div>
+                <div class="navod-text">Otevře se tiskový dialog</div>
+            </div>
+            <div class="install-step">
+                <div class="step-num">4</div>
+                <div class="navod-text">
+                    <strong style="color:white;">iPhone:</strong>
+                    Přiblíž prsty na náhled → otevře se PDF →
+                    Sdílet → Uložit do Souborů
+                </div>
+            </div>
+            <div class="install-step">
+                <div class="step-num">5</div>
+                <div class="navod-text">
+                    <strong style="color:white;">PC/Mac:</strong>
+                    Vyber "Uložit jako PDF" v tiskovém dialogu
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">💡 Tipy</div>
+        <div class="navod-section">
+            <div class="navod-tip-row">
+                <span class="navod-tip-icon">💾</span>
+                <span class="navod-text">
+                    Data se <strong style="color:white;">automaticky ukládají</strong>
+                    – neztratíš je při zavření aplikace
+                </span>
+            </div>
+            <div class="navod-tip-row">
+                <span class="navod-tip-icon">📱</span>
+                <span class="navod-text">
+                    Přidej aplikaci na <strong style="color:white;">plochu telefonu</strong>
+                    přes záložku Info
+                </span>
+            </div>
+            <div class="navod-tip-row">
+                <span class="navod-tip-icon">✏️</span>
+                <span class="navod-text">
+                    Názvy fotek lze <strong style="color:white;">libovolně přejmenovat</strong>
+                    – barva rámečku se změní automaticky
+                </span>
+            </div>
+            <div class="navod-tip-row">
+                <span class="navod-tip-icon">📷</span>
+                <span class="navod-text">
+                    Lze přidat <strong style="color:white;">2 až 6 fotek</strong>
+                    – grid se automaticky přizpůsobí
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- TAB BAR – 4 tlačítka -->
 <div class="tabbar">
     <button class="tab-btn active" onclick="showPage('form',this)">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1203,6 +1375,12 @@
         </svg>
         Info
     </button>
+    <button class="tab-btn" onclick="showPage('navod',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+        </svg>
+        Návod
+    </button>
 </div>
 
 <script>
@@ -1211,6 +1389,7 @@
     let photoData = [];
     const imageURLs = {};
 
+    /* ── ZMĚNA 2: Pracovní instrukce vždy Krok 1-6 ── */
     function getDefaultPhotoName(index, type, count) {
         if (type === 'qa') {
             if (count === 2) return index === 0 ? 'OK' : 'NOK';
@@ -1218,25 +1397,17 @@
             if (index === count - 1) return 'NOK';
             return `Detail ${index}`;
         } else {
+            // Pracovní instrukce – VŽDY Krok 1 až Krok 6
             return `Krok ${index + 1}`;
         }
     }
 
-    /* ══════════════════════════════
-       ZMĚNA 1: Barva rámečku podle názvu
-       Pravidla:
-       - obsahuje přesně "NOK" jako slovo → červená
-       - obsahuje přesně "OK" jako slovo  → zelená
-       - cokoliv jiného (Krok 1-6 atd.)   → žlutá
-    ══════════════════════════════ */
+    /* ── ZMĚNA 1: Barva rámečku pomocí regex ── */
     function getPhotoStyle(name) {
         const n = (name || '').trim();
-
-        // \b = hranice slova – "krok" neobsahuje \bOK\b ani \bNOK\b
         const isNok = /\bNOK\b/i.test(n);
         const isOk  = /\bOK\b/i.test(n);
 
-        // NOK musí být zkontrolováno PŘED OK
         if (isNok) {
             return {
                 cellClass: 'qa-cell-nok',
@@ -1250,7 +1421,6 @@
                 bodyStyle: 'background:#f0fff0;'
             };
         } else {
-            // Krok 1, Krok 2 ... Krok 6, Detail, cokoliv jiného → žlutá
             return {
                 cellClass: 'wi-cell',
                 headerStyle: 'background:#ffaa00;color:#000;',
@@ -1280,6 +1450,8 @@
             document.getElementById('f-control').placeholder = 'Proveď manuální kontrolu...';
         }
 
+        // Reset názvů fotek při změně typu
+        photoData = [];
         buildPhotoInputs();
         liveUpdate();
     }
@@ -1295,7 +1467,8 @@
         for (let i = 0; i < photoCount; i++) {
             const existing = oldData[i] || {};
             const defaultName = getDefaultPhotoName(i, docType, photoCount);
-            const name = existing.name !== undefined ? existing.name : defaultName;
+            // Použij existující název pouze pokud byl ručně změněn
+            const name = (existing.name !== undefined && existing.name !== '') ? existing.name : defaultName;
             const src = existing.src || null;
 
             photoData.push({ name, src });
@@ -1342,13 +1515,10 @@
     function loadPhoto(index) {
         const file = document.getElementById(`photo-file-${index}`).files[0];
         if (!file) return;
-
         if (imageURLs[index]) URL.revokeObjectURL(imageURLs[index]);
-
         const src = URL.createObjectURL(file);
         imageURLs[index] = src;
         photoData[index].src = src;
-
         const upload = document.getElementById(`photo-upload-${index}`);
         upload.classList.add('has-image');
         upload.innerHTML = `
@@ -1357,7 +1527,6 @@
             <img src="${src}" id="photo-preview-${index}">
             <button class="img-remove" onclick="removePhoto(event,${index})">✕</button>
         `;
-
         liveUpdate();
         showToast('✅ Fotka nahrána!');
     }
@@ -1366,7 +1535,6 @@
         e.stopPropagation();
         if (imageURLs[index]) { URL.revokeObjectURL(imageURLs[index]); delete imageURLs[index]; }
         photoData[index].src = null;
-
         const upload = document.getElementById(`photo-upload-${index}`);
         upload.classList.remove('has-image');
         upload.innerHTML = `
@@ -1378,7 +1546,6 @@
             </div>
             <img id="photo-preview-${index}" style="display:none">
         `;
-
         liveUpdate();
     }
 
@@ -1401,7 +1568,6 @@
         grid.innerHTML = photoData.map((photo) => {
             const name = photo.name || 'Foto';
             const style = getPhotoStyle(name);
-
             return `
                 <div class="doc-img-cell ${style.cellClass}" style="min-height:${cellHeight};">
                     <div class="doc-img-header" style="${style.headerStyle}">${name}</div>
