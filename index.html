@@ -176,7 +176,6 @@
         .toggle input:checked + .toggle-slider { background: var(--red); }
         .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-        /* ── Typ dokumentu přepínač ── */
         .doc-type-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -210,7 +209,6 @@
             color: #ffaa00;
         }
 
-        /* ── Fotky ve formuláři ── */
         .photos-container {
             padding: 12px 16px;
             display: flex;
@@ -308,7 +306,7 @@
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
         /* ══════════════════════════════
-           DOCUMENT WRAPPER
+           DOCUMENT
         ══════════════════════════════ */
         #doc-wrapper {
             background: white;
@@ -386,7 +384,6 @@
             height: 28px;
         }
 
-        /* TOP HEADER */
         .doc-top {
             display: grid;
             grid-template-columns: 100px 1fr auto;
@@ -595,6 +592,7 @@
             display: block;
         }
 
+        /* ── ZMĚNA 2: automatická výška podle textu ── */
         .doc-control-val {
             font-size: 13px;
             font-weight: 900;
@@ -602,12 +600,10 @@
             padding: 8px 8px 10px;
             line-height: 1.6;
             background: #ffff00;
-            min-height: 120px;
+            min-height: 30px;  /* ← malé minimum, roste s textem */
         }
 
-        /* ══════════════════════════════
-           FOTKY V DOKUMENTU – dynamický grid
-        ══════════════════════════════ */
+        /* FOTKY */
         .doc-imgs {
             display: grid;
             gap: 5px;
@@ -615,7 +611,6 @@
             flex-shrink: 0;
         }
 
-        /* Grid podle počtu fotek */
         .doc-imgs.cols-1 { grid-template-columns: 1fr; }
         .doc-imgs.cols-2 { grid-template-columns: 1fr 1fr; }
         .doc-imgs.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -624,15 +619,11 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-height: 80px;
         }
 
-        /* Quality Alert – zelená/červená */
-        .qa-cell-ok   { border: 2.5px solid #009900; }
-        .qa-cell-nok  { border: 2.5px solid #cc0000; }
-
-        /* Pracovní instrukce – žlutá */
-        .wi-cell      { border: 2.5px solid #ffaa00; }
+        .qa-cell-ok  { border: 2.5px solid #009900; }
+        .qa-cell-nok { border: 2.5px solid #cc0000; }
+        .wi-cell     { border: 2.5px solid #ffaa00; }
 
         .doc-img-header {
             display: flex;
@@ -647,10 +638,6 @@
             flex-shrink: 0;
         }
 
-        .qa-cell-ok  .doc-img-header { background: #009900; }
-        .qa-cell-nok .doc-img-header { background: #cc0000; }
-        .wi-cell     .doc-img-header { background: #ffaa00; color: #000; }
-
         .doc-img-body {
             flex: 1;
             display: flex;
@@ -660,10 +647,6 @@
             overflow: hidden;
             min-height: 60px;
         }
-
-        .qa-cell-ok  .doc-img-body { background: #f0fff0; }
-        .qa-cell-nok .doc-img-body { background: #fff0f0; }
-        .wi-cell     .doc-img-body { background: #fffde7; }
 
         .doc-img-body img {
             max-width: 100%;
@@ -818,7 +801,6 @@
             }
 
             #page-preview { display: block !important; padding: 0 !important; margin: 0 !important; }
-
             #doc-wrapper { box-shadow: none !important; border-radius: 0 !important; }
 
             .doc-page1 {
@@ -829,11 +811,7 @@
                 page-break-after: always !important;
             }
 
-            .doc-imgs {
-                flex: 1 !important;
-                min-height: 0 !important;
-            }
-
+            .doc-imgs { flex: 1 !important; min-height: 0 !important; }
             .doc-spacer { flex: 1 !important; }
 
             .doc-page2 {
@@ -859,7 +837,6 @@
 <!-- PAGE 1: FORMULÁŘ -->
 <div class="page active" id="page-form">
 
-    <!-- TYP DOKUMENTU -->
     <div class="card">
         <div class="card-header">📄 Typ dokumentu</div>
         <div class="doc-type-selector">
@@ -932,7 +909,6 @@
         </div>
     </div>
 
-    <!-- TYP QA – pouze pro Quality Alert -->
     <div class="card" id="card-typqa">
         <div class="card-header">🏭 Typ QA</div>
         <div class="toggle-row">
@@ -1010,7 +986,6 @@
         </div>
     </div>
 
-    <!-- FOTOGRAFIE -->
     <div class="card">
         <div class="card-header">📷 Fotografie</div>
         <div class="form-row">
@@ -1037,7 +1012,6 @@
 
     <div id="doc-wrapper">
 
-        <!-- ═══════════ STRÁNKA 1 ═══════════ -->
         <div class="doc-page1">
 
             <div class="doc-top">
@@ -1098,7 +1072,6 @@
                 </div>
             </div>
 
-            <!-- TYP QA – skryje se pro WI -->
             <div class="doc-typqa-section" id="d-typqa-section">
                 <div class="doc-typqa-left">
                     <span class="doc-typqa-label">Typ QA / Type of QA</span>
@@ -1128,10 +1101,11 @@
 
             <div class="doc-control-section">
                 <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
+                <!-- ZMĚNA 2: výška se přizpůsobí textu automaticky -->
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
 
-            <!-- FOTKY – dynamicky generované -->
+            <!-- FOTKY – dynamicky generované s automatickou barvou -->
             <div class="doc-imgs cols-2" id="doc-imgs-grid"></div>
 
             <div class="doc-spacer"></div>
@@ -1155,7 +1129,6 @@
 
         </div>
 
-        <!-- ═══════════ STRÁNKA 2 – PODPISY ═══════════ -->
         <div class="doc-page2">
             <span class="doc-page2-title">
                 Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem.
@@ -1208,7 +1181,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">3.0.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">3.1.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -1244,13 +1217,11 @@
 </div>
 
 <script>
-    // ── Stav aplikace ──
-    let docType = 'qa'; // 'qa' nebo 'wi'
+    let docType = 'qa';
     let photoCount = 2;
-    let photoData = []; // { name, src }
+    let photoData = [];
     const imageURLs = {};
 
-    // ── Výchozí názvy fotek ──
     function getDefaultPhotoName(index, type, count) {
         if (type === 'qa') {
             if (count === 2) return index === 0 ? 'OK' : 'NOK';
@@ -1262,20 +1233,15 @@
         }
     }
 
-    // ── Nastavení typu dokumentu ──
     function setDocType(type) {
         docType = type;
-
         document.getElementById('btn-qa').className =
             'doc-type-btn' + (type === 'qa' ? ' active-qa' : '');
         document.getElementById('btn-wi').className =
             'doc-type-btn' + (type === 'wi' ? ' active-wi' : '');
-
-        // Skrýt/zobrazit Typ QA sekci
         document.getElementById('card-typqa').style.display =
             type === 'qa' ? 'block' : 'none';
 
-        // Změnit placeholder texty
         if (type === 'wi') {
             document.getElementById('defect-header').textContent = '📝 Název instrukce';
             document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
@@ -1288,16 +1254,12 @@
             document.getElementById('f-control').placeholder = 'Proveď manuální kontrolu...';
         }
 
-        // Přegenerovat fotky s novými výchozími názvy
         buildPhotoInputs();
         liveUpdate();
     }
 
-    // ── Sestavení vstupů pro fotky ──
     function buildPhotoInputs() {
         photoCount = parseInt(document.getElementById('photo-count').value);
-
-        // Zachovat existující data
         const oldData = [...photoData];
         photoData = [];
 
@@ -1346,13 +1308,11 @@
         liveUpdate();
     }
 
-    // ── Aktualizace názvu fotky ──
     function updatePhotoName(index) {
         photoData[index].name = document.getElementById(`photo-name-${index}`).value;
         liveUpdate();
     }
 
-    // ── Nahrání fotky ──
     function loadPhoto(index) {
         const file = document.getElementById(`photo-file-${index}`).files[0];
         if (!file) return;
@@ -1376,7 +1336,6 @@
         showToast('✅ Fotka nahrána!');
     }
 
-    // ── Odstranění fotky ──
     function removePhoto(e, index) {
         e.stopPropagation();
         if (imageURLs[index]) { URL.revokeObjectURL(imageURLs[index]); delete imageURLs[index]; }
@@ -1397,12 +1356,34 @@
         liveUpdate();
     }
 
-    // ── Sestavení gridu fotek v dokumentu ──
+    /* ── ZMĚNA 1: barva rámečku podle názvu fotky ── */
+    function getPhotoStyle(name) {
+        const n = (name || '').toLowerCase();
+        if (n.includes('nok')) {
+            return {
+                cellClass: 'qa-cell-nok',
+                headerStyle: 'background:#cc0000;color:white;',
+                bodyStyle: 'background:#fff0f0;'
+            };
+        } else if (n.includes('ok')) {
+            return {
+                cellClass: 'qa-cell-ok',
+                headerStyle: 'background:#009900;color:white;',
+                bodyStyle: 'background:#f0fff0;'
+            };
+        } else {
+            return {
+                cellClass: 'wi-cell',
+                headerStyle: 'background:#ffaa00;color:#000;',
+                bodyStyle: 'background:#fffde7;'
+            };
+        }
+    }
+
     function buildDocGrid() {
         const grid = document.getElementById('doc-imgs-grid');
         const count = photoData.length;
 
-        // Počet sloupců
         let cols = 2;
         if (count === 1) cols = 1;
         else if (count <= 2) cols = 2;
@@ -1410,40 +1391,19 @@
 
         grid.className = `doc-imgs cols-${cols}`;
 
-        // Výška buněk podle počtu fotek
         let cellHeight = '150px';
         if (count <= 2) cellHeight = '180px';
         else if (count <= 4) cellHeight = '130px';
         else cellHeight = '110px';
 
-        grid.innerHTML = photoData.map((photo, i) => {
-            const name = photo.name || `Foto ${i + 1}`;
-            const isWI = docType === 'wi';
-
-            let cellClass, headerStyle, bodyStyle;
-
-            if (isWI) {
-                cellClass = 'wi-cell';
-                headerStyle = 'background:#ffaa00;color:#000;';
-                bodyStyle = 'background:#fffde7;';
-            } else {
-                // QA – první polovina OK, druhá NOK
-                const half = Math.ceil(count / 2);
-                if (i < half) {
-                    cellClass = 'qa-cell-ok';
-                    headerStyle = 'background:#009900;';
-                    bodyStyle = 'background:#f0fff0;';
-                } else {
-                    cellClass = 'qa-cell-nok';
-                    headerStyle = 'background:#cc0000;';
-                    bodyStyle = 'background:#fff0f0;';
-                }
-            }
+        grid.innerHTML = photoData.map((photo) => {
+            const name = photo.name || 'Foto';
+            const style = getPhotoStyle(name);
 
             return `
-                <div class="doc-img-cell ${cellClass}" style="min-height:${cellHeight};">
-                    <div class="doc-img-header" style="${headerStyle}">${name}</div>
-                    <div class="doc-img-body" style="${bodyStyle}">
+                <div class="doc-img-cell ${style.cellClass}" style="min-height:${cellHeight};">
+                    <div class="doc-img-header" style="${style.headerStyle}">${name}</div>
+                    <div class="doc-img-body" style="${style.bodyStyle}">
                         ${photo.src
                             ? `<img src="${photo.src}" style="max-width:100%;max-height:100%;object-fit:contain;">`
                             : `<div class="doc-img-placeholder-icon">📷</div>`
@@ -1454,9 +1414,7 @@
         }).join('');
     }
 
-    // ── Live update dokumentu ──
     function liveUpdate() {
-        // Název dokumentu
         if (docType === 'wi') {
             document.getElementById('d-doc-title').textContent = 'PRACOVNÍ INSTRUKCE';
             document.getElementById('d-doc-sub').textContent = 'WORK INSTRUCTION';
@@ -1560,7 +1518,6 @@
             const el = document.getElementById('qa-' + t);
             if (el) data['qa-' + t] = el.checked;
         });
-        // Uložit názvy fotek (ne src – příliš velké)
         data.photoNames = photoData.map(p => p.name);
         try { localStorage.setItem('qa-form-data', JSON.stringify(data)); } catch(e) {}
     }
@@ -1571,14 +1528,8 @@
             if (!saved) return;
             const data = JSON.parse(saved);
 
-            if (data.docType) {
-                docType = data.docType;
-                setDocType(docType);
-            }
-
-            if (data.photoCount) {
-                document.getElementById('photo-count').value = data.photoCount;
-            }
+            if (data.docType) { docType = data.docType; setDocType(docType); }
+            if (data.photoCount) document.getElementById('photo-count').value = data.photoCount;
 
             const fields = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                             'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -1593,7 +1544,6 @@
                 if (el && data['qa-' + t] !== undefined) el.checked = data['qa-' + t];
             });
 
-            // Obnovit názvy fotek
             if (data.photoNames) {
                 buildPhotoInputs();
                 data.photoNames.forEach((name, i) => {
