@@ -330,9 +330,7 @@
             color: white;
         }
 
-        /* ══════════════════════════════
-           INFO GRID – nový styl labelů
-        ══════════════════════════════ */
+        /* INFO GRID */
         .doc-info-section {
             border: 1px solid #bbb;
             margin-bottom: 5px;
@@ -355,7 +353,6 @@
 
         .doc-info-cell:last-child { border-right: none; }
 
-        /* LABEL – tmavý pruh */
         .doc-cell-label {
             background: #2c2c2c;
             color: #ffffff;
@@ -367,7 +364,6 @@
             display: block;
         }
 
-        /* HODNOTA – bílé pozadí, velký text */
         .doc-cell-val {
             font-size: 10px;
             font-weight: 700;
@@ -377,9 +373,7 @@
             background: #fff;
         }
 
-        /* ══════════════════════════════
-           TYP QA
-        ══════════════════════════════ */
+        /* TYP QA */
         .doc-typqa-section {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -388,13 +382,8 @@
             flex-shrink: 0;
         }
 
-        .doc-typqa-left {
-            border-right: 1px solid #bbb;
-        }
+        .doc-typqa-left { border-right: 1px solid #bbb; }
 
-        .doc-typqa-right { }
-
-        /* Label pruhy pro TYP QA */
         .doc-typqa-label {
             background: #2c2c2c;
             color: #fff;
@@ -430,7 +419,7 @@
         }
 
         /* ══════════════════════════════
-           POPIS DEFEKTU
+           POPIS DEFEKTU – načervenalá výplň
         ══════════════════════════════ */
         .doc-defect-section {
             border: 1px solid #bbb;
@@ -439,7 +428,6 @@
             overflow: hidden;
         }
 
-        /* Label pruh – červený pro defekt */
         .doc-defect-label {
             background: #cc0000;
             color: #fff;
@@ -456,7 +444,7 @@
             align-items: center;
             gap: 6px;
             padding: 5px 8px 6px;
-            background: #ffff00;
+            background: #fff0f0; /* ← načervenalá jako NOK foto */
         }
 
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
@@ -468,7 +456,7 @@
         }
 
         /* ══════════════════════════════
-           POPIS KONTROLY
+           POPIS KONTROLY – žlutá výplň
         ══════════════════════════════ */
         .doc-control-section {
             border: 1px solid #bbb;
@@ -477,7 +465,6 @@
             overflow: hidden;
         }
 
-        /* Label pruh – modrý pro kontrolu */
         .doc-control-label {
             background: #1a4a8a;
             color: #fff;
@@ -494,12 +481,10 @@
             color: #000;
             padding: 5px 8px 6px;
             line-height: 1.5;
-            background: #f0f4ff;
+            background: #ffff00; /* ← žlutá */
         }
 
-        /* ══════════════════════════════
-           FOTKY
-        ══════════════════════════════ */
+        /* FOTKY */
         .doc-imgs {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -560,9 +545,7 @@
 
         .doc-spacer { flex: 1; }
 
-        /* ══════════════════════════════
-           FOOTER
-        ══════════════════════════════ */
+        /* FOOTER */
         .doc-footer {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -571,13 +554,9 @@
             overflow: hidden;
         }
 
-        .doc-footer-cell {
-            border-right: 1px solid #bbb;
-        }
-
+        .doc-footer-cell { border-right: 1px solid #bbb; }
         .doc-footer-cell:last-child { border-right: none; }
 
-        /* Label pruh pro footer */
         .doc-footer-label {
             background: #2c2c2c;
             color: #fff;
@@ -1027,6 +1006,7 @@
                 </div>
             </div>
 
+            <!-- POPIS DEFEKTU – načervenalá výplň -->
             <div class="doc-defect-section">
                 <span class="doc-defect-label">⚠ Popis defektu / Defect description</span>
                 <div class="doc-defect-val">
@@ -1035,6 +1015,7 @@
                 </div>
             </div>
 
+            <!-- POPIS KONTROLY – žlutá výplň -->
             <div class="doc-control-section">
                 <span class="doc-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
                 <div class="doc-control-val" id="d-control">—</div>
@@ -1165,7 +1146,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">2.3.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.4.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
