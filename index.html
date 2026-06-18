@@ -249,6 +249,7 @@
             padding: 8px;
             display: flex;
             flex-direction: column;
+            min-height: 277mm;
         }
 
         .doc-page2 {
@@ -264,7 +265,6 @@
         /* TOP HEADER */
         .doc-top {
             display: grid;
-            /* OPRAVA: auto místo 90px – box se roztáhne podle obsahu */
             grid-template-columns: 100px 1fr auto;
             align-items: center;
             margin-bottom: 6px;
@@ -315,7 +315,7 @@
             color: white;
             padding: 6px 10px;
             text-align: center;
-            min-width: 70px;  /* minimální šířka */
+            min-width: 70px;
         }
 
         .doc-num-label {
@@ -325,7 +325,6 @@
             font-weight: 600;
         }
 
-        /* OPRAVA: číslo dokumentu – menší písmo, nezalomí */
         .doc-num-val {
             font-size: 12px;
             font-weight: 900;
@@ -425,7 +424,7 @@
         /* ══════════════════════════════
            POPIS DEFEKTU
            label: červený pruh
-           výplň: slabě červená #fff0f0
+           výplň: slabě červená #ffe0e0
         ══════════════════════════════ */
         .doc-defect-section {
             border: 1px solid #bbb;
@@ -435,7 +434,7 @@
         }
 
         .doc-defect-label {
-            background: #cc0000;   /* červený pruh */
+            background: #cc0000;
             color: #fff;
             font-size: 7px;
             font-weight: 700;
@@ -450,7 +449,7 @@
             align-items: center;
             gap: 6px;
             padding: 5px 8px 6px;
-            background: #fff0f0;   /* ← slabě červená */
+            background: #ffe0e0;  /* ← slabě červená ✅ */
         }
 
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
@@ -474,7 +473,7 @@
         }
 
         .doc-control-label {
-            background: #1a4a8a;   /* modrý pruh */
+            background: #1a4a8a;
             color: #fff;
             font-size: 7px;
             font-weight: 700;
@@ -489,7 +488,7 @@
             color: #000;
             padding: 5px 8px 6px;
             line-height: 1.5;
-            background: #ffff00;   /* ← žlutá */
+            background: #ffff00;  /* ← žlutá ✅ */
         }
 
         /* FOTKY */
@@ -718,6 +717,7 @@
             .doc-page1 {
                 padding: 4px !important;
                 height: calc(297mm - 12mm) !important;
+                min-height: unset !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
             }
@@ -1014,7 +1014,7 @@
                 </div>
             </div>
 
-            <!-- DEFEKT: červený pruh + slabě červená výplň -->
+            <!-- DEFEKT: červený pruh + slabě červená výplň #ffe0e0 -->
             <div class="doc-defect-section">
                 <span class="doc-defect-label">⚠ Popis defektu / Defect description</span>
                 <div class="doc-defect-val">
@@ -1023,7 +1023,7 @@
                 </div>
             </div>
 
-            <!-- KONTROLA: modrý pruh + žlutá výplň -->
+            <!-- KONTROLA: modrý pruh + žlutá výplň #ffff00 -->
             <div class="doc-control-section">
                 <span class="doc-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
                 <div class="doc-control-val" id="d-control">—</div>
