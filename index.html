@@ -232,7 +232,7 @@
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
         /* ══════════════════════════════
-           DOCUMENT STYLES
+           DOCUMENT WRAPPER
         ══════════════════════════════ */
         #doc-wrapper {
             background: white;
@@ -241,28 +241,31 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        /* Stránka 1 – pevná výška A4 */
+        /* ══════════════════════════════
+           STRÁNKA 1 – v náhledu bez pevné výšky,
+           při tisku pevná výška A4
+        ══════════════════════════════ */
         .doc-page1 {
             font-family: Arial, sans-serif;
             font-size: 9px;
             color: #000;
             background: white;
             padding: 8px;
-            /* Pevná výška A4 mínus margins = footer vždy dole */
-            height: 277mm;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
-        /* Stránka 2 – podpisová */
+        /* ══════════════════════════════
+           STRÁNKA 2
+        ══════════════════════════════ */
         .doc-page2 {
             font-family: Arial, sans-serif;
             font-size: 9px;
             color: #000;
             background: white;
             padding: 8px;
-            border-top: 3px solid #000;
+            border-top: 4px solid #333;
+            margin-top: 4px;
         }
 
         /* TOP HEADER */
@@ -473,14 +476,15 @@
             line-height: 1.4;
         }
 
-        /* FOTKY – flex-grow: 1 aby vyplnily zbývající místo */
+        /* FOTKY */
         .doc-imgs {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
             margin-bottom: 5px;
-            flex-grow: 1;   /* ← vyplní volné místo mezi obsahem a footerem */
-            min-height: 0;  /* ← nutné pro flex-grow uvnitř flex containeru */
+            /* V náhledu pevná výška, při tisku se přizpůsobí */
+            height: 200px;
+            flex-shrink: 0;
         }
 
         .doc-img-cell {
@@ -508,7 +512,6 @@
         .ok-cell  .doc-img-header { background: #009900; }
         .nok-cell .doc-img-header { background: #cc0000; }
 
-        /* doc-img-body vyplní zbytek buňky */
         .doc-img-body {
             flex: 1;
             display: flex;
@@ -533,7 +536,12 @@
             color: #ccc;
         }
 
-        /* FOOTER – flex-shrink: 0 aby se nesmrskl */
+        /* SPACER – vyplní prostor mezi fotkami a footerem */
+        .doc-spacer {
+            flex: 1;
+        }
+
+        /* FOOTER */
         .doc-footer {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -656,7 +664,7 @@
         .toast.show { opacity: 1; }
 
         /* ══════════════════════════════
-           PRINT
+           PRINT – zde teprve pevná výška A4
         ══════════════════════════════ */
         @media print {
             * {
@@ -692,23 +700,32 @@
                 border-radius: 0 !important;
             }
 
-            /* Stránka 1 – přesná výška A4 */
+            /* Stránka 1 – přesná výška A4 při tisku */
             .doc-page1 {
                 padding: 4px !important;
                 height: calc(297mm - 12mm) !important;
-                page-break-after: always !important;
                 overflow: hidden !important;
+                page-break-after: always !important;
             }
 
-            /* Stránka 2 – podpisová */
+            /* Fotky při tisku větší */
+            .doc-imgs {
+                height: auto !important;
+                flex: 1 !important;
+                min-height: 0 !important;
+            }
+
+            /* Spacer při tisku aktivní */
+            .doc-spacer {
+                flex: 1 !important;
+            }
+
+            /* Stránka 2 */
             .doc-page2 {
                 padding: 4px !important;
+                border-top: none !important;
+                margin-top: 0 !important;
                 page-break-before: always !important;
-            }
-
-            .doc-img-body img {
-                max-height: 100% !important;
-                max-width: 100% !important;
             }
         }
     </style>
@@ -911,7 +928,6 @@
         <!-- ═══════════ STRÁNKA 1 ═══════════ -->
         <div class="doc-page1">
 
-            <!-- TOP HEADER -->
             <div class="doc-top">
                 <div class="doc-logo-box">
                     <div class="doc-logo-main">LEAR</div>
@@ -927,7 +943,6 @@
                 </div>
             </div>
 
-            <!-- INFO SEKCE -->
             <div class="doc-info-section">
                 <div class="doc-info-row doc-info-row-4">
                     <div class="doc-info-cell">
@@ -971,7 +986,6 @@
                 </div>
             </div>
 
-            <!-- TYP QA -->
             <div class="doc-typqa-section">
                 <div class="doc-typqa-left">
                     <div class="doc-typqa-label">Typ QA / Type of QA</div>
@@ -991,7 +1005,6 @@
                 </div>
             </div>
 
-            <!-- POPIS DEFEKTU -->
             <div class="doc-defect-section">
                 <div class="doc-defect-label">⚠ Popis defektu / Defect</div>
                 <div class="doc-defect-val">
@@ -1000,7 +1013,6 @@
                 </div>
             </div>
 
-            <!-- POPIS KONTROLY -->
             <div class="doc-control-section">
                 <div class="doc-control-label">
                     Popis kontroly / Pracovní postup / Description of checks
@@ -1008,7 +1020,7 @@
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
 
-            <!-- FOTKY – flex-grow vyplní zbývající prostor -->
+            <!-- FOTKY s pevnou výškou v náhledu -->
             <div class="doc-imgs">
                 <div class="doc-img-cell ok-cell">
                     <div class="doc-img-header">✓ OK</div>
@@ -1024,7 +1036,10 @@
                 </div>
             </div>
 
-            <!-- FOOTER – vždy na spodku díky flex-shrink: 0 -->
+            <!-- SPACER – v náhledu skrytý, při tisku vyplní prostor -->
+            <div class="doc-spacer"></div>
+
+            <!-- FOOTER – vždy na spodku -->
             <div class="doc-footer">
                 <div class="doc-footer-cell">
                     <div class="doc-footer-label">Autor / Author</div>
@@ -1046,7 +1061,7 @@
         <!-- ═══════════ STRÁNKA 2 – PODPISY ═══════════ -->
         <div class="doc-page2">
             <div style="font-size:9px; color:#cc0000; font-weight:700;
-                        padding: 6px 0; border-top: 2px solid #000;">
+                        padding:6px 0 8px; border-bottom: 1px solid #ccc; margin-bottom:8px;">
                 Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem.
                 Pokud nerozumím, zeptám se svého nadřízeného.
             </div>
@@ -1054,10 +1069,14 @@
                 <table style="width:100%; border-collapse:collapse; font-size:8px;">
                     <thead>
                         <tr>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Datum</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Jméno</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Osobní č.</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Podpis</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:22%;">Datum</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;">Jméno</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:20%;">Osobní č.</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:25%;">Podpis</th>
                         </tr>
                     </thead>
                     <tbody id="sig-tbody-1"></tbody>
@@ -1065,10 +1084,14 @@
                 <table style="width:100%; border-collapse:collapse; font-size:8px;">
                     <thead>
                         <tr>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Datum</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Jméno</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Osobní č.</th>
-                            <th style="border:1px solid #000;padding:3px;text-align:center;background:#f0f0f0;">Podpis</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:22%;">Datum</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;">Jméno</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:20%;">Osobní č.</th>
+                            <th style="border:1px solid #000;padding:3px;text-align:center;
+                                       background:#f0f0f0;width:25%;">Podpis</th>
                         </tr>
                     </thead>
                     <tbody id="sig-tbody-2"></tbody>
@@ -1127,7 +1150,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">2.1.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.2.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
@@ -1174,7 +1197,7 @@
     function generateSignatureRows() {
         return Array(15).fill(`
             <tr>
-                <td style="border:1px solid #000;padding:4px;height:16px;"></td>
+                <td style="border:1px solid #000;padding:4px;height:18px;"></td>
                 <td style="border:1px solid #000;padding:4px;"></td>
                 <td style="border:1px solid #000;padding:4px;"></td>
                 <td style="border:1px solid #000;padding:4px;"></td>
@@ -1250,36 +1273,25 @@
     function loadImg(inputId, uploadId, previewId, docId) {
         const file = document.getElementById(inputId).files[0];
         if (!file) return;
-
         const type = inputId.startsWith('nok') ? 'nok' : 'ok';
-
         if (imageURLs[type]) URL.revokeObjectURL(imageURLs[type]);
-
         const src = URL.createObjectURL(file);
         imageURLs[type] = src;
-
         const preview = document.getElementById(previewId);
         preview.src = src;
         preview.style.display = 'block';
-
         document.getElementById(type + '-placeholder').style.display = 'none';
         document.getElementById(type + '-badge').style.display = 'block';
         document.getElementById(type + '-remove').style.display = 'flex';
         document.getElementById(type + '-upload').classList.add('has-image');
-
         document.getElementById(docId).innerHTML =
-            `<img src="${src}" style="max-width:100%;max-height:100%;
-             object-fit:contain;display:block;">`;
-
+            `<img src="${src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">`;
         showToast('✅ Fotka nahrána!');
     }
 
     function removeImg(e, type) {
         e.stopPropagation();
-        if (imageURLs[type]) {
-            URL.revokeObjectURL(imageURLs[type]);
-            imageURLs[type] = null;
-        }
+        if (imageURLs[type]) { URL.revokeObjectURL(imageURLs[type]); imageURLs[type] = null; }
         document.getElementById(type + '-preview').style.display = 'none';
         document.getElementById(type + '-preview').src = '';
         document.getElementById(type + '-placeholder').style.display = 'block';
@@ -1292,16 +1304,11 @@
     }
 
     function saveToStorage() {
-        const fields = [
-            'f-number','f-customer','f-project','f-pracoviste','f-dil',
-            'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-            'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'
-        ];
+        const fields = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                        'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                        'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
         const data = {};
-        fields.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) data[id] = el.value;
-        });
+        fields.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const el = document.getElementById('qa-' + t);
             if (el) data['qa-' + t] = el.checked;
@@ -1325,10 +1332,10 @@
 
     function validateForm() {
         const required = {
-            'f-number':  'Číslo dokumentu',
-            'f-defect':  'Popis defektu',
+            'f-number': 'Číslo dokumentu',
+            'f-defect': 'Popis defektu',
             'f-control': 'Popis kontroly',
-            'f-vydal':   'Vydal'
+            'f-vydal': 'Vydal'
         };
         return Object.entries(required)
             .filter(([id]) => !document.getElementById(id).value.trim())
@@ -1337,10 +1344,7 @@
 
     function savePDF() {
         const missing = validateForm();
-        if (missing.length > 0) {
-            showToast(`⚠️ Chybí: ${missing.join(', ')}`);
-            return;
-        }
+        if (missing.length > 0) { showToast(`⚠️ Chybí: ${missing.join(', ')}`); return; }
         liveUpdate();
         showToast('🖨️ Otevírám tiskový dialog...');
         setTimeout(() => window.print(), 500);
@@ -1356,15 +1360,12 @@
     window.onload = () => {
         document.getElementById('sig-tbody-1').innerHTML = generateSignatureRows();
         document.getElementById('sig-tbody-2').innerHTML = generateSignatureRows();
-
         loadFromStorage();
-
         const today = new Date().toISOString().split('T')[0];
         if (!document.getElementById('f-datum').value)
             document.getElementById('f-datum').value = today;
         if (!document.getElementById('f-pocatek').value)
             document.getElementById('f-pocatek').value = today;
-
         liveUpdate();
     };
 </script>
