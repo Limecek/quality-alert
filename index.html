@@ -253,7 +253,7 @@
         }
 
         /* ══════════════════════════════
-           STRÁNKA 2 – jedna tabulka přes celou šířku
+           STRÁNKA 2
         ══════════════════════════════ */
         .doc-page2 {
             font-family: Arial, sans-serif;
@@ -273,6 +273,9 @@
             display: block;
         }
 
+        /* ══════════════════════════════
+           PODPISOVÁ TABULKA – jedna přes celou šířku
+        ══════════════════════════════ */
         .sig-table {
             width: 100%;
             border-collapse: collapse;
@@ -283,17 +286,18 @@
         .sig-table th {
             background: #2c2c2c;
             color: white;
-            padding: 5px 6px;
+            padding: 6px 8px;
             text-align: center;
             border: 1px solid #000;
             font-size: 9px;
             font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         .sig-table td {
             border: 1px solid #000;
             padding: 0;
-            height: 22px;
+            height: 28px;  /* větší řádky pro podpis */
         }
 
         /* TOP HEADER */
@@ -762,6 +766,15 @@
                 margin-top: 0 !important;
                 page-break-before: always !important;
             }
+
+            /* Tabulka vyplní celou stránku 2 */
+            .sig-table {
+                width: 100% !important;
+            }
+
+            .sig-table td {
+                height: 28px !important;
+            }
         }
     </style>
 </head>
@@ -1204,13 +1217,12 @@
     const imageURLs = { ok: null, nok: null };
 
     function generateSignatureRows() {
-        // 30 řádků – vyplní celou A4
         return Array(30).fill(`
             <tr>
-                <td class="sig-td"></td>
-                <td class="sig-td"></td>
-                <td class="sig-td"></td>
-                <td class="sig-td"></td>
+                <td style="border:1px solid #000;height:28px;"></td>
+                <td style="border:1px solid #000;"></td>
+                <td style="border:1px solid #000;"></td>
+                <td style="border:1px solid #000;"></td>
             </tr>
         `).join('');
     }
@@ -1368,7 +1380,6 @@
     }
 
     window.onload = () => {
-        // Jedna tabulka – pouze sig-tbody-1
         document.getElementById('sig-tbody-1').innerHTML = generateSignatureRows();
         loadFromStorage();
         const today = new Date().toISOString().split('T')[0];
