@@ -264,7 +264,8 @@
         /* TOP HEADER */
         .doc-top {
             display: grid;
-            grid-template-columns: 100px 1fr 90px;
+            /* OPRAVA: auto místo 90px – box se roztáhne podle obsahu */
+            grid-template-columns: 100px 1fr auto;
             align-items: center;
             margin-bottom: 6px;
             gap: 8px;
@@ -312,8 +313,9 @@
         .doc-num-box {
             background: #000;
             color: white;
-            padding: 6px 8px;
+            padding: 6px 10px;
             text-align: center;
+            min-width: 70px;  /* minimální šířka */
         }
 
         .doc-num-label {
@@ -323,11 +325,13 @@
             font-weight: 600;
         }
 
+        /* OPRAVA: číslo dokumentu – menší písmo, nezalomí */
         .doc-num-val {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 900;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: white;
+            white-space: nowrap;
         }
 
         /* INFO GRID */
@@ -419,7 +423,9 @@
         }
 
         /* ══════════════════════════════
-           POPIS DEFEKTU – načervenalá výplň
+           POPIS DEFEKTU
+           label: červený pruh
+           výplň: slabě červená #fff0f0
         ══════════════════════════════ */
         .doc-defect-section {
             border: 1px solid #bbb;
@@ -429,7 +435,7 @@
         }
 
         .doc-defect-label {
-            background: #cc0000;
+            background: #cc0000;   /* červený pruh */
             color: #fff;
             font-size: 7px;
             font-weight: 700;
@@ -444,7 +450,7 @@
             align-items: center;
             gap: 6px;
             padding: 5px 8px 6px;
-            background: #fff0f0; /* ← načervenalá jako NOK foto */
+            background: #fff0f0;   /* ← slabě červená */
         }
 
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
@@ -456,7 +462,9 @@
         }
 
         /* ══════════════════════════════
-           POPIS KONTROLY – žlutá výplň
+           POPIS KONTROLY
+           label: modrý pruh
+           výplň: žlutá #ffff00
         ══════════════════════════════ */
         .doc-control-section {
             border: 1px solid #bbb;
@@ -466,7 +474,7 @@
         }
 
         .doc-control-label {
-            background: #1a4a8a;
+            background: #1a4a8a;   /* modrý pruh */
             color: #fff;
             font-size: 7px;
             font-weight: 700;
@@ -481,7 +489,7 @@
             color: #000;
             padding: 5px 8px 6px;
             line-height: 1.5;
-            background: #ffff00; /* ← žlutá */
+            background: #ffff00;   /* ← žlutá */
         }
 
         /* FOTKY */
@@ -1006,7 +1014,7 @@
                 </div>
             </div>
 
-            <!-- POPIS DEFEKTU – načervenalá výplň -->
+            <!-- DEFEKT: červený pruh + slabě červená výplň -->
             <div class="doc-defect-section">
                 <span class="doc-defect-label">⚠ Popis defektu / Defect description</span>
                 <div class="doc-defect-val">
@@ -1015,7 +1023,7 @@
                 </div>
             </div>
 
-            <!-- POPIS KONTROLY – žlutá výplň -->
+            <!-- KONTROLA: modrý pruh + žlutá výplň -->
             <div class="doc-control-section">
                 <span class="doc-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
                 <div class="doc-control-val" id="d-control">—</div>
@@ -1146,7 +1154,7 @@
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row">
             <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">2.4.0</span>
+            <span class="form-input" style="text-align:right; color:#636366;">2.5.0</span>
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
