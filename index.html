@@ -368,10 +368,7 @@
 
         .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
         .navod-section:last-child { border-bottom: none; }
-        .navod-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
         .navod-text { font-size: 14px; color: var(--subtext); line-height: 1.6; }
-        .navod-color-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-        .navod-color-dot { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
         .navod-tip-row { display: flex; align-items: flex-start; gap: 12px; margin-top: 10px; }
         .navod-tip-icon { font-size: 22px; flex-shrink: 0; }
 
@@ -539,7 +536,7 @@
         .modal-btn.cancel { background: var(--input); color: #636366; }
         .modal-btn.send   { background: #0a84ff; color: white; }
 
-        .share-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .share-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
 
         .share-option {
             display: flex;
@@ -553,8 +550,6 @@
             transition: all 0.2s;
             font-family: inherit;
             color: var(--text);
-            font-size: 15px;
-            font-weight: 600;
             width: 100%;
             text-align: left;
         }
@@ -573,6 +568,18 @@
 
         .share-option-title { font-size: 15px; font-weight: 600; }
         .share-option-sub { font-size: 12px; color: #636366; margin-top: 2px; }
+
+        /* Info box v modalu */
+        .modal-info {
+            background: rgba(10,132,255,0.1);
+            border: 1px solid #0a84ff;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #0a84ff;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
 
         /* DOKUMENT */
         #doc-wrapper {
@@ -791,6 +798,17 @@
         <div class="modal-handle"></div>
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
+
+            <!-- 1. Stáhnout HTML dokument -->
+            <button class="share-option" onclick="stahnoutHTML()">
+                <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📎</div>
+                <div>
+                    <div class="share-option-title">Stáhnout dokument</div>
+                    <div class="share-option-sub">Uloží .html soubor – lze přiložit do emailu</div>
+                </div>
+            </button>
+
+            <!-- 2. Systémové sdílení -->
             <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
                 <div class="share-option-icon" style="background:rgba(10,132,255,0.15);">📱</div>
                 <div>
@@ -798,20 +816,30 @@
                     <div class="share-option-sub">Mail, WhatsApp, Teams, AirDrop...</div>
                 </div>
             </button>
+
+            <!-- 3. Email s textem -->
             <button class="share-option" onclick="zobrazitEmailForm()">
                 <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
                 <div>
                     <div class="share-option-title">Odeslat emailem</div>
-                    <div class="share-option-sub">Otevře emailového klienta</div>
+                    <div class="share-option-sub">Otevře Mail s předvyplněným textem</div>
                 </div>
             </button>
+
+            <!-- 4. Kopírovat -->
             <button class="share-option" onclick="kopirovatShrnutí()">
-                <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📋</div>
+                <div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div>
                 <div>
                     <div class="share-option-title">Kopírovat shrnutí</div>
                     <div class="share-option-sub">Text do schránky</div>
                 </div>
             </button>
+
+        </div>
+
+        <div class="modal-info">
+            💡 <strong>Tip:</strong> Stáhni dokument → otevři email → přilož soubor ručně.
+            PDF nelze přiložit automaticky kvůli omezení prohlížeče.
         </div>
     </div>
 </div>
@@ -843,7 +871,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v3.7.0</div>
+        <div class="version-badge">v3.8.0</div>
     </div>
 </div>
 
@@ -1019,8 +1047,11 @@
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
     <div class="share-hint">
-        <strong>💡 iPhone:</strong> Uložit PDF → tiskový dialog → přiblíž prsty → Sdílet → Uložit do Souborů<br>
-        <strong>📤 Sdílet</strong> → odešli shrnutí emailem nebo přes WhatsApp/Teams
+        <strong>💡 Jak sdílet s přílohami:</strong><br>
+        1. Klikni <strong>📤 Sdílet</strong> → <strong>Stáhnout dokument</strong><br>
+        2. Soubor se uloží do Souborů<br>
+        3. Otevři email → přilož soubor ručně<br><br>
+        <strong>Nebo:</strong> Uložit PDF → přiblíž prsty → Sdílet → Mail
     </div>
 </div>
 
@@ -1039,7 +1070,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#636366;">3.7.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#636366;">3.8.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#636366;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#636366;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#636366;">19. 6. 2026</span></div>
@@ -1049,256 +1080,68 @@
 
 <!-- NÁVOD -->
 <div class="page" id="page-navod">
+    <div class="card">
+        <div class="card-header">📤 Jak sdílet dokument s přílohou</div>
+        <div class="navod-section">
+            <div class="navod-text" style="margin-bottom:12px;">
+                Prohlížeč <strong style="color:white;">neumožňuje</strong> automaticky přiložit PDF do emailu kvůli bezpečnostním omezením.
+                Existují 3 způsoby jak dokument odeslat:
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;">
+
+                <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
+                    <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:8px;">✅ Způsob 1 – Stáhnout a přiložit (doporučeno)</div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Stáhnout dokument</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Soubor se uloží do <strong style="color:white;">Souborů</strong> v telefonu</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div class="navod-text">Otevři <strong style="color:white;">Mail</strong> → nový email → ikona přílohy</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">4</div><div class="navod-text">Vyber soubor ze <strong style="color:white;">Souborů</strong> a odešli</div></div>
+                </div>
+
+                <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
+                    <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF přes tisk</div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text"><strong style="color:white;">Přiblíž prsty</strong> na náhled → otevře se PDF</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Klikni <strong style="color:white;">Sdílet → Uložit do Souborů</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Přilož PDF soubor do emailu ručně</div></div>
+                </div>
+
+                <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
+                    <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:8px;">✉️ Způsob 3 – Email s textem</div>
+                    <div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Odeslat emailem</strong>. Otevře se Mail s předvyplněným shrnutím dokumentu. PDF přilož ručně ze Souborů.</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="card">
         <div class="card-header">🗺️ Přehled aplikace</div>
         <div class="navod-section">
-            <div class="navod-text">Aplikace má <strong style="color:white;">4 záložky</strong> v dolní liště:</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
-                <div style="background:var(--input);border-radius:10px;padding:10px;">
-                    <div style="font-size:18px;margin-bottom:4px;">📝</div>
-                    <div style="font-size:13px;font-weight:700;color:white;">Formulář</div>
-                    <div style="font-size:12px;color:#636366;margin-top:2px;">Vyplnění dat a fotek</div>
-                </div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;">
-                    <div style="font-size:18px;margin-bottom:4px;">👁️</div>
-                    <div style="font-size:13px;font-weight:700;color:white;">Náhled</div>
-                    <div style="font-size:12px;color:#636366;margin-top:2px;">Náhled + PDF + Sdílení</div>
-                </div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;">
-                    <div style="font-size:18px;margin-bottom:4px;">ℹ️</div>
-                    <div style="font-size:13px;font-weight:700;color:white;">Info</div>
-                    <div style="font-size:12px;color:#636366;margin-top:2px;">O aplikaci + reset</div>
-                </div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;">
-                    <div style="font-size:18px;margin-bottom:4px;">📖</div>
-                    <div style="font-size:13px;font-weight:700;color:white;">Návod</div>
-                    <div style="font-size:12px;color:#636366;margin-top:2px;">Tato stránka</div>
-                </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">📝</div><div style="font-size:13px;font-weight:700;color:white;">Formulář</div><div style="font-size:12px;color:#636366;margin-top:2px;">Vyplnění dat a fotek</div></div>
+                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">👁️</div><div style="font-size:13px;font-weight:700;color:white;">Náhled</div><div style="font-size:12px;color:#636366;margin-top:2px;">Náhled + PDF + Sdílení</div></div>
+                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">ℹ️</div><div style="font-size:13px;font-weight:700;color:white;">Info</div><div style="font-size:12px;color:#636366;margin-top:2px;">O aplikaci + reset</div></div>
+                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">📖</div><div style="font-size:13px;font-weight:700;color:white;">Návod</div><div style="font-size:12px;color:#636366;margin-top:2px;">Tato stránka</div></div>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header">📄 Typ dokumentu</div>
+        <div class="card-header">📷 Barvy rámečků fotek</div>
         <div class="navod-section">
-            <div style="display:flex;gap:10px;margin-bottom:12px;">
-                <div style="flex:1;background:rgba(204,0,0,0.15);border:2px solid #cc0000;border-radius:10px;padding:10px;text-align:center;">
-                    <div style="font-size:20px;">🔴</div>
-                    <div style="font-size:13px;font-weight:700;color:#cc0000;margin-top:4px;">Quality Alert</div>
-                </div>
-                <div style="flex:1;background:rgba(255,170,0,0.15);border:2px solid #ffaa00;border-radius:10px;padding:10px;text-align:center;">
-                    <div style="font-size:20px;">🟡</div>
-                    <div style="font-size:13px;font-weight:700;color:#ffaa00;margin-top:4px;">Pracovní instrukce</div>
-                </div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">🔴</span>
-                <div>
-                    <div style="font-weight:700;color:white;margin-bottom:3px;">Quality Alert</div>
-                    <div class="navod-text">Hlášení o kvalitě. Pole: <em>Popis defektu</em> a <em>Popis kontroly</em>. Výchozí fotky: <strong style="color:white;">OK</strong> a <strong style="color:white;">NOK</strong>.</div>
-                </div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">🟡</span>
-                <div>
-                    <div style="font-weight:700;color:white;margin-bottom:3px;">Pracovní instrukce</div>
-                    <div class="navod-text">Pracovní postup. Pole: <em>Název instrukce</em> a <em>Popis postupu</em>. Fotky: <strong style="color:white;">Krok 1</strong> až <strong style="color:white;">Krok 6</strong>.</div>
-                </div>
-            </div>
-            <div style="background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;padding:10px;margin-top:12px;">
-                <div style="font-size:12px;color:#0a84ff;">💡 Typ lze změnit kdykoliv – názvy fotek se automaticky přejmenují pokud jsi je nezměnil ručně.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">📋 Pole formuláře</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:10px;">Pole označená <span style="color:var(--red);">*</span> jsou <strong style="color:white;">povinná</strong>.</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:var(--red);font-weight:700;font-size:13px;min-width:16px;">*</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Číslo Nº</div><div style="font-size:12px;color:#636366;">Unikátní číslo, např. <em>QABMW001</em></div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:var(--red);font-weight:700;font-size:13px;min-width:16px;">*</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Vydal</div><div style="font-size:12px;color:#636366;">Jméno osoby která dokument vydala</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:var(--red);font-weight:700;font-size:13px;min-width:16px;">*</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Popis defektu / Název instrukce</div><div style="font-size:12px;color:#636366;">Zobrazí se velkým písmem v dokumentu</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:#636366;font-size:13px;min-width:16px;">—</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Zákazník / Projekt</div><div style="font-size:12px;color:#636366;">Předvyplněno BMW / G2x/G8x</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:#636366;font-size:13px;min-width:16px;">—</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Počátek / Konec</div><div style="font-size:12px;color:#636366;">Platnost dokumentu – od kdy do kdy</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:#636366;font-size:13px;min-width:16px;">—</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Datum vystavení</div><div style="font-size:12px;color:#636366;">Automaticky předvyplněno dnešním datem</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:10px;padding:8px;background:var(--input);border-radius:8px;">
-                    <span style="color:#636366;font-size:13px;min-width:16px;">—</span>
-                    <div><div style="font-size:13px;font-weight:700;color:white;">Popis kontroly / postup</div><div style="font-size:12px;color:#636366;">Zobrazí se na žlutém pozadí. Podporuje více řádků (Enter).</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">🏭 Typ QA</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:10px;">Přepínače označují oddělení. Lze zapnout více najednou. Zobrazí se pouze u Quality Alert.</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">⚙️ <strong style="color:white;">Engineering</strong><br><span style="color:#636366;">Technické oddělení</span></div>
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">🔧 <strong style="color:white;">Maintenance</strong><br><span style="color:#636366;">Údržba</span></div>
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">🚚 <strong style="color:white;">Logistics</strong><br><span style="color:#636366;">Logistika</span></div>
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">🏭 <strong style="color:white;">Production</strong><br><span style="color:#636366;">Výroba (výchozí)</span></div>
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">✅ <strong style="color:white;">Quality</strong><br><span style="color:#636366;">Kvalita</span></div>
-                <div style="background:var(--input);border-radius:8px;padding:8px;font-size:12px;color:var(--subtext);">🔚 <strong style="color:white;">EOL</strong><br><span style="color:#636366;">End of Line</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">📷 Fotografie</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:12px;">Lze přidat <strong style="color:white;">2 až 6 fotek</strong>. Rozložení v dokumentu:</div>
-            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;min-width:52px;text-align:center;">2 fotky</div>
-                    <div style="display:flex;gap:3px;flex:1;">
-                        <div style="flex:1;height:20px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="flex:1;height:20px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                    </div>
-                    <div style="font-size:11px;color:#636366;min-width:70px;">2 sl. × 1 řád.</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;min-width:52px;text-align:center;">3 fotky</div>
-                    <div style="display:flex;gap:3px;flex:1;">
-                        <div style="flex:1;height:20px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="flex:1;height:20px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="flex:1;height:20px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                    </div>
-                    <div style="font-size:11px;color:#636366;min-width:70px;">3 sl. × 1 řád.</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;min-width:52px;text-align:center;">4 fotky</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:1;">
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                    </div>
-                    <div style="font-size:11px;color:#636366;min-width:70px;">2 sl. × 2 řád.</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;min-width:52px;text-align:center;">5–6 fotek</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;flex:1;">
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                        <div style="height:14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;"></div>
-                    </div>
-                    <div style="font-size:11px;color:#636366;min-width:70px;">3 sl. × 2 řád.</div>
-                </div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">📤</span>
-                <div><div style="font-weight:700;color:white;margin-bottom:3px;">Nahrání fotky</div><div class="navod-text">Klikni na šedou plochu → vyber z galerie nebo foť přímo. Fotky se ukládají a přežijí zavření aplikace.</div></div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">🏷️</span>
-                <div><div style="font-weight:700;color:white;margin-bottom:3px;">Název fotky</div><div class="navod-text">Každá fotka má editovatelný název který určuje barvu rámečku v dokumentu.</div></div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">✕</span>
-                <div><div style="font-weight:700;color:white;margin-bottom:3px;">Smazání fotky</div><div class="navod-text">Klikni na tlačítko <strong style="color:white;">✕</strong> v pravém horním rohu náhledu.</div></div>
-            </div>
-            <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px;margin-top:10px;">
-                <div style="font-size:12px;color:#ffaa00;">⚠️ Fotky větší než 3 MB mohou způsobit problémy s úložištěm. Doporučujeme komprimovat před nahráním.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">🎨 Barvy rámečků fotek</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:12px;">Barva se nastaví <strong style="color:white;">automaticky</strong> podle názvu fotky:</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(0,153,0,0.1);border:1px solid #009900;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#009900;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">✅</div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#009900;">Zelený rámeček</div>
-                        <div style="font-size:12px;color:var(--subtext);margin-top:2px;">Název obsahuje <strong style="color:white;">OK</strong> (ale ne NOK)</div>
-                        <div style="font-size:11px;color:#636366;margin-top:2px;">Příklady: "OK", "Správně OK", "OK stav"</div>
-                    </div>
+                    <div><div style="font-size:13px;font-weight:700;color:#009900;">Zelený</div><div style="font-size:12px;color:#636366;">Název obsahuje OK (ne NOK) – "OK", "OK stav"</div></div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#cc0000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">❌</div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#cc0000;">Červený rámeček</div>
-                        <div style="font-size:12px;color:var(--subtext);margin-top:2px;">Název obsahuje <strong style="color:white;">NOK</strong></div>
-                        <div style="font-size:11px;color:#636366;margin-top:2px;">Příklady: "NOK", "Vada NOK", "NOK detail"</div>
-                    </div>
+                    <div><div style="font-size:13px;font-weight:700;color:#cc0000;">Červený</div><div style="font-size:12px;color:#636366;">Název obsahuje NOK – "NOK", "Vada NOK"</div></div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#ffaa00;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📋</div>
-                    <div>
-                        <div style="font-size:13px;font-weight:700;color:#ffaa00;">Žlutý rámeček</div>
-                        <div style="font-size:12px;color:var(--subtext);margin-top:2px;">Cokoliv jiného</div>
-                        <div style="font-size:11px;color:#636366;margin-top:2px;">Příklady: "Detail 2", "Krok 1", "Pohled shora"</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">👁️ Náhled a PDF</div>
-        <div class="navod-section">
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">👁️</span>
-                <div><div style="font-weight:700;color:white;margin-bottom:3px;">Zobrazit náhled</div><div class="navod-text">Tlačítko na konci formuláře. Zkontrolují se povinná pole – chybějící se zvýrazní červeně.</div></div>
-            </div>
-            <div style="margin-top:14px;">
-                <div style="font-size:12px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">📱 iPhone:</div>
-                <div class="install-step"><div class="step-num">1</div><div class="navod-text">Klikni <strong style="color:white;">"Uložit PDF"</strong></div></div>
-                <div class="install-step"><div class="step-num">2</div><div class="navod-text">Otevře se tiskový dialog</div></div>
-                <div class="install-step"><div class="step-num">3</div><div class="navod-text"><strong style="color:white;">Přiblíž dva prsty</strong> na náhled dokumentu</div></div>
-                <div class="install-step"><div class="step-num">4</div><div class="navod-text">Klikni <strong style="color:white;">Sdílet → Uložit do Souborů</strong></div></div>
-            </div>
-            <div style="margin-top:14px;">
-                <div style="font-size:12px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">💻 PC / Mac:</div>
-                <div class="install-step"><div class="step-num">1</div><div class="navod-text">Klikni <strong style="color:white;">"Uložit PDF"</strong></div></div>
-                <div class="install-step"><div class="step-num">2</div><div class="navod-text">V tiskovém dialogu vyber <strong style="color:white;">"Uložit jako PDF"</strong></div></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">📤 Sdílení dokumentu</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:12px;">Tlačítko <strong style="color:white;">📤 Sdílet</strong> nabízí 3 možnosti:</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px;">📱</span><div style="font-size:13px;font-weight:700;color:#0a84ff;">Sdílet přes systém</div></div>
-                    <div class="navod-text">Systémový dialog iPhone – Mail, WhatsApp, Teams, AirDrop. Sdílí se textové shrnutí.</div>
-                </div>
-                <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px;">✉️</span><div style="font-size:13px;font-weight:700;color:#ff9f0a;">Odeslat emailem</div></div>
-                    <div class="navod-text">Zadej příjemce, volitelně CC a poznámku. Předmět se předvyplní. Otevře Mail s celým shrnutím.</div>
-                    <div style="font-size:11px;color:#636366;margin-top:6px;">PDF přilož ručně ze Souborů.</div>
-                </div>
-                <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:18px;">📋</span><div style="font-size:13px;font-weight:700;color:#30d158;">Kopírovat shrnutí</div></div>
-                    <div class="navod-text">Zkopíruje textové shrnutí do schránky – vlož do Teams, Slack, SMS...</div>
+                    <div><div style="font-size:13px;font-weight:700;color:#ffaa00;">Žlutý</div><div style="font-size:12px;color:#636366;">Cokoliv jiného – "Detail 2", "Krok 1"</div></div>
                 </div>
             </div>
         </div>
@@ -1307,78 +1150,11 @@
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
         <div class="navod-section">
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">🟡</span>
-                <div><div style="font-weight:700;color:#ffaa00;margin-bottom:3px;">Ukládám…</div><div class="navod-text">Data se právě ukládají.</div></div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">🟢</span>
-                <div><div style="font-weight:700;color:var(--green);margin-bottom:3px;">Uloženo</div><div class="navod-text">Vše uloženo. Přežije zavření i restart telefonu.</div></div>
-            </div>
-            <div class="navod-tip-row">
-                <span class="navod-tip-icon">⚠️</span>
-                <div><div style="font-weight:700;color:#ffaa00;margin-bottom:3px;">Úložiště je plné</div><div class="navod-text">Fotky jsou příliš velké. Formulář se uloží bez fotek. Použij menší fotky.</div></div>
-            </div>
-            <div style="background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;padding:10px;margin-top:10px;">
-                <div style="font-size:12px;color:#0a84ff;">💡 Ukládá se vše: textová pole, checkboxy, počet fotek, názvy i samotné fotky.</div>
-            </div>
+            <div class="navod-tip-row"><span class="navod-tip-icon">🟡</span><div><div style="font-weight:700;color:#ffaa00;margin-bottom:3px;">Ukládám…</div><div class="navod-text">Data se právě ukládají.</div></div></div>
+            <div class="navod-tip-row"><span class="navod-tip-icon">🟢</span><div><div style="font-weight:700;color:var(--green);margin-bottom:3px;">Uloženo</div><div class="navod-text">Vše uloženo včetně fotek. Přežije zavření aplikace.</div></div></div>
+            <div class="navod-tip-row"><span class="navod-tip-icon">⚠️</span><div><div style="font-weight:700;color:#ffaa00;margin-bottom:3px;">Úložiště plné</div><div class="navod-text">Fotky jsou příliš velké. Použij menší fotky.</div></div></div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header">📱 Instalace na plochu</div>
-        <div class="navod-section">
-            <div class="install-step"><div class="step-num">1</div><div class="navod-text">Otevři v <strong style="color:white;">Safari</strong> (jiné prohlížeče nepodporují)</div></div>
-            <div class="install-step"><div class="step-num">2</div><div class="navod-text">Klikni na ikonu <strong style="color:white;">Sdílet</strong> (čtverec se šipkou) ve spodní liště</div></div>
-            <div class="install-step"><div class="step-num">3</div><div class="navod-text">Posuň dolů a vyber <strong style="color:white;">"Přidat na plochu"</strong></div></div>
-            <div class="install-step"><div class="step-num">4</div><div class="navod-text">Potvrď <strong style="color:white;">"Přidat"</strong></div></div>
-            <div class="install-step"><div class="step-num">5</div><div class="navod-text">Na ploše se objeví ikona Quality Alert 🎉</div></div>
-            <div style="background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;padding:10px;margin-top:10px;">
-                <div style="font-size:12px;color:#30d158;">✅ Funguje na celou obrazovku bez lišty Safari, i offline.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">🗑️ Vymazání formuláře</div>
-        <div class="navod-section">
-            <div class="navod-text" style="margin-bottom:10px;">Tlačítko <strong style="color:white;">"Vymazat formulář"</strong> v záložce Info smaže:</div>
-            <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">
-                <div style="font-size:13px;color:var(--subtext);"><span style="color:var(--red);">✕</span> Všechna textová pole</div>
-                <div style="font-size:13px;color:var(--subtext);"><span style="color:var(--red);">✕</span> Všechny fotky</div>
-                <div style="font-size:13px;color:var(--subtext);"><span style="color:var(--red);">✕</span> Nastavení checkboxů</div>
-                <div style="font-size:13px;color:var(--subtext);"><span style="color:var(--red);">✕</span> Typ dokumentu (vrátí na QA)</div>
-            </div>
-            <div style="background:rgba(204,0,0,0.1);border:1px solid var(--red);border-radius:10px;padding:10px;">
-                <div style="font-size:12px;color:var(--red);">⚠️ Nevratná akce! Před vymazáním si ulož PDF.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">📋 Historie verzí</div>
-        <div class="navod-section">
-            <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                    <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">v3.7.0</div>
-                    <div style="font-size:12px;color:var(--subtext);">Sdílení emailem, Web Share API, kopírování shrnutí, detailní návod</div>
-                </div>
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                    <div style="background:var(--input);color:#636366;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">v3.6.3</div>
-                    <div style="font-size:12px;color:#636366;">Oprava gridu 4 fotek (2×2), skrytý file input</div>
-                </div>
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                    <div style="background:var(--input);color:#636366;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">v3.6.1</div>
-                    <div style="font-size:12px;color:#636366;">Fotky vyplňují celý prostor stránky v PDF</div>
-                </div>
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                    <div style="background:var(--input);color:#636366;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;">v3.6.0</div>
-                    <div style="font-size:12px;color:#636366;">Oprava ukládání fotek (Base64), migrace storage</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <!-- TAB BAR -->
@@ -1471,6 +1247,112 @@
         document.getElementById('progress-pct').textContent  = p + ' %';
     }
 
+    /* ══════════════════════════════════════════════════
+       STAŽENÍ HTML DOKUMENTU
+       Vygeneruje kompletní standalone HTML soubor
+       s vloženými fotkami (base64) – lze přiložit do emailu
+    ══════════════════════════════════════════════════ */
+    function stahnoutHTML() {
+        document.getElementById('modal-share').classList.remove('show');
+
+        // Získáme aktuální HTML dokumentu (jen doc-wrapper)
+        const docHTML = document.getElementById('doc-wrapper').outerHTML;
+        const cislo   = (document.getElementById('f-number') || {}).value || 'dokument';
+        const datum   = new Date().toISOString().split('T')[0];
+
+        // Sestavíme kompletní HTML soubor s CSS
+        const html = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quality Alert ${cislo}</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: white; }
+#doc-wrapper { background: white; }
+.doc-page1 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; height:277mm; display:flex; flex-direction:column; overflow:hidden; page-break-after:always; }
+.doc-page2 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; border-top:3px solid #000; display:flex; flex-direction:column; }
+.doc-page-footer { text-align:center; font-size:8px; font-weight:600; color:#000; padding:4px 0 2px; border-top:1px solid #ccc; margin-top:4px; flex-shrink:0; }
+.doc-page2-title { font-size:9px; color:#cc0000; font-weight:700; padding:6px 0 10px; display:block; flex-shrink:0; }
+.sig-table { width:100%; border-collapse:collapse; font-size:9px; flex:1; }
+.sig-table th { background:#2c2c2c; color:white; padding:6px 8px; text-align:center; border:1px solid #000; font-size:9px; font-weight:700; }
+.sig-table td { border:1px solid #000; padding:0; height:28px; }
+.doc-top { display:grid; grid-template-columns:100px 1fr auto; align-items:center; margin-bottom:6px; gap:8px; flex-shrink:0; }
+.doc-logo-box { background:#cc0000; padding:6px 8px; display:flex; flex-direction:column; }
+.doc-logo-main { font-size:16px; font-weight:900; color:white; letter-spacing:1px; }
+.doc-logo-sub { font-size:5px; color:rgba(255,255,255,0.8); letter-spacing:0.5px; margin-top:1px; }
+.doc-title-center { text-align:center; }
+.doc-title-main { font-size:20px; font-weight:900; color:#000; letter-spacing:2px; line-height:1; }
+.doc-title-sub { font-size:7px; color:#666; letter-spacing:1px; margin-top:2px; }
+.doc-num-box { background:#000; color:white; padding:6px 10px; text-align:center; min-width:70px; }
+.doc-num-label { font-size:7px; letter-spacing:1px; color:#aaa; font-weight:600; }
+.doc-num-val { font-size:12px; font-weight:900; color:white; white-space:nowrap; }
+.doc-info-section { border:1px solid #bbb; margin-bottom:5px; flex-shrink:0; }
+.doc-info-row { display:grid; border-bottom:1px solid #bbb; }
+.doc-info-row:last-child { border-bottom:none; }
+.doc-info-row-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+.doc-info-row-5 { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
+.doc-info-cell { border-right:1px solid #bbb; overflow:hidden; }
+.doc-info-cell:last-child { border-right:none; }
+.doc-cell-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+.doc-cell-val { font-size:10px; font-weight:700; color:#000; padding:4px 6px 5px; min-height:16px; background:#fff; }
+.doc-typqa-section { display:grid; grid-template-columns:1fr auto; border:1px solid #bbb; margin-bottom:5px; flex-shrink:0; }
+.doc-typqa-left { border-right:1px solid #bbb; }
+.doc-typqa-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+.doc-typqa-items { display:flex; gap:4px; flex-wrap:wrap; padding:5px 6px; }
+.doc-typqa-item { border:1.5px solid #999; padding:2px 7px; font-size:7px; font-weight:700; color:#666; text-transform:uppercase; border-radius:2px; }
+.doc-typqa-item.active { background:#cc0000; color:white; border-color:#cc0000; }
+.doc-defect-section { border:1px solid #bbb; margin-bottom:5px; overflow:hidden; flex-shrink:0; }
+.doc-defect-label { background:#cc0000; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+.doc-defect-val { display:flex; align-items:center; gap:6px; padding:5px 8px 6px; background:#fdf0ed; }
+.doc-defect-icon { font-size:14px; color:#cc0000; }
+.doc-defect-text { font-size:15px; font-weight:900; color:#000; }
+.doc-control-section { border:1px solid #bbb; margin-bottom:5px; overflow:hidden; flex-shrink:0; }
+.doc-control-label { background:#1a4a8a; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+.doc-control-val { font-size:13px; font-weight:900; color:#000; padding:8px 8px 10px; line-height:1.6; background:#ffff00; white-space:pre-wrap; }
+.doc-imgs-wrap { flex:1; min-height:0; display:flex; flex-direction:column; margin-bottom:5px; overflow:hidden; }
+.doc-imgs { flex:1; min-height:0; display:grid; gap:4px; }
+.doc-img-cell { display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+.qa-cell-ok { border:2.5px solid #009900; }
+.qa-cell-nok { border:2.5px solid #cc0000; }
+.wi-cell { border:2.5px solid #ffaa00; }
+.doc-img-header { padding:3px 5px; font-size:9px; font-weight:900; letter-spacing:0.5px; text-align:center; flex-shrink:0; }
+.doc-img-body { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:3px; overflow:hidden; }
+.doc-img-body img { width:100%; height:100%; object-fit:contain; display:block; }
+.doc-img-placeholder-icon { font-size:20px; color:#ccc; }
+.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; }
+.doc-footer-cell { border-right:1px solid #bbb; }
+.doc-footer-cell:last-child { border-right:none; }
+.doc-footer-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+.doc-footer-val { font-size:10px; font-weight:700; color:#000; padding:5px 6px 6px; min-height:28px; background:#fff; }
+@media print {
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  @page { size:A4 portrait; margin:6mm; }
+  .doc-page1 { height:calc(297mm - 12mm) !important; page-break-after:always !important; }
+  .doc-page2 { page-break-before:always !important; min-height:calc(297mm - 12mm) !important; }
+}
+</style>
+</head>
+<body>
+${docHTML}
+</body>
+</html>`;
+
+        // Stáhneme soubor
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = `QA_${cislo}_${datum}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        toast('✅ Dokument stažen! Přilož ho do emailu.', 3500);
+    }
+
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id) || {}).value || '';
         const label = typ === 'wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -1492,7 +1374,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno aplikací Quality Alert v3.7.0`;
+Vygenerováno: Quality Alert v3.8.0`;
     }
 
     function sestavitPredmet() {
@@ -1551,7 +1433,7 @@ Vygenerováno aplikací Quality Alert v3.7.0`;
         }
         document.getElementById('email-to').classList.remove('error');
         const poznamka = note ? `\n\nPoznámka: ${note}\n\n` : '\n\n';
-        const body = poznamka + sestavitShrnutí() + '\n\n---\nPDF: uložte přes tlačítko "Uložit PDF" v aplikaci Quality Alert.';
+        const body = poznamka + sestavitShrnutí() + '\n\n---\nDokument: stáhni přes tlačítko Sdílet → Stáhnout dokument a přilož do emailu.';
         let mailto = `mailto:${encodeURIComponent(to)}`;
         const params = [];
         if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
