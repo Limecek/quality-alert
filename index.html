@@ -11,7 +11,6 @@
         :root {
             --red: #cc0000;
             --green: #009900;
-            --yellow: #ffff00;
             --dark: #1c1c1e;
             --card: #2c2c2e;
             --input: #3a3a3c;
@@ -39,14 +38,12 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border);
-            transform: translateZ(0);
-            will-change: transform;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .topbar h1 { font-size: 28px; font-weight: 700; color: var(--text); }
+        .topbar h1 { font-size: 28px; font-weight: 700; }
         .topbar span { color: var(--red); }
 
         .version-badge {
@@ -57,7 +54,6 @@
             font-size: 11px;
             color: #636366;
             font-weight: 600;
-            margin-top: 8px;
         }
 
         .tabbar {
@@ -130,14 +126,9 @@
             color: var(--subtext);
             text-align: right;
             font-family: inherit;
-            transition: border-bottom 0.2s;
         }
 
-        .form-input.error {
-            border-bottom: 2px solid var(--red);
-            color: #ff6666;
-        }
-
+        .form-input.error { border-bottom: 2px solid var(--red); color: #ff6666; }
         .form-input::placeholder { color: #636366; }
         input[type="date"].form-input { color-scheme: dark; }
 
@@ -156,10 +147,7 @@
             color: var(--subtext);
         }
 
-        select.form-input option {
-            background: var(--card);
-            color: var(--text);
-        }
+        select.form-input option { background: var(--card); color: var(--text); }
 
         .toggle-row {
             display: flex;
@@ -217,17 +205,8 @@
             font-family: inherit;
         }
 
-        .doc-type-btn.active-qa {
-            border-color: var(--red);
-            background: rgba(204,0,0,0.15);
-            color: var(--red);
-        }
-
-        .doc-type-btn.active-wi {
-            border-color: #ffaa00;
-            background: rgba(255,170,0,0.15);
-            color: #ffaa00;
-        }
+        .doc-type-btn.active-qa { border-color: var(--red); background: rgba(204,0,0,0.15); color: var(--red); }
+        .doc-type-btn.active-wi { border-color: #ffaa00; background: rgba(255,170,0,0.15); color: #ffaa00; }
 
         .photos-container {
             padding: 12px 16px;
@@ -250,11 +229,7 @@
             gap: 8px;
         }
 
-        .photo-name-label {
-            font-size: 12px;
-            color: #636366;
-            white-space: nowrap;
-        }
+        .photo-name-label { font-size: 12px; color: #636366; white-space: nowrap; }
 
         .photo-name-input {
             flex: 1;
@@ -268,50 +243,79 @@
 
         .photo-name-input::placeholder { color: #636366; }
 
+        /* ══════════════════════════════
+           UPLOAD ZÓNA – OPRAVA
+           Skryjeme nativní file input,
+           celá zóna je klikatelná přes
+           position:relative + ::after overlay
+        ══════════════════════════════ */
         .img-upload {
             margin: 10px;
             border: 2px dashed var(--border);
             border-radius: 10px;
-            padding: 16px;
-            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            min-height: 80px;
+            /* Pevná výška pro prázdný stav */
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .img-upload:active { transform: scale(0.98); }
-        .img-upload.has-image { border-style: solid; padding: 6px; }
 
-        .img-upload img {
-            width: 100%;
-            max-height: 160px;
-            object-fit: contain;
-            border-radius: 6px;
-            display: block;
+        /* Stav s obrázkem – výška se přizpůsobí */
+        .img-upload.has-image {
+            border-style: solid;
+            height: auto;
+            min-height: 120px;
         }
 
+        /* OPRAVA: file input je absolutně pozicovaný
+           přes celou plochu ale neviditelný */
+        .img-upload input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        /* Placeholder ikona a text */
         .img-upload-placeholder {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
             pointer-events: none;
+            z-index: 0;
         }
 
         .img-upload-icon { font-size: 28px; }
         .img-upload-text { font-size: 12px; color: #636366; }
 
+        /* Náhled fotky vyplní celou plochu */
+        .img-upload img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            display: block;
+            border-radius: 8px;
+            z-index: 0;
+        }
+
+        /* Tlačítko smazání nad obrázkem */
         .img-remove {
             position: absolute;
             top: 6px; right: 6px;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.65);
             border: none;
             color: white;
-            width: 26px; height: 26px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             font-size: 14px;
             cursor: pointer;
@@ -375,7 +379,6 @@
             gap: 6px;
             font-size: 11px;
             color: #636366;
-            padding: 0 4px;
             transition: color 0.3s;
         }
 
@@ -386,53 +389,18 @@
             width: 6px; height: 6px;
             border-radius: 50%;
             background: currentColor;
-            flex-shrink: 0;
         }
 
-        .navod-section {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
+        .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
         .navod-section:last-child { border-bottom: none; }
+        .navod-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .navod-text { font-size: 14px; color: var(--subtext); line-height: 1.6; }
 
-        .navod-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+        .navod-color-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .navod-color-dot { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
 
-        .navod-text {
-            font-size: 14px;
-            color: var(--subtext);
-            line-height: 1.6;
-        }
-
-        .navod-color-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .navod-color-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .navod-tip-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .navod-tip-icon {
-            font-size: 22px;
-            flex-shrink: 0;
-        }
+        .navod-tip-row { display: flex; align-items: flex-start; gap: 12px; margin-top: 10px; }
+        .navod-tip-icon { font-size: 22px; flex-shrink: 0; }
 
         .install-step {
             display: flex;
@@ -457,7 +425,7 @@
         }
 
         /* ══════════════════════════════
-           DOKUMENT – strana 1
+           DOKUMENT
         ══════════════════════════════ */
         #doc-wrapper {
             background: white;
@@ -466,23 +434,13 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        /*
-         * KLÍČOVÁ OPRAVA:
-         * doc-page1 je flex kontejner s pevnou výškou A4.
-         * Sekce s fotkami (.doc-imgs-wrap) dostane flex:1
-         * a roztáhne se na veškerý zbývající prostor.
-         */
         .doc-page1 {
             font-family: Arial, sans-serif;
             font-size: 9px;
             color: #000;
             background: white;
             padding: 8px;
-
-            /* Pevná výška A4 mínus okraje – zajistí správné roztažení */
             height: 277mm;
-            min-height: 277mm;
-
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -502,7 +460,6 @@
 
         .doc-page-footer {
             text-align: center;
-            font-family: Arial, sans-serif;
             font-size: 8px;
             font-weight: 600;
             color: #000;
@@ -524,7 +481,6 @@
         .sig-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: Arial, sans-serif;
             font-size: 9px;
             flex: 1;
         }
@@ -539,21 +495,15 @@
             font-weight: 700;
         }
 
-        .sig-table td {
-            border: 1px solid #000;
-            padding: 0;
-            height: 28px;
-        }
+        .sig-table td { border: 1px solid #000; padding: 0; height: 28px; }
 
-        /* Všechny pevné sekce nesmí růst */
+        /* Pevné sekce se nesmí roztahovat */
         .doc-top,
         .doc-info-section,
         .doc-typqa-section,
         .doc-defect-section,
         .doc-control-section,
-        .doc-footer {
-            flex-shrink: 0;
-        }
+        .doc-footer { flex-shrink: 0; }
 
         .doc-top {
             display: grid;
@@ -563,249 +513,79 @@
             gap: 8px;
         }
 
-        .doc-logo-box {
-            background: #cc0000;
-            padding: 6px 8px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .doc-logo-main {
-            font-size: 16px;
-            font-weight: 900;
-            color: white;
-            letter-spacing: 1px;
-        }
-
-        .doc-logo-sub {
-            font-size: 5px;
-            color: rgba(255,255,255,0.8);
-            letter-spacing: 0.5px;
-            margin-top: 1px;
-        }
-
+        .doc-logo-box { background: #cc0000; padding: 6px 8px; display: flex; flex-direction: column; }
+        .doc-logo-main { font-size: 16px; font-weight: 900; color: white; letter-spacing: 1px; }
+        .doc-logo-sub { font-size: 5px; color: rgba(255,255,255,0.8); letter-spacing: 0.5px; margin-top: 1px; }
         .doc-title-center { text-align: center; }
+        .doc-title-main { font-size: 20px; font-weight: 900; color: #000; letter-spacing: 2px; line-height: 1; }
+        .doc-title-sub { font-size: 7px; color: #666; letter-spacing: 1px; margin-top: 2px; }
+        .doc-num-box { background: #000; color: white; padding: 6px 10px; text-align: center; min-width: 70px; }
+        .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
+        .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
 
-        .doc-title-main {
-            font-size: 20px;
-            font-weight: 900;
-            color: #000;
-            letter-spacing: 2px;
-            line-height: 1;
-        }
-
-        .doc-title-sub {
-            font-size: 7px;
-            color: #666;
-            letter-spacing: 1px;
-            margin-top: 2px;
-        }
-
-        .doc-num-box {
-            background: #000;
-            color: white;
-            padding: 6px 10px;
-            text-align: center;
-            min-width: 70px;
-        }
-
-        .doc-num-label {
-            font-size: 7px;
-            letter-spacing: 1px;
-            color: #aaa;
-            font-weight: 600;
-        }
-
-        .doc-num-val {
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            color: white;
-            white-space: nowrap;
-        }
-
-        .doc-info-section {
-            border: 1px solid #bbb;
-            margin-bottom: 5px;
-        }
-
-        .doc-info-row {
-            display: grid;
-            border-bottom: 1px solid #bbb;
-        }
-
+        .doc-info-section { border: 1px solid #bbb; margin-bottom: 5px; }
+        .doc-info-row { display: grid; border-bottom: 1px solid #bbb; }
         .doc-info-row:last-child { border-bottom: none; }
         .doc-info-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
         .doc-info-row-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
-
-        .doc-info-cell {
-            border-right: 1px solid #bbb;
-            overflow: hidden;
-        }
-
+        .doc-info-cell { border-right: 1px solid #bbb; overflow: hidden; }
         .doc-info-cell:last-child { border-right: none; }
+        .doc-cell-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
+        .doc-cell-val { font-size: 10px; font-weight: 700; color: #000; padding: 4px 6px 5px; min-height: 16px; background: #fff; }
 
-        .doc-cell-label {
-            background: #2c2c2c;
-            color: #ffffff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 2px 6px;
-            display: block;
-        }
-
-        .doc-cell-val {
-            font-size: 10px;
-            font-weight: 700;
-            color: #000;
-            padding: 4px 6px 5px;
-            min-height: 16px;
-            background: #fff;
-        }
-
-        .doc-typqa-section {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            border: 1px solid #bbb;
-            margin-bottom: 5px;
-        }
-
+        .doc-typqa-section { display: grid; grid-template-columns: 1fr auto; border: 1px solid #bbb; margin-bottom: 5px; }
         .doc-typqa-left { border-right: 1px solid #bbb; }
+        .doc-typqa-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
+        .doc-typqa-items { display: flex; gap: 4px; flex-wrap: wrap; padding: 5px 6px; }
+        .doc-typqa-item { border: 1.5px solid #999; padding: 2px 7px; font-size: 7px; font-weight: 700; color: #666; text-transform: uppercase; border-radius: 2px; }
+        .doc-typqa-item.active { background: #cc0000; color: white; border-color: #cc0000; }
 
-        .doc-typqa-label {
-            background: #2c2c2c;
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 2px 6px;
-            display: block;
-        }
-
-        .doc-typqa-items {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            padding: 5px 6px;
-        }
-
-        .doc-typqa-item {
-            border: 1.5px solid #999;
-            padding: 2px 7px;
-            font-size: 7px;
-            font-weight: 700;
-            color: #666;
-            text-transform: uppercase;
-            border-radius: 2px;
-        }
-
-        .doc-typqa-item.active {
-            background: #cc0000;
-            color: white;
-            border-color: #cc0000;
-        }
-
-        .doc-defect-section {
-            border: 1px solid #bbb;
-            margin-bottom: 5px;
-            overflow: hidden;
-        }
-
-        .doc-defect-label {
-            background: #cc0000;
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 2px 6px;
-            display: block;
-        }
-
-        .doc-defect-val {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 8px 6px;
-            background: #fdf0ed;
-        }
-
+        .doc-defect-section { border: 1px solid #bbb; margin-bottom: 5px; overflow: hidden; }
+        .doc-defect-label { background: #cc0000; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
+        .doc-defect-val { display: flex; align-items: center; gap: 6px; padding: 5px 8px 6px; background: #fdf0ed; }
         .doc-defect-icon { font-size: 14px; color: #cc0000; }
+        .doc-defect-text { font-size: 15px; font-weight: 900; color: #000; }
 
-        .doc-defect-text {
-            font-size: 15px;
-            font-weight: 900;
-            color: #000;
-        }
+        .doc-control-section { border: 1px solid #bbb; margin-bottom: 5px; overflow: hidden; }
+        .doc-control-label { background: #1a4a8a; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
+        .doc-control-val { font-size: 13px; font-weight: 900; color: #000; padding: 8px 8px 10px; line-height: 1.6; background: #ffff00; white-space: pre-wrap; }
 
-        .doc-control-section {
-            border: 1px solid #bbb;
-            margin-bottom: 5px;
-            overflow: hidden;
-        }
-
-        .doc-control-label {
-            background: #1a4a8a;
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 2px 6px;
-            display: block;
-        }
-
-        .doc-control-val {
-            font-size: 13px;
-            font-weight: 900;
-            color: #000;
-            padding: 8px 8px 10px;
-            line-height: 1.6;
-            background: #ffff00;
-            white-space: pre-wrap;
-        }
-
-        /*
-         * KLÍČOVÁ OPRAVA – obal fotek:
-         * flex: 1 → vyplní veškerý zbývající prostor mezi kontrolou a patičkou
-         * min-height: 0 → umožní flex dítěti se zmenšit pod přirozenou výšku
-         * display: flex + flex-direction: column → grid uvnitř se roztáhne
-         */
+        /* ══════════════════════════════
+           GRID FOTEK – OPRAVA
+           
+           Obal dostane flex:1 → vyplní
+           veškerý zbývající prostor.
+           
+           Grid uvnitř používá
+           grid-template-rows: repeat(N, 1fr)
+           aby byly VŠECHNY řádky stejně vysoké.
+        ══════════════════════════════ */
         .doc-imgs-wrap {
             flex: 1;
             min-height: 0;
             display: flex;
             flex-direction: column;
             margin-bottom: 5px;
+            overflow: hidden;
         }
 
         .doc-imgs {
-            display: grid;
-            gap: 5px;
-            /* KLÍČOVÁ OPRAVA: grid-template-rows: 1fr zajistí
-               že řádky gridu vyplní celou výšku obalu */
             flex: 1;
             min-height: 0;
+            display: grid;
+            gap: 4px;
+            /* Řádky se nastaví inline stylem přes JS */
         }
 
-        /* Sloupce podle počtu fotek */
         .doc-imgs.cols-1 { grid-template-columns: 1fr; }
         .doc-imgs.cols-2 { grid-template-columns: 1fr 1fr; }
         .doc-imgs.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-
-        /* Řádky – každý řádek dostane stejný díl prostoru */
-        .doc-imgs.rows-1 { grid-template-rows: 1fr; }
-        .doc-imgs.rows-2 { grid-template-rows: 1fr 1fr; }
 
         .doc-img-cell {
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* min-height zajistí minimální viditelnou výšku */
-            min-height: 80px;
+            min-height: 0;
         }
 
         .qa-cell-ok  { border: 2.5px solid #009900; }
@@ -813,30 +593,22 @@
         .wi-cell     { border: 2.5px solid #ffaa00; }
 
         .doc-img-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            padding: 4px 5px;
+            padding: 3px 5px;
             font-size: 9px;
             font-weight: 900;
             letter-spacing: 0.5px;
+            text-align: center;
             flex-shrink: 0;
         }
 
-        /*
-         * KLÍČOVÁ OPRAVA – tělo fotky:
-         * flex: 1 → vyplní zbytek buňky
-         * overflow: hidden → ořízne přetékající obrázek
-         */
         .doc-img-body {
             flex: 1;
+            min-height: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 4px;
+            padding: 3px;
             overflow: hidden;
-            min-height: 0;
         }
 
         .doc-img-body img {
@@ -846,10 +618,7 @@
             display: block;
         }
 
-        .doc-img-placeholder-icon {
-            font-size: 22px;
-            color: #ccc;
-        }
+        .doc-img-placeholder-icon { font-size: 20px; color: #ccc; }
 
         .doc-footer {
             display: grid;
@@ -860,26 +629,8 @@
 
         .doc-footer-cell { border-right: 1px solid #bbb; }
         .doc-footer-cell:last-child { border-right: none; }
-
-        .doc-footer-label {
-            background: #2c2c2c;
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 2px 6px;
-            display: block;
-        }
-
-        .doc-footer-val {
-            font-size: 10px;
-            font-weight: 700;
-            color: #000;
-            padding: 5px 6px 6px;
-            min-height: 28px;
-            background: #fff;
-        }
+        .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
+        .doc-footer-val { font-size: 10px; font-weight: 700; color: #000; padding: 5px 6px 6px; min-height: 28px; background: #fff; }
 
         .pdf-btn {
             width: 100%;
@@ -908,7 +659,7 @@
             padding: 14px 16px;
             margin-top: 12px;
             font-size: 13px;
-            color: #ebebf5;
+            color: var(--subtext);
             line-height: 1.6;
         }
 
@@ -968,52 +719,25 @@
         .toast.show { opacity: 1; }
 
         /* ══════════════════════════════
-           TISK / PDF
+           TISK
         ══════════════════════════════ */
         @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: A4 portrait; margin: 6mm; }
 
-            @page {
-                size: A4 portrait;
-                margin: 6mm;
-            }
-
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
 
             .topbar, .tabbar, .pdf-btn, .share-hint,
             .gen-btn, #page-form, #page-install,
             #page-navod, .toast, .progress-bar-wrap,
-            .storage-warning {
-                display: none !important;
-            }
+            .storage-warning { display: none !important; }
 
-            #page-preview {
-                display: block !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
+            #page-preview { display: block !important; padding: 0 !important; margin: 0 !important; }
+            #doc-wrapper { box-shadow: none !important; border-radius: 0 !important; }
 
-            #doc-wrapper {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-            }
-
-            /*
-             * KLÍČOVÁ OPRAVA PRO TISK:
-             * Pevná výška A4 mínus okraje (6mm * 2 = 12mm)
-             * overflow: hidden zabrání přetečení na druhou stránku
-             */
             .doc-page1 {
                 padding: 4px !important;
                 height: calc(297mm - 12mm) !important;
-                min-height: unset !important;
                 max-height: calc(297mm - 12mm) !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
@@ -1021,13 +745,12 @@
                 flex-direction: column !important;
             }
 
-            /* Obal fotek vyplní zbývající prostor při tisku */
             .doc-imgs-wrap {
                 flex: 1 !important;
                 min-height: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
-                margin-bottom: 4px !important;
+                overflow: hidden !important;
             }
 
             .doc-imgs {
@@ -1035,9 +758,12 @@
                 min-height: 0 !important;
             }
 
+            .doc-img-cell { min-height: 0 !important; overflow: hidden !important; }
+
             .doc-img-body {
                 flex: 1 !important;
                 min-height: 0 !important;
+                overflow: hidden !important;
             }
 
             .doc-img-body img {
@@ -1054,38 +780,31 @@
                 min-height: calc(297mm - 12mm) !important;
             }
 
-            .sig-table {
-                height: calc(297mm - 40mm) !important;
-            }
-
-            .sig-table td {
-                height: 28px !important;
-            }
+            .sig-table { height: calc(297mm - 40mm) !important; }
+            .sig-table td { height: 28px !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div>
-        <h1>🔴 Quality <span>Alert</span></h1>
-    </div>
+    <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator">
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v3.6.1</div>
+        <div class="version-badge">v3.6.2</div>
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- STRÁNKA 1: FORMULÁŘ -->
+<!-- FORMULÁŘ -->
 <div class="page active" id="page-form">
 
     <div class="storage-warning" id="storage-warning">
-        ⚠️ <strong>Upozornění:</strong> Fotografie jsou velké a nemusí se vejít do úložiště prohlížeče.
+        ⚠️ <strong>Upozornění:</strong> Fotografie jsou velké a nemusí se vejít do úložiště.
         Zkus použít menší fotky nebo smaž nepotřebná data.
     </div>
 
@@ -1102,12 +821,8 @@
     <div class="card">
         <div class="card-header">📄 Typ dokumentu</div>
         <div class="doc-type-selector">
-            <button class="doc-type-btn active-qa" id="btn-qa" onclick="nastavTypDokumentu('qa')">
-                🔴 Quality Alert
-            </button>
-            <button class="doc-type-btn" id="btn-wi" onclick="nastavTypDokumentu('wi')">
-                🟡 Pracovní instrukce
-            </button>
+            <button class="doc-type-btn active-qa" id="btn-qa" onclick="nastavTypDokumentu('qa')">🔴 Quality Alert</button>
+            <button class="doc-type-btn" id="btn-wi" onclick="nastavTypDokumentu('wi')">🟡 Pracovní instrukce</button>
         </div>
     </div>
 
@@ -1115,28 +830,23 @@
         <div class="card-header">📋 Hlavička dokumentu</div>
         <div class="form-row">
             <span class="form-label">Číslo Nº <span style="color:var(--red)">*</span></span>
-            <input class="form-input" type="text" id="f-number" placeholder="QABMW001"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-number" placeholder="QABMW001" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Zákazník</span>
-            <input class="form-input" type="text" id="f-customer" value="BMW"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-customer" value="BMW" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Projekt</span>
-            <input class="form-input" type="text" id="f-project" value="G2x/G8x"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-project" value="G2x/G8x" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Pracoviště</span>
-            <input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Díl</span>
-            <input class="form-input" type="text" id="f-dil" placeholder="Název dílu"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-dil" placeholder="Název dílu" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
     </div>
 
@@ -1144,8 +854,7 @@
         <div class="card-header">📅 Datum a autor</div>
         <div class="form-row">
             <span class="form-label">Vydal <span style="color:var(--red)">*</span></span>
-            <input class="form-input" type="text" id="f-vydal" placeholder="Jméno Příjmení"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-vydal" placeholder="Jméno Příjmení" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Počátek</span>
@@ -1161,58 +870,35 @@
         </div>
         <div class="form-row">
             <span class="form-label">Autor</span>
-            <input class="form-input" type="text" id="f-autor" placeholder="J. Leško"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-autor" placeholder="J. Leško" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Důvod vystavení</span>
-            <input class="form-input" type="text" id="f-duvod" placeholder="Customer claim"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-duvod" placeholder="Customer claim" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
     </div>
 
     <div class="card" id="card-typqa">
         <div class="card-header">🏭 Typ QA</div>
-        <div class="toggle-row">
-            <span>Engineering</span>
-            <label class="toggle"><input type="checkbox" id="qa-engineering" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
-        <div class="toggle-row">
-            <span>Maintenance</span>
-            <label class="toggle"><input type="checkbox" id="qa-maintenance" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
-        <div class="toggle-row">
-            <span>Logistics</span>
-            <label class="toggle"><input type="checkbox" id="qa-logistics" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
-        <div class="toggle-row">
-            <span>Production</span>
-            <label class="toggle"><input type="checkbox" id="qa-production" checked onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
-        <div class="toggle-row">
-            <span>Quality</span>
-            <label class="toggle"><input type="checkbox" id="qa-quality" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
-        <div class="toggle-row">
-            <span>EOL</span>
-            <label class="toggle"><input type="checkbox" id="qa-eol" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label>
-        </div>
+        <div class="toggle-row"><span>Engineering</span><label class="toggle"><input type="checkbox" id="qa-engineering" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Maintenance</span><label class="toggle"><input type="checkbox" id="qa-maintenance" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Logistics</span><label class="toggle"><input type="checkbox" id="qa-logistics" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Production</span><label class="toggle"><input type="checkbox" id="qa-production" checked onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Quality</span><label class="toggle"><input type="checkbox" id="qa-quality" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>EOL</span><label class="toggle"><input type="checkbox" id="qa-eol" onchange="naplanovatAktualizaci()"><span class="toggle-slider"></span></label></div>
     </div>
 
     <div class="card">
         <div class="card-header" id="defect-header">⚠️ Popis defektu <span style="color:var(--red)">*</span></div>
         <div class="form-row">
-            <input class="form-input" type="text" id="f-defect"
-                   placeholder="Kontrola zajištění KST"
-                   style="text-align:left;" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-defect" placeholder="Kontrola zajištění KST" style="text-align:left;" oninput="naplanovatAktualizaci()">
         </div>
     </div>
 
     <div class="card">
         <div class="card-header" id="control-header">📝 Popis kontroly / pracovní postup</div>
         <div class="form-row">
-            <textarea class="form-input" id="f-control" oninput="naplanovatAktualizaci()"
-                      placeholder="Proveď manuální kontrolu..."></textarea>
+            <textarea class="form-input" id="f-control" oninput="naplanovatAktualizaci()" placeholder="Proveď manuální kontrolu..."></textarea>
         </div>
     </div>
 
@@ -1220,14 +906,11 @@
         <div class="card-header">✍️ Podpisy</div>
         <div class="form-row">
             <span class="form-label">Podpis QA</span>
-            <input class="form-input" type="text" id="f-podpisqa" placeholder="Originál"
-                   autocomplete="off" oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-podpisqa" placeholder="Originál" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
         <div class="form-row">
             <span class="form-label">Schválení výroby</span>
-            <input class="form-input" type="text" id="f-schvaleni"
-                   placeholder="Production approval" autocomplete="off"
-                   oninput="naplanovatAktualizaci()">
+            <input class="form-input" type="text" id="f-schvaleni" placeholder="Production approval" autocomplete="off" oninput="naplanovatAktualizaci()">
         </div>
     </div>
 
@@ -1246,17 +929,12 @@
         <div class="photos-container" id="photos-container"></div>
     </div>
 
-    <button class="gen-btn" onclick="prejitNaNahled()">
-        👁️ Zobrazit náhled dokumentu
-    </button>
-
+    <button class="gen-btn" onclick="prejitNaNahled()">👁️ Zobrazit náhled dokumentu</button>
 </div>
 
-<!-- STRÁNKA 2: NÁHLED -->
+<!-- NÁHLED -->
 <div class="page" id="page-preview">
-
     <div id="doc-wrapper">
-
         <div class="doc-page1">
 
             <div class="doc-top">
@@ -1276,44 +954,17 @@
 
             <div class="doc-info-section">
                 <div class="doc-info-row doc-info-row-4">
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Důvod vystavení / Reason</span>
-                        <div class="doc-cell-val" id="d-duvod">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Vydal / Issued by</span>
-                        <div class="doc-cell-val" id="d-vydal">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Počátek / Start</span>
-                        <div class="doc-cell-val" id="d-pocatek">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Konec / End</span>
-                        <div class="doc-cell-val" id="d-konec">—</div>
-                    </div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Důvod vystavení / Reason</span><div class="doc-cell-val" id="d-duvod">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Vydal / Issued by</span><div class="doc-cell-val" id="d-vydal">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Počátek / Start</span><div class="doc-cell-val" id="d-pocatek">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Konec / End</span><div class="doc-cell-val" id="d-konec">—</div></div>
                 </div>
                 <div class="doc-info-row doc-info-row-5">
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Zákazník / Customer</span>
-                        <div class="doc-cell-val" id="d-customer">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Projekt / Project</span>
-                        <div class="doc-cell-val" id="d-project">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Pracoviště / Workplace</span>
-                        <div class="doc-cell-val" id="d-pracoviste">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Díl / Part</span>
-                        <div class="doc-cell-val" id="d-dil">—</div>
-                    </div>
-                    <div class="doc-info-cell">
-                        <span class="doc-cell-label">Datum vystavení / Date</span>
-                        <div class="doc-cell-val" id="d-datum">—</div>
-                    </div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Zákazník / Customer</span><div class="doc-cell-val" id="d-customer">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Projekt / Project</span><div class="doc-cell-val" id="d-project">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Pracoviště / Workplace</span><div class="doc-cell-val" id="d-pracoviste">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Díl / Part</span><div class="doc-cell-val" id="d-dil">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Datum vystavení / Date</span><div class="doc-cell-val" id="d-datum">—</div></div>
                 </div>
             </div>
 
@@ -1349,28 +1000,18 @@
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
 
-            <!-- KLÍČOVÁ ZMĚNA: obal fotek s flex:1 -->
+            <!-- Obal fotek – flex:1 vyplní zbývající prostor -->
             <div class="doc-imgs-wrap">
-                <div class="doc-imgs cols-2 rows-1" id="doc-imgs-grid"></div>
+                <div class="doc-imgs" id="doc-imgs-grid"></div>
             </div>
 
             <div class="doc-footer">
-                <div class="doc-footer-cell">
-                    <span class="doc-footer-label">Autor / Author</span>
-                    <div class="doc-footer-val" id="d-autor">—</div>
-                </div>
-                <div class="doc-footer-cell">
-                    <span class="doc-footer-label">Podpis QA (originál) / QA Approval</span>
-                    <div class="doc-footer-val" id="d-podpisqa">—</div>
-                </div>
-                <div class="doc-footer-cell">
-                    <span class="doc-footer-label">Schválení výroby / Production Approval</span>
-                    <div class="doc-footer-val" id="d-schvaleni">—</div>
-                </div>
+                <div class="doc-footer-cell"><span class="doc-footer-label">Autor / Author</span><div class="doc-footer-val" id="d-autor">—</div></div>
+                <div class="doc-footer-cell"><span class="doc-footer-label">Podpis QA (originál) / QA Approval</span><div class="doc-footer-val" id="d-podpisqa">—</div></div>
+                <div class="doc-footer-cell"><span class="doc-footer-label">Schválení výroby / Production Approval</span><div class="doc-footer-val" id="d-schvaleni">—</div></div>
             </div>
 
             <div class="doc-page-footer">MPM_20.22_F11</div>
-
         </div>
 
         <div class="doc-page2">
@@ -1391,12 +1032,9 @@
             </table>
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
-
     </div>
 
-    <button class="pdf-btn" onclick="ulozitPDF()">
-        📄 Uložit jako PDF
-    </button>
+    <button class="pdf-btn" onclick="ulozitPDF()">📄 Uložit jako PDF</button>
 
     <div class="share-hint">
         <strong>💡 Jak uložit PDF na iPhone:</strong><br>
@@ -1405,10 +1043,9 @@
         3. Přiblíž prsty na náhled → otevře se PDF<br>
         4. Klikni <strong>Sdílet</strong> → <strong>Uložit do Souborů</strong>
     </div>
-
 </div>
 
-<!-- STRÁNKA 3: INFO -->
+<!-- INFO -->
 <div class="page" id="page-install">
     <div class="install-card">
         <h3>📱 Přidat na plochu</h3>
@@ -1423,29 +1060,15 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row">
-            <span class="form-label">Verze</span>
-            <span class="form-input" style="text-align:right; color:#636366;">3.6.1</span>
-        </div>
-        <div class="form-row">
-            <span class="form-label">Projekt</span>
-            <span class="form-input" style="text-align:right; color:#636366;">BMW G2x/G8x</span>
-        </div>
-        <div class="form-row">
-            <span class="form-label">Firma</span>
-            <span class="form-input" style="text-align:right; color:#636366;">Lear Corporation</span>
-        </div>
-        <div class="form-row">
-            <span class="form-label">Poslední změna</span>
-            <span class="form-input" style="text-align:right; color:#636366;">19. 6. 2026</span>
-        </div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#636366;">3.6.2</span></div>
+        <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#636366;">BMW G2x/G8x</span></div>
+        <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#636366;">Lear Corporation</span></div>
+        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#636366;">19. 6. 2026</span></div>
     </div>
-    <button class="gen-btn" style="background:#3a3a3c; margin-top:0;" onclick="vymazatFormular()">
-        🗑️ Vymazat formulář
-    </button>
+    <button class="gen-btn" style="background:#3a3a3c;margin-top:0;" onclick="vymazatFormular()">🗑️ Vymazat formulář</button>
 </div>
 
-<!-- STRÁNKA 4: NÁVOD -->
+<!-- NÁVOD -->
 <div class="page" id="page-navod">
     <div class="card">
         <div class="card-header">📖 Typy dokumentů</div>
@@ -1455,34 +1078,16 @@
         </div>
         <div class="navod-section">
             <div class="navod-title" style="color:#ffaa00;">🟡 Pracovní instrukce</div>
-            <div class="navod-text">Dokument pro pracovní postupy. Fotky jsou automaticky pojmenovány <strong style="color:white;">Krok 1</strong> až <strong style="color:white;">Krok 6</strong> s žlutým rámečkem.</div>
+            <div class="navod-text">Dokument pro pracovní postupy. Fotky jsou pojmenovány <strong style="color:white;">Krok 1</strong> až <strong style="color:white;">Krok 6</strong> s žlutým rámečkem.</div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">📷 Barvy rámečků fotek</div>
         <div class="navod-section">
             <div class="navod-text">Barva rámečku se nastaví automaticky podle názvu fotky:</div>
-            <div class="navod-color-row" style="margin-top:12px;">
-                <div class="navod-color-dot" style="background:#009900;"></div>
-                <span class="navod-text">Název obsahuje <strong style="color:white;">OK</strong> (ne NOK) → zelený rámeček</span>
-            </div>
-            <div class="navod-color-row">
-                <div class="navod-color-dot" style="background:#cc0000;"></div>
-                <span class="navod-text">Název obsahuje <strong style="color:white;">NOK</strong> → červený rámeček</span>
-            </div>
-            <div class="navod-color-row">
-                <div class="navod-color-dot" style="background:#ffaa00;"></div>
-                <span class="navod-text">Cokoliv jiného → žlutý rámeček</span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">🖨️ Jak uložit PDF</div>
-        <div class="navod-section">
-            <div class="install-step"><div class="step-num">1</div><div class="navod-text">Vyplň formulář a klikni <strong style="color:white;">"Zobrazit náhled"</strong></div></div>
-            <div class="install-step"><div class="step-num">2</div><div class="navod-text">Klikni <strong style="color:white;">"Uložit jako PDF"</strong></div></div>
-            <div class="install-step"><div class="step-num">3</div><div class="navod-text"><strong style="color:white;">iPhone:</strong> Přiblíž prsty na náhled → Sdílet → Uložit do Souborů</div></div>
-            <div class="install-step"><div class="step-num">4</div><div class="navod-text"><strong style="color:white;">PC/Mac:</strong> Vyber "Uložit jako PDF" v tiskovém dialogu</div></div>
+            <div class="navod-color-row" style="margin-top:12px;"><div class="navod-color-dot" style="background:#009900;"></div><span class="navod-text">Název obsahuje <strong style="color:white;">OK</strong> (ne NOK) → zelený rámeček</span></div>
+            <div class="navod-color-row"><div class="navod-color-dot" style="background:#cc0000;"></div><span class="navod-text">Název obsahuje <strong style="color:white;">NOK</strong> → červený rámeček</span></div>
+            <div class="navod-color-row"><div class="navod-color-dot" style="background:#ffaa00;"></div><span class="navod-text">Cokoliv jiného → žlutý rámeček</span></div>
         </div>
     </div>
     <div class="card">
@@ -1498,19 +1103,19 @@
 
 <!-- TAB BAR -->
 <div class="tabbar">
-    <button class="tab-btn active" id="tab-form" onclick="zobrazitStranku('form', this)">
+    <button class="tab-btn active" id="tab-form" onclick="zobrazitStranku('form',this)">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
         Formulář
     </button>
-    <button class="tab-btn" id="tab-preview" onclick="zobrazitStranku('preview', this)">
+    <button class="tab-btn" id="tab-preview" onclick="zobrazitStranku('preview',this)">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
         Náhled
     </button>
-    <button class="tab-btn" id="tab-install" onclick="zobrazitStranku('install', this)">
+    <button class="tab-btn" id="tab-install" onclick="zobrazitStranku('install',this)">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         Info
     </button>
-    <button class="tab-btn" id="tab-navod" onclick="zobrazitStranku('navod', this)">
+    <button class="tab-btn" id="tab-navod" onclick="zobrazitStranku('navod',this)">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
         Návod
     </button>
@@ -1518,15 +1123,12 @@
 
 <script>
     /* ══════════════════════════════════════════════════
-       STAV APLIKACE
+       STAV
     ══════════════════════════════════════════════════ */
     let typDokumentu = 'qa';
     let pocetFotek   = 2;
     let dataFotek    = [];
 
-    /* ══════════════════════════════════════════════════
-       DEBOUNCE
-    ══════════════════════════════════════════════════ */
     let _casovacAktualizace = null;
 
     function naplanovatAktualizaci() {
@@ -1535,9 +1137,6 @@
         _casovacAktualizace = setTimeout(() => aktualizovat(), 200);
     }
 
-    /* ══════════════════════════════════════════════════
-       INDIKÁTOR ULOŽENÍ
-    ══════════════════════════════════════════════════ */
     let _casovacIndikatoru = null;
 
     function nastavIndikatorUlozeni(stav) {
@@ -1572,28 +1171,23 @@
     }
 
     function ziskatStylFotky(nazev) {
-        const n    = (nazev || '').trim();
+        const n     = (nazev || '').trim();
         const jeNok = /\bNOK\b/i.test(n);
         const jeOk  = !jeNok && /\bOK\b/i.test(n);
-        if (jeNok) return { trida: 'qa-cell-nok', stylHlavicky: 'background:#cc0000;color:white;', stylTela: 'background:#fff0f0;' };
-        if (jeOk)  return { trida: 'qa-cell-ok',  stylHlavicky: 'background:#009900;color:white;', stylTela: 'background:#f0fff0;' };
-        return             { trida: 'wi-cell',     stylHlavicky: 'background:#ffaa00;color:#000;',  stylTela: 'background:#fffde7;' };
+        if (jeNok) return { trida: 'qa-cell-nok', stylH: 'background:#cc0000;color:white;', stylT: 'background:#fff0f0;' };
+        if (jeOk)  return { trida: 'qa-cell-ok',  stylH: 'background:#009900;color:white;', stylT: 'background:#f0fff0;' };
+        return             { trida: 'wi-cell',     stylH: 'background:#ffaa00;color:#000;',  stylT: 'background:#fffde7;' };
     }
 
-    function formatovatDatum(hodnota) {
-        if (!hodnota) return '—';
-        const casti = hodnota.split('-');
-        if (casti.length !== 3) return '—';
-        const [r, m, d] = casti.map(Number);
+    function formatovatDatum(h) {
+        if (!h) return '—';
+        const [r, m, d] = h.split('-').map(Number);
         if (!r || !m || !d || m < 1 || m > 12 || d < 1 || d > 31) return '—';
         return `${d}. ${m}. ${r}`;
     }
 
-    function escapovatHTML(text) {
-        return (text || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    function esc(t) {
+        return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
     function zobrazitToast(zprava, trvani = 2500) {
@@ -1604,28 +1198,23 @@
     }
 
     /* ══════════════════════════════════════════════════
-       PROGRESS BAR
+       PROGRESS
     ══════════════════════════════════════════════════ */
     function aktualizovatProgress() {
-        const pole = [
-            'f-number','f-customer','f-project','f-pracoviste','f-dil',
-            'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-            'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'
-        ];
-        const vyplneno = pole.filter(id => {
-            const el = document.getElementById(id);
-            return el && el.value.trim() !== '';
-        }).length;
-        const procenta = Math.round((vyplneno / pole.length) * 100);
-        document.getElementById('progress-fill').style.width = procenta + '%';
-        document.getElementById('progress-pct').textContent  = procenta + ' %';
+        const pole = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                      'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const n = pole.filter(id => { const e = document.getElementById(id); return e && e.value.trim(); }).length;
+        const p = Math.round(n / pole.length * 100);
+        document.getElementById('progress-fill').style.width = p + '%';
+        document.getElementById('progress-pct').textContent  = p + ' %';
     }
 
     /* ══════════════════════════════════════════════════
        TYP DOKUMENTU
     ══════════════════════════════════════════════════ */
     function nastavTypDokumentu(typ) {
-        const predchoziTyp = typDokumentu;
+        const predchozi = typDokumentu;
         typDokumentu = typ;
 
         document.getElementById('btn-qa').className = 'doc-type-btn' + (typ === 'qa' ? ' active-qa' : '');
@@ -1645,73 +1234,67 @@
         }
 
         for (let i = 0; i < dataFotek.length; i++) {
-            const vychoziStary = ziskatVychoziNazevFotky(i, predchoziTyp, dataFotek.length);
-            const vychoziNovy  = ziskatVychoziNazevFotky(i, typ, dataFotek.length);
-            if (dataFotek[i].name === vychoziStary || dataFotek[i].name === '') {
-                dataFotek[i].name = vychoziNovy;
-                const vstup = document.getElementById(`photo-name-${i}`);
-                if (vstup) vstup.value = vychoziNovy;
+            const stary = ziskatVychoziNazevFotky(i, predchozi, dataFotek.length);
+            const novy  = ziskatVychoziNazevFotky(i, typ, dataFotek.length);
+            if (dataFotek[i].name === stary || dataFotek[i].name === '') {
+                dataFotek[i].name = novy;
+                const inp = document.getElementById(`photo-name-${i}`);
+                if (inp) inp.value = novy;
             }
         }
-
         aktualizovat();
     }
 
     /* ══════════════════════════════════════════════════
        VSTUPY FOTEK
     ══════════════════════════════════════════════════ */
-    function sestavitVstupyFotek(zachovatData) {
+    function sestavitVstupyFotek(zachovat) {
         const novyPocet = parseInt(document.getElementById('photo-count').value);
-        const stareData = zachovatData ? dataFotek.slice() : [];
-
+        const stare     = zachovat ? dataFotek.slice() : [];
         pocetFotek = novyPocet;
         dataFotek  = [];
 
-        const kontejner = document.getElementById('photos-container');
-        kontejner.innerHTML = '';
+        const kont = document.getElementById('photos-container');
+        kont.innerHTML = '';
 
         for (let i = 0; i < pocetFotek; i++) {
-            const existujici   = stareData[i] || {};
-            const vychoziNazev = ziskatVychoziNazevFotky(i, typDokumentu, pocetFotek);
-            const nazev = (existujici.name !== undefined && existujici.name !== '')
-                ? existujici.name : vychoziNazev;
-            const src = existujici.src || null;
+            const ex  = stare[i] || {};
+            const def = ziskatVychoziNazevFotky(i, typDokumentu, pocetFotek);
+            const nm  = (ex.name !== undefined && ex.name !== '') ? ex.name : def;
+            const src = ex.src || null;
+            dataFotek.push({ name: nm, src });
 
-            dataFotek.push({ name: nazev, src });
-
-            const polozka = document.createElement('div');
-            polozka.className = 'photo-item';
-            polozka.innerHTML = sestavitHTMLFotky(i, nazev, src, vychoziNazev);
-            kontejner.appendChild(polozka);
-
-            if (src) nastavitSrcFotky(i);
+            const el = document.createElement('div');
+            el.className = 'photo-item';
+            el.innerHTML = htmlFotky(i, nm, src, def);
+            kont.appendChild(el);
+            if (src) setSrc(i);
         }
-
         aktualizovat();
     }
 
-    function sestavitHTMLFotky(i, nazev, src, placeholder) {
-        const bezpecnyNazev       = escapovatHTML(nazev);
-        const bezpecnyPlaceholder = escapovatHTML(placeholder);
-
+    /*
+     * OPRAVA formuláře:
+     * - input[type=file] je absolutně pozicovaný přes celou plochu (opacity:0)
+     * - náhled fotky je plně viditelný přes celou plochu upload zóny
+     * - tlačítko smazání je nad vším (z-index:2)
+     */
+    function htmlFotky(i, nm, src, def) {
         return `
             <div class="photo-name-row">
                 <span class="photo-name-label">Název:</span>
                 <input class="photo-name-input" type="text"
                        id="photo-name-${i}"
-                       value="${bezpecnyNazev}"
-                       placeholder="${bezpecnyPlaceholder}"
-                       oninput="aktualizovatNazevFotky(${i})">
+                       value="${esc(nm)}"
+                       placeholder="${esc(def)}"
+                       oninput="aktualizovatNazev(${i})">
             </div>
-            <div class="img-upload ${src ? 'has-image' : ''}"
-                 id="photo-upload-${i}"
-                 onclick="document.getElementById('photo-file-${i}').click()">
-                <input type="file" id="photo-file-${i}" accept="image/*"
-                       onchange="nacistFotku(${i})">
+            <div class="img-upload ${src ? 'has-image' : ''}" id="photo-upload-${i}">
+                <input type="file" accept="image/*" onchange="nacistFotku(${i})">
                 ${src
-                    ? `<img id="photo-preview-${i}" alt="foto ${i + 1}" loading="lazy">
+                    ? `<img id="photo-preview-${i}" alt="foto">
                        <button class="img-remove" onclick="odstranitFotku(event,${i})">✕</button>`
-                    : `<div class="img-upload-placeholder" id="photo-placeholder-${i}">
+                    : `<div class="img-upload-placeholder">
                            <div class="img-upload-icon">📷</div>
                            <div class="img-upload-text">Klikni pro nahrání fotky</div>
                        </div>
@@ -1721,117 +1304,103 @@
         `;
     }
 
-    function nastavitSrcFotky(index) {
-        const src = dataFotek[index] && dataFotek[index].src;
+    function setSrc(i) {
+        const src = dataFotek[i] && dataFotek[i].src;
         if (!src) return;
-        const img = document.getElementById(`photo-preview-${index}`);
+        const img = document.getElementById(`photo-preview-${i}`);
         if (img) img.src = src;
     }
 
-    function aktualizovatNazevFotky(index) {
-        dataFotek[index].name = document.getElementById(`photo-name-${index}`).value;
+    function aktualizovatNazev(i) {
+        dataFotek[i].name = document.getElementById(`photo-name-${i}`).value;
         naplanovatAktualizaci();
     }
 
-    function nacistFotku(index) {
-        const soubor = document.getElementById(`photo-file-${index}`).files[0];
+    function nacistFotku(i) {
+        const inp    = document.querySelector(`#photo-upload-${i} input[type=file]`);
+        const soubor = inp && inp.files[0];
         if (!soubor) return;
 
-        if (soubor.size > 3 * 1024 * 1024) {
+        if (soubor.size > 3 * 1024 * 1024)
             zobrazitToast('⚠️ Fotka je velká (>3 MB), může být pomalé uložení', 3000);
-        }
 
-        const ctecka = new FileReader();
-        ctecka.onload = (e) => {
-            const base64 = e.target.result;
-            dataFotek[index].src = base64;
+        const r = new FileReader();
+        r.onload = e => {
+            const b64 = e.target.result;
+            dataFotek[i].src = b64;
 
-            const upload = document.getElementById(`photo-upload-${index}`);
+            const upload = document.getElementById(`photo-upload-${i}`);
             upload.classList.add('has-image');
             upload.innerHTML = `
-                <input type="file" id="photo-file-${index}" accept="image/*"
-                       onchange="nacistFotku(${index})">
-                <img id="photo-preview-${index}" alt="foto ${index + 1}" loading="lazy">
-                <button class="img-remove" onclick="odstranitFotku(event,${index})">✕</button>
+                <input type="file" accept="image/*" onchange="nacistFotku(${i})">
+                <img id="photo-preview-${i}" alt="foto">
+                <button class="img-remove" onclick="odstranitFotku(event,${i})">✕</button>
             `;
-            document.getElementById(`photo-preview-${index}`).src = base64;
-
+            document.getElementById(`photo-preview-${i}`).src = b64;
             aktualizovat();
             zobrazitToast('✅ Fotka nahrána!');
         };
-        ctecka.onerror = () => zobrazitToast('❌ Chyba při načítání fotky', 3000);
-        ctecka.readAsDataURL(soubor);
+        r.onerror = () => zobrazitToast('❌ Chyba při načítání fotky', 3000);
+        r.readAsDataURL(soubor);
     }
 
-    function odstranitFotku(e, index) {
+    function odstranitFotku(e, i) {
         e.stopPropagation();
-        dataFotek[index].src = null;
-
-        const upload = document.getElementById(`photo-upload-${index}`);
+        dataFotek[i].src = null;
+        const upload = document.getElementById(`photo-upload-${i}`);
         upload.classList.remove('has-image');
         upload.innerHTML = `
-            <input type="file" id="photo-file-${index}" accept="image/*"
-                   onchange="nacistFotku(${index})">
-            <div class="img-upload-placeholder" id="photo-placeholder-${index}">
+            <input type="file" accept="image/*" onchange="nacistFotku(${i})">
+            <div class="img-upload-placeholder">
                 <div class="img-upload-icon">📷</div>
                 <div class="img-upload-text">Klikni pro nahrání fotky</div>
             </div>
-            <img id="photo-preview-${index}" style="display:none" alt="">
+            <img id="photo-preview-${i}" style="display:none" alt="">
         `;
         aktualizovat();
         zobrazitToast('🗑️ Fotka odstraněna');
     }
 
     /* ══════════════════════════════════════════════════
-       GRID FOTEK V DOKUMENTU
+       GRID DOKUMENTU
        
-       Logika řádků:
-       2 fotky → 1 řádek, 2 sloupce
-       3 fotky → 1 řádek, 3 sloupce
-       4 fotky → 2 řádky, 2 sloupce
-       5 fotky → 2 řádky (3+2), 3 sloupce
-       6 fotek → 2 řádky, 3 sloupce
+       Logika rozložení:
+       2 fotky → 2 sloupce, 1 řádek
+       3 fotky → 3 sloupce, 1 řádek
+       4 fotky → 2 sloupce, 2 řádky
+       5 fotek → 3 sloupce, 2 řádky  (poslední řádek má 2)
+       6 fotek → 3 sloupce, 2 řádky
+       
+       OPRAVA: grid-template-rows: repeat(N, 1fr)
+       zajistí že oba řádky jsou STEJNĚ vysoké
     ══════════════════════════════════════════════════ */
-    function sestavitGridDokumentu() {
+    function sestavitGrid() {
         const grid  = document.getElementById('doc-imgs-grid');
         const pocet = dataFotek.length;
 
-        // Počet sloupců a řádků
         let sloupce, radky;
-        if (pocet <= 3) {
-            sloupce = pocet;   // 2→2, 3→3
-            radky   = 1;
-        } else {
-            sloupce = 3;       // 4,5,6 → vždy 3 sloupce
-            radky   = 2;
-        }
+        if (pocet <= 3) { sloupce = pocet; radky = 1; }
+        else            { sloupce = 3;     radky = 2; }
 
-        grid.className = `doc-imgs cols-${sloupce} rows-${radky}`;
+        // Nastavíme třídu pro sloupce a inline styl pro řádky
+        grid.className = `doc-imgs cols-${sloupce}`;
+        grid.style.gridTemplateRows    = `repeat(${radky}, 1fr)`;
+        grid.style.gridTemplateColumns = `repeat(${sloupce}, 1fr)`;
 
-        // Sestavíme HTML buněk
         grid.innerHTML = dataFotek.map((foto, idx) => {
-            const nazev = foto.name || 'Foto';
-            const styl  = ziskatStylFotky(nazev);
-            const imgHTML = foto.src
-                ? `<img id="doc-img-${idx}"
-                        style="width:100%;height:100%;object-fit:contain;"
-                        alt="${escapovatHTML(nazev)}"
-                        loading="lazy">`
+            const nm   = foto.name || 'Foto';
+            const styl = ziskatStylFotky(nm);
+            const img  = foto.src
+                ? `<img id="doc-img-${idx}" style="width:100%;height:100%;object-fit:contain;" alt="${esc(nm)}" loading="lazy">`
                 : `<div class="doc-img-placeholder-icon">📷</div>`;
-
             return `
                 <div class="doc-img-cell ${styl.trida}">
-                    <div class="doc-img-header" style="${styl.stylHlavicky}">
-                        ${escapovatHTML(nazev)}
-                    </div>
-                    <div class="doc-img-body" style="${styl.stylTela}">
-                        ${imgHTML}
-                    </div>
-                </div>
-            `;
+                    <div class="doc-img-header" style="${styl.stylH}">${esc(nm)}</div>
+                    <div class="doc-img-body" style="${styl.stylT}">${img}</div>
+                </div>`;
         }).join('');
 
-        // Nastavíme src přes DOM (bezpečné pro base64)
+        // src přes DOM (bezpečné pro base64)
         dataFotek.forEach((foto, idx) => {
             if (foto.src) {
                 const img = document.getElementById(`doc-img-${idx}`);
@@ -1841,42 +1410,25 @@
     }
 
     /* ══════════════════════════════════════════════════
-       HLAVNÍ AKTUALIZACE
+       AKTUALIZACE DOKUMENTU
     ══════════════════════════════════════════════════ */
     function aktualizovat() {
-        if (typDokumentu === 'wi') {
-            document.getElementById('d-doc-title').textContent = 'PRACOVNÍ INSTRUKCE';
-            document.getElementById('d-doc-sub').textContent   = 'WORK INSTRUCTION';
-            document.getElementById('d-typqa-section').style.display = 'none';
-            document.getElementById('d-defect-label').textContent    = '📝 Název instrukce';
-            document.getElementById('d-control-label').textContent   = '📋 Popis pracovního postupu';
-        } else {
-            document.getElementById('d-doc-title').textContent = 'QUALITY ALERT';
-            document.getElementById('d-doc-sub').textContent   = 'PROCESS QUALITY NOTICE';
-            document.getElementById('d-typqa-section').style.display = 'grid';
-            document.getElementById('d-defect-label').textContent    = '⚠ Popis defektu / Defect description';
-            document.getElementById('d-control-label').textContent   = '📋 Popis kontroly / Pracovní postup / Description of checks';
-        }
+        const jeWI = typDokumentu === 'wi';
+        document.getElementById('d-doc-title').textContent = jeWI ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
+        document.getElementById('d-doc-sub').textContent   = jeWI ? 'WORK INSTRUCTION'   : 'PROCESS QUALITY NOTICE';
+        document.getElementById('d-typqa-section').style.display = jeWI ? 'none' : 'grid';
+        document.getElementById('d-defect-label').textContent    = jeWI ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
+        document.getElementById('d-control-label').textContent   = jeWI ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup / Description of checks';
 
-        const mapovani = {
-            'd-number':    'f-number',
-            'd-customer':  'f-customer',
-            'd-project':   'f-project',
-            'd-pracoviste':'f-pracoviste',
-            'd-dil':       'f-dil',
-            'd-vydal':     'f-vydal',
-            'd-autor':     'f-autor',
-            'd-duvod':     'f-duvod',
-            'd-defect':    'f-defect',
-            'd-control':   'f-control',
-            'd-podpisqa':  'f-podpisqa',
-            'd-schvaleni': 'f-schvaleni',
+        const mapa = {
+            'd-number':'f-number','d-customer':'f-customer','d-project':'f-project',
+            'd-pracoviste':'f-pracoviste','d-dil':'f-dil','d-vydal':'f-vydal',
+            'd-autor':'f-autor','d-duvod':'f-duvod','d-defect':'f-defect',
+            'd-control':'f-control','d-podpisqa':'f-podpisqa','d-schvaleni':'f-schvaleni'
         };
-
-        Object.entries(mapovani).forEach(([docId, formId]) => {
-            const el  = document.getElementById(docId);
-            const val = document.getElementById(formId).value;
-            if (el) el.textContent = val || '—';
+        Object.entries(mapa).forEach(([dId, fId]) => {
+            const el = document.getElementById(dId);
+            if (el) el.textContent = document.getElementById(fId).value || '—';
         });
 
         document.getElementById('d-pocatek').textContent = formatovatDatum(document.getElementById('f-pocatek').value);
@@ -1884,34 +1436,30 @@
         document.getElementById('d-datum').textContent   = formatovatDatum(document.getElementById('f-datum').value);
 
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const zaskrtnuto = document.getElementById('qa-' + t).checked;
-            const el         = document.getElementById('dqa-' + t);
-            if (el) el.className = 'doc-typqa-item' + (zaskrtnuto ? ' active' : '');
+            const el = document.getElementById('dqa-' + t);
+            if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-' + t).checked ? ' active' : '');
         });
 
-        sestavitGridDokumentu();
+        sestavitGrid();
         aktualizovatProgress();
-        ulozitDoUloziste();
+        ulozit();
     }
 
     /* ══════════════════════════════════════════════════
        NAVIGACE
     ══════════════════════════════════════════════════ */
-    function zobrazitStranku(nazev, tlacitko) {
+    function zobrazitStranku(nazev, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('page-' + nazev).classList.add('active');
-        tlacitko.classList.add('active');
+        btn.classList.add('active');
         window.scrollTo(0, 0);
         if (nazev === 'preview') aktualizovat();
     }
 
     function prejitNaNahled() {
-        const chybejici = zvalidovatFormular();
-        if (chybejici.length > 0) {
-            zobrazitToast(`⚠️ Chybí: ${chybejici.join(', ')}`, 3500);
-            return;
-        }
+        const chybi = validovat();
+        if (chybi.length) { zobrazitToast(`⚠️ Chybí: ${chybi.join(', ')}`, 3500); return; }
         aktualizovat();
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1924,166 +1472,124 @@
     /* ══════════════════════════════════════════════════
        PODPISY
     ══════════════════════════════════════════════════ */
-    function vygeneratRadkyPodpisu() {
-        return Array.from({ length: 30 }, () => `
-            <tr>
-                <td style="border:1px solid #000;height:28px;"></td>
-                <td style="border:1px solid #000;"></td>
-                <td style="border:1px solid #000;"></td>
-                <td style="border:1px solid #000;"></td>
-            </tr>
-        `).join('');
+    function radkyPodpisu() {
+        return Array.from({ length: 30 }, () =>
+            `<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`
+        ).join('');
     }
 
     /* ══════════════════════════════════════════════════
        ÚLOŽIŠTĚ
     ══════════════════════════════════════════════════ */
-    const KLIC_ULOZISTE = 'qa-form-data-v3';
-    const STARE_KLICE   = ['qa-form-data-v2', 'qa-form-data'];
+    const KLIC = 'qa-form-data-v3';
+    const STARE = ['qa-form-data-v2', 'qa-form-data'];
 
-    function ulozitDoUloziste() {
-        const pole = [
-            'f-number','f-customer','f-project','f-pracoviste','f-dil',
-            'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-            'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'
-        ];
-        const data = { typDokumentu, pocetFotek };
-        pole.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) data[id] = el.value;
-        });
+    function ulozit() {
+        const pole = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                      'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const d = { typDokumentu, pocetFotek };
+        pole.forEach(id => { const e = document.getElementById(id); if (e) d[id] = e.value; });
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const el = document.getElementById('qa-' + t);
-            if (el) data['qa-' + t] = el.checked;
+            const e = document.getElementById('qa-' + t); if (e) d['qa-' + t] = e.checked;
         });
-        data.photos = dataFotek.map(f => ({ name: f.name, src: f.src || null }));
+        d.photos = dataFotek.map(f => ({ name: f.name, src: f.src || null }));
 
         try {
-            localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(data));
+            localStorage.setItem(KLIC, JSON.stringify(d));
             nastavIndikatorUlozeni('saved');
             document.getElementById('storage-warning').classList.remove('show');
-            STARE_KLICE.forEach(k => { try { localStorage.removeItem(k); } catch (_) {} });
-        } catch (e) {
+            STARE.forEach(k => { try { localStorage.removeItem(k); } catch(_){} });
+        } catch(e) {
             nastavIndikatorUlozeni('saving');
             document.getElementById('storage-warning').classList.add('show');
             zobrazitToast('⚠️ Úložiště je plné – fotky se neuloží', 4000);
             try {
-                const dataBesFotek = { ...data, photos: dataFotek.map(f => ({ name: f.name, src: null })) };
-                localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(dataBesFotek));
+                localStorage.setItem(KLIC, JSON.stringify({ ...d, photos: dataFotek.map(f => ({ name: f.name, src: null })) }));
                 nastavIndikatorUlozeni('saved');
-            } catch (e2) {
-                console.warn('localStorage nedostupný:', e2);
-            }
+            } catch(_) {}
         }
     }
 
-    function nacistZUloziste() {
+    function nacist() {
         try {
-            let raw = localStorage.getItem(KLIC_ULOZISTE);
-            if (!raw) {
-                for (const k of STARE_KLICE) {
-                    raw = localStorage.getItem(k);
-                    if (raw) break;
-                }
-            }
+            let raw = localStorage.getItem(KLIC);
+            if (!raw) for (const k of STARE) { raw = localStorage.getItem(k); if (raw) break; }
             if (!raw) return false;
 
-            const data = JSON.parse(raw);
-
-            if (data.typDokumentu || data.docType) {
-                typDokumentu = data.typDokumentu || data.docType;
+            const d = JSON.parse(raw);
+            if (d.typDokumentu || d.docType) {
+                typDokumentu = d.typDokumentu || d.docType;
                 document.getElementById('btn-qa').className = 'doc-type-btn' + (typDokumentu === 'qa' ? ' active-qa' : '');
                 document.getElementById('btn-wi').className = 'doc-type-btn' + (typDokumentu === 'wi' ? ' active-wi' : '');
                 document.getElementById('card-typqa').style.display = typDokumentu === 'qa' ? 'block' : 'none';
             }
 
-            const ulozenyPocet = data.pocetFotek || data.photoCount;
-            if (ulozenyPocet) document.getElementById('photo-count').value = ulozenyPocet;
+            const pc = d.pocetFotek || d.photoCount;
+            if (pc) document.getElementById('photo-count').value = pc;
 
-            const pole = [
-                'f-number','f-customer','f-project','f-pracoviste','f-dil',
-                'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-                'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'
-            ];
-            pole.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && data[id] !== undefined) el.value = data[id];
+            ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+             'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+             'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
+                const e = document.getElementById(id);
+                if (e && d[id] !== undefined) e.value = d[id];
             });
 
             ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-                const el = document.getElementById('qa-' + t);
-                if (el && data['qa-' + t] !== undefined) el.checked = data['qa-' + t];
+                const e = document.getElementById('qa-' + t);
+                if (e && d['qa-' + t] !== undefined) e.checked = d['qa-' + t];
             });
 
-            const ulozenePhotos = data.photos || [];
-            const pocet = parseInt(document.getElementById('photo-count').value) || 2;
-            pocetFotek = pocet;
+            const photos = d.photos || [];
+            const cnt    = parseInt(document.getElementById('photo-count').value) || 2;
+            pocetFotek = cnt;
             dataFotek  = [];
+            const kont = document.getElementById('photos-container');
+            kont.innerHTML = '';
 
-            const kontejner = document.getElementById('photos-container');
-            kontejner.innerHTML = '';
-
-            for (let i = 0; i < pocet; i++) {
-                const ulozena      = ulozenePhotos[i] || {};
-                const vychoziNazev = ziskatVychoziNazevFotky(i, typDokumentu, pocet);
-                const nazev = (ulozena.name !== undefined && ulozena.name !== '')
-                    ? ulozena.name : vychoziNazev;
-                const src = ulozena.src || null;
-
-                dataFotek.push({ name: nazev, src });
-
-                const polozka = document.createElement('div');
-                polozka.className = 'photo-item';
-                polozka.innerHTML = sestavitHTMLFotky(i, nazev, src, vychoziNazev);
-                kontejner.appendChild(polozka);
-
-                if (src) nastavitSrcFotky(i);
+            for (let i = 0; i < cnt; i++) {
+                const p   = photos[i] || {};
+                const def = ziskatVychoziNazevFotky(i, typDokumentu, cnt);
+                const nm  = (p.name !== undefined && p.name !== '') ? p.name : def;
+                const src = p.src || null;
+                dataFotek.push({ name: nm, src });
+                const el = document.createElement('div');
+                el.className = 'photo-item';
+                el.innerHTML = htmlFotky(i, nm, src, def);
+                kont.appendChild(el);
+                if (src) setSrc(i);
             }
-
             return true;
-        } catch (e) {
-            console.warn('Chyba při načítání dat:', e);
+        } catch(e) {
+            console.warn('Chyba načítání:', e);
             return false;
         }
     }
 
     /* ══════════════════════════════════════════════════
-       RESET
+       RESET & VALIDACE
     ══════════════════════════════════════════════════ */
     function vymazatFormular() {
         if (!confirm('Opravdu chceš vymazat celý formulář včetně fotek?')) return;
-        try {
-            localStorage.removeItem(KLIC_ULOZISTE);
-            STARE_KLICE.forEach(k => localStorage.removeItem(k));
-        } catch (e) {}
+        try { localStorage.removeItem(KLIC); STARE.forEach(k => localStorage.removeItem(k)); } catch(_) {}
         location.reload();
     }
 
-    /* ══════════════════════════════════════════════════
-       VALIDACE
-    ══════════════════════════════════════════════════ */
-    function zvalidovatFormular() {
-        const povinna = {
-            'f-number': 'Číslo dokumentu',
-            'f-defect': typDokumentu === 'wi' ? 'Název instrukce' : 'Popis defektu',
-            'f-vydal':  'Vydal'
-        };
-        Object.keys(povinna).forEach(id => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            if (!el.value.trim()) el.classList.add('error');
-            else                  el.classList.remove('error');
+    function validovat() {
+        const pov = { 'f-number': 'Číslo dokumentu', 'f-defect': typDokumentu === 'wi' ? 'Název instrukce' : 'Popis defektu', 'f-vydal': 'Vydal' };
+        Object.keys(pov).forEach(id => {
+            const e = document.getElementById(id);
+            if (!e) return;
+            e.classList.toggle('error', !e.value.trim());
         });
-        return Object.entries(povinna)
-            .filter(([id]) => !document.getElementById(id).value.trim())
-            .map(([, popis]) => popis);
+        return Object.entries(pov).filter(([id]) => !document.getElementById(id).value.trim()).map(([,l]) => l);
     }
 
     function ulozitPDF() {
-        const chybejici = zvalidovatFormular();
-        if (chybejici.length > 0) {
+        const chybi = validovat();
+        if (chybi.length) {
             zobrazitStranku('form', document.getElementById('tab-form'));
-            zobrazitToast(`⚠️ Chybí: ${chybejici.join(', ')}`, 3500);
+            zobrazitToast(`⚠️ Chybí: ${chybi.join(', ')}`, 3500);
             return;
         }
         aktualizovat();
@@ -2092,31 +1598,25 @@
     }
 
     /* ══════════════════════════════════════════════════
-       INICIALIZACE
+       INIT
     ══════════════════════════════════════════════════ */
     window.onload = () => {
-        document.getElementById('sig-tbody-1').innerHTML = vygeneratRadkyPodpisu();
+        document.getElementById('sig-tbody-1').innerHTML = radkyPodpisu();
 
-        const nacteno = nacistZUloziste();
-        if (!nacteno) sestavitVstupyFotek(false);
+        if (!nacist()) sestavitVstupyFotek(false);
 
         const dnes = new Date().toISOString().split('T')[0];
-        if (!document.getElementById('f-datum').value)
-            document.getElementById('f-datum').value = dnes;
-        if (!document.getElementById('f-pocatek').value)
-            document.getElementById('f-pocatek').value = dnes;
+        if (!document.getElementById('f-datum').value)   document.getElementById('f-datum').value   = dnes;
+        if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
 
         if (typDokumentu === 'wi') {
-            document.getElementById('defect-header').innerHTML =
-                '📝 Název instrukce <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent =
-                '📋 Popis pracovního postupu';
+            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
         }
 
         aktualizovat();
         nastavIndikatorUlozeni('saved');
     };
 </script>
-
 </body>
 </html>
