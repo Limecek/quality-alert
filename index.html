@@ -349,7 +349,6 @@
             transition: width 0.4s ease;
         }
 
-        /* Indikátor uložení */
         .save-indicator {
             display: flex;
             align-items: center;
@@ -873,7 +872,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v3.9.2</div>
+        <div class="version-badge">v3.9.3</div>
     </div>
 </div>
 
@@ -1066,7 +1065,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.2</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.3</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">22. 6. 2026</span></div>
@@ -1163,9 +1162,11 @@
     let fotky = [];
     let _timer = null;
     let _timerInd = null;
+    let _inicializovano = false;
+
+    const KLIC = 'qa-form-v4';
 
     // ── localStorage — pouze text ─────────────────────────
-    const KLIC = 'qa-form-v4';
 
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
@@ -1195,7 +1196,7 @@
             const e = document.getElementById('qa-' + t);
             if (e) d['qa-' + t] = e.checked;
         });
-        // Uložit jen názvy fotek — BEZ base64 dat
+        // Uložit jen názvy fotek — BEZ base64
         d.nazvy = fotky.map(f => f.name);
         try {
             localStorage.setItem(KLIC, JSON.stringify(d));
@@ -1210,23 +1211,19 @@
             const raw = localStorage.getItem(KLIC);
             if (!raw) return false;
             const d = JSON.parse(raw);
-            // Typ dokumentu
             if (d.typ) {
                 typ = d.typ;
                 document.getElementById('btn-qa').className = 'doc-type-btn' + (typ === 'qa' ? ' active-qa' : '');
                 document.getElementById('btn-wi').className = 'doc-type-btn' + (typ === 'wi' ? ' active-wi' : '');
                 document.getElementById('card-typqa').style.display = typ === 'qa' ? 'block' : 'none';
             }
-            // Počet fotek
             if (d.pocet) document.getElementById('photo-count').value = d.pocet;
-            // Textová pole
             ['f-number','f-customer','f-project','f-pracoviste','f-dil',
              'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
              'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
                 const e = document.getElementById(id);
                 if (e && d[id] !== undefined) e.value = d[id];
             });
-            // Checkboxy
             ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
                 const e = document.getElementById('qa-' + t);
                 if (e && d['qa-' + t] !== undefined) e.checked = d['qa-' + t];
@@ -1246,6 +1243,40 @@
             ulozit();
         }, 400);
     }
+
+    // ── Inicializace ──────────────────────────────────────
+
+    function inicializovat() {
+        if (_inicializovano) return;
+        _inicializovano = true;
+        document.getElementById('sig-tbody-1').innerHTML = podpisy();
+        const maNactenaData = nacist();
+        sestavitFotky(false);
+        const dnes = new Date().toISOString().split('T')[0];
+        if (!document.getElementById('f-datum').value)   document.getElementById('f-datum').value   = dnes;
+        if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
+        if (typ === 'wi') {
+            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
+        }
+        update();
+        indikator('saved');
+        if (maNactenaData) toast('📂 Formulář obnoven', 2000);
+    }
+
+    // pageshow — správně zachytí i návrat z emailu na mobilu
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            // Návrat z cache (Back-Forward Cache)
+            // Stránka je v paměti — text i fotky zůstaly
+            // Jen aktualizujeme náhled
+            update();
+            indikator('saved');
+            return;
+        }
+        // Normální načtení stránky
+        inicializovat();
+    });
 
     // ── Pomocné funkce ────────────────────────────────────
 
@@ -1559,7 +1590,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v3.9.2`;
+Vygenerováno: Quality Alert v3.9.3`;
     }
 
     function sestavitPredmet() {
@@ -1743,26 +1774,6 @@ body { font-family:Arial,sans-serif; background:white; }
             document.body.removeChild(ta);
         }
     }
-
-    window.onload = () => {
-        document.getElementById('sig-tbody-1').innerHTML = podpisy();
-        // Načíst uložená data
-        const maNactenaData = nacist();
-        // Sestavit fotky (bez uložených dat — jen názvy)
-        sestavitFotky(false);
-        // Nastavit dnešní datum pokud není uloženo
-        const dnes = new Date().toISOString().split('T')[0];
-        if (!document.getElementById('f-datum').value)   document.getElementById('f-datum').value   = dnes;
-        if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
-        // Nastavit popisky podle typu
-        if (typ === 'wi') {
-            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
-        }
-        update();
-        indikator('saved');
-        if (maNactenaData) toast('📂 Formulář obnoven', 2000);
-    };
 </script>
 </body>
 </html>
