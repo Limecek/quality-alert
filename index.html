@@ -627,14 +627,61 @@
         .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
         .sig-table td { border: 1px solid #000; padding: 0; height: 28px; }
 
-        .doc-top { display: grid; grid-template-columns: 100px 1fr auto; align-items: center; margin-bottom: 6px; gap: 8px; flex-shrink: 0; }
-        .doc-logo-box { background: #cc0000; padding: 6px 8px; display: flex; flex-direction: column; }
-        .doc-logo-main { font-size: 16px; font-weight: 900; color: white; letter-spacing: 1px; }
-        .doc-logo-sub { font-size: 5px; color: rgba(255,255,255,0.8); letter-spacing: 0.5px; margin-top: 1px; }
-        .doc-title-center { text-align: center; }
-        .doc-title-main { font-size: 20px; font-weight: 900; color: #000; letter-spacing: 2px; line-height: 1; }
-        .doc-title-sub { font-size: 7px; color: #666; letter-spacing: 1px; margin-top: 2px; }
-        .doc-num-box { background: #000; color: white; padding: 6px 10px; text-align: center; min-width: 70px; }
+        /* HLAVIČKA DOKUMENTU */
+        .doc-top {
+            display: grid;
+            grid-template-columns: 110px 1fr auto;
+            align-items: stretch;
+            margin-bottom: 6px;
+            gap: 0;
+            flex-shrink: 0;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+
+        /* LEAR LOGO */
+        .doc-logo-box {
+            background: white;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #ddd;
+        }
+
+        /* QUALITY ALERT nadpis */
+        .doc-title-center {
+            background: #cc0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .doc-title-main {
+            font-size: 22px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 2px;
+            line-height: 1;
+            font-family: Arial, sans-serif;
+        }
+
+        .doc-title-sub { display: none; }
+
+        .doc-num-box {
+            background: #000;
+            color: white;
+            padding: 6px 10px;
+            text-align: center;
+            min-width: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid #ddd;
+        }
+
         .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
         .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
 
@@ -733,61 +780,31 @@
 
         .toast.show { opacity: 1; }
 
-        /* ═══════════════════════════════════════
-           TISK — zoom 78% = vše na 2 stránky
-        ═══════════════════════════════════════ */
         @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: A4 portrait; margin: 0; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
             .topbar, .tabbar, .action-buttons, .share-hint, .gen-btn,
             #page-form, #page-install, #page-navod,
             .toast, .progress-bar-wrap, .modal-overlay {
                 display: none !important;
             }
+            #page-preview { display: block !important; padding: 0 !important; margin: 0 !important; }
+            #doc-wrapper { box-shadow: none !important; border-radius: 0 !important; }
 
-            #page-preview {
-                display: block !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            #doc-wrapper {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-            }
-
-            /* STRÁNKA 1 — zoom 78% */
             .doc-page1 {
                 font-family: Arial, sans-serif !important;
-                font-size: 9px !important;
-                color: #000 !important;
                 background: white !important;
                 padding: 6mm !important;
-                /* Zoom 78% pomocí transform */
-                width: calc(210mm) !important;
-                height: calc(297mm) !important;
-                max-height: calc(297mm) !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                max-height: 297mm !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 display: flex !important;
                 flex-direction: column !important;
                 box-sizing: border-box !important;
-                /* Klíčový zoom */
                 zoom: 0.78 !important;
             }
 
@@ -799,7 +816,6 @@
             .doc-footer { flex-shrink: 0 !important; }
             .doc-page-footer { flex-shrink: 0 !important; }
 
-            /* FOTKY */
             .doc-imgs-wrap {
                 flex: 1 !important;
                 min-height: 0 !important;
@@ -817,17 +833,8 @@
                 height: 100% !important;
             }
 
-            .doc-img-cell {
-                overflow: hidden !important;
-                min-height: 0 !important;
-            }
-
-            .doc-img-body {
-                flex: 1 !important;
-                min-height: 0 !important;
-                overflow: hidden !important;
-            }
-
+            .doc-img-cell { overflow: hidden !important; min-height: 0 !important; }
+            .doc-img-body { flex: 1 !important; min-height: 0 !important; overflow: hidden !important; }
             .doc-img-body img {
                 width: 100% !important;
                 height: 100% !important;
@@ -837,7 +844,6 @@
                 display: block !important;
             }
 
-            /* STRÁNKA 2 — zoom 78% */
             .doc-page2 {
                 font-family: Arial, sans-serif !important;
                 background: white !important;
@@ -845,12 +851,11 @@
                 border-top: none !important;
                 margin-top: 0 !important;
                 page-break-before: always !important;
-                width: calc(210mm) !important;
-                height: calc(297mm) !important;
+                width: 210mm !important;
+                height: 297mm !important;
                 display: flex !important;
                 flex-direction: column !important;
                 box-sizing: border-box !important;
-                /* Klíčový zoom */
                 zoom: 0.78 !important;
             }
 
@@ -933,7 +938,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v3.9.4</div>
+        <div class="version-badge">v4.0.0</div>
     </div>
 </div>
 
@@ -960,7 +965,7 @@
     <div class="card">
         <div class="card-header">📋 Hlavička dokumentu</div>
         <div class="form-row"><span class="form-label">Číslo Nº <span style="color:var(--red)">*</span></span><input class="form-input" type="text" id="f-number" placeholder="QABMW001" autocomplete="off" oninput="planovatUlozeni()"></div>
-        <div class="form-row"><span class="form-label">Zákazník</span><input class="form-input" type="text" id="f-customer" value="BMW" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Proces</span><input class="form-input" type="text" id="f-customer" placeholder="Název procesu" autocomplete="off" oninput="planovatUlozeni()"></div>
         <div class="form-row"><span class="form-label">Projekt</span><input class="form-input" type="text" id="f-project" value="G2x/G8x" autocomplete="off" oninput="planovatUlozeni()"></div>
         <div class="form-row"><span class="form-label">Pracoviště</span><input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020" autocomplete="off" oninput="planovatUlozeni()"></div>
         <div class="form-row"><span class="form-label">Díl</span><input class="form-input" type="text" id="f-dil" placeholder="Název dílu" autocomplete="off" oninput="planovatUlozeni()"></div>
@@ -1017,20 +1022,31 @@
 <div class="page" id="page-preview">
     <div id="doc-wrapper">
         <div class="doc-page1">
+            <!-- HLAVIČKA -->
             <div class="doc-top">
+                <!-- LEAR LOGO -->
                 <div class="doc-logo-box">
-                    <div class="doc-logo-main">LEAR</div>
-                    <div class="doc-logo-sub">MAKING EVERY DRIVE BETTER™</div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;">
+                        <div style="display:flex;align-items:center;gap:5px;">
+                            <div style="width:26px;height:26px;background:#cc0000;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="color:white;font-size:16px;font-weight:900;font-style:italic;font-family:Arial,sans-serif;line-height:1;margin-left:-2px;">L</span>
+                            </div>
+                            <span style="font-size:18px;font-weight:900;color:#000;letter-spacing:2px;font-family:Arial,sans-serif;line-height:1;">LEAR</span>
+                        </div>
+                        <div style="font-size:6px;color:#333;letter-spacing:2px;font-family:Arial,sans-serif;margin-top:2px;margin-left:31px;">CORPORATION</div>
+                    </div>
                 </div>
+                <!-- QUALITY ALERT — červené pozadí -->
                 <div class="doc-title-center">
                     <div class="doc-title-main" id="d-doc-title">QUALITY ALERT</div>
-                    <div class="doc-title-sub" id="d-doc-sub">PROCESS QUALITY NOTICE</div>
                 </div>
+                <!-- ČÍSLO -->
                 <div class="doc-num-box">
                     <div class="doc-num-label">N°</div>
                     <div class="doc-num-val" id="d-number">—</div>
                 </div>
             </div>
+
             <div class="doc-info-section">
                 <div class="doc-info-row doc-info-row-4">
                     <div class="doc-info-cell"><span class="doc-cell-label">Důvod vystavení / Reason</span><div class="doc-cell-val" id="d-duvod">—</div></div>
@@ -1039,7 +1055,7 @@
                     <div class="doc-info-cell"><span class="doc-cell-label">Konec / End</span><div class="doc-cell-val" id="d-konec">—</div></div>
                 </div>
                 <div class="doc-info-row doc-info-row-5">
-                    <div class="doc-info-cell"><span class="doc-cell-label">Zákazník / Customer</span><div class="doc-cell-val" id="d-customer">—</div></div>
+                    <div class="doc-info-cell"><span class="doc-cell-label">Proces / Process</span><div class="doc-cell-val" id="d-customer">—</div></div>
                     <div class="doc-info-cell"><span class="doc-cell-label">Projekt / Project</span><div class="doc-cell-val" id="d-project">—</div></div>
                     <div class="doc-info-cell"><span class="doc-cell-label">Pracoviště / Workplace</span><div class="doc-cell-val" id="d-pracoviste">—</div></div>
                     <div class="doc-info-cell"><span class="doc-cell-label">Díl / Part</span><div class="doc-cell-val" id="d-dil">—</div></div>
@@ -1106,7 +1122,7 @@
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
     <div class="share-hint">
-        <strong>💡 PDF:</strong> Automaticky 2 stránky — stránka 1 dokument, stránka 2 podpisy<br><br>
+        <strong>💡 PDF:</strong> Automaticky 2 stránky při 100% měřítku<br><br>
         <strong>💡 Sdílení:</strong> 📤 Sdílet → Stáhnout dokument → přiložit do emailu
     </div>
 </div>
@@ -1126,7 +1142,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.4</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">22. 6. 2026</span></div>
@@ -1231,9 +1247,8 @@
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
         el.className = 'save-indicator ' + stav;
-        if (stav === 'saving') {
-            lb.textContent = 'Ukládám…';
-        } else {
+        if (stav === 'saving') { lb.textContent = 'Ukládám…'; }
+        else {
             lb.textContent = 'Uloženo';
             clearTimeout(_timerInd);
             _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000);
@@ -1388,10 +1403,16 @@
     function update() {
         const wi = typ === 'wi';
         document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-        document.getElementById('d-doc-sub').textContent   = wi ? 'WORK INSTRUCTION'   : 'PROCESS QUALITY NOTICE';
         document.getElementById('d-typqa-section').style.display = wi ? 'none' : 'grid';
         document.getElementById('d-defect-label').textContent    = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
         document.getElementById('d-control-label').textContent   = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup / Description of checks';
+
+        // Barva pozadí nadpisu podle typu
+        const titleCenter = document.querySelector('.doc-title-center');
+        if (titleCenter) {
+            titleCenter.style.background = wi ? '#ffaa00' : '#cc0000';
+        }
+
         [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
          ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
          ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
@@ -1400,13 +1421,16 @@
             const el = document.getElementById(dId);
             if (el) el.textContent = document.getElementById(fId).value || '—';
         });
+
         document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
         document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
         document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
+
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const el = document.getElementById('dqa-' + t);
             if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-' + t).checked ? ' active' : '');
         });
+
         sestavitGrid();
         progress();
     }
@@ -1574,7 +1598,7 @@
         const label = typ === 'wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
         return `${label} – ${g('f-number')}
 ${'─'.repeat(40)}
-📋 Zákazník:    ${g('f-customer')}
+🔧 Proces:      ${g('f-customer')}
 🔧 Projekt:     ${g('f-project')}
 🏭 Pracoviště:  ${g('f-pracoviste')}
 🔩 Díl:         ${g('f-dil')}
@@ -1590,7 +1614,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v3.9.4`;
+Vygenerováno: Quality Alert v4.0.0`;
     }
 
     function sestavitPredmet() {
@@ -1629,14 +1653,12 @@ body { font-family:Arial,sans-serif; background:white; }
 .sig-table { width:100%; border-collapse:collapse; font-size:9px; flex:1; }
 .sig-table th { background:#2c2c2c; color:white; padding:6px 8px; text-align:center; border:1px solid #000; font-size:9px; font-weight:700; }
 .sig-table td { border:1px solid #000; padding:0; height:28px; }
-.doc-top { display:grid; grid-template-columns:100px 1fr auto; align-items:center; margin-bottom:6px; gap:8px; flex-shrink:0; }
-.doc-logo-box { background:#cc0000; padding:6px 8px; display:flex; flex-direction:column; }
-.doc-logo-main { font-size:16px; font-weight:900; color:white; letter-spacing:1px; }
-.doc-logo-sub { font-size:5px; color:rgba(255,255,255,0.8); letter-spacing:0.5px; margin-top:1px; }
-.doc-title-center { text-align:center; }
-.doc-title-main { font-size:20px; font-weight:900; color:#000; letter-spacing:2px; line-height:1; }
-.doc-title-sub { font-size:7px; color:#666; letter-spacing:1px; margin-top:2px; }
-.doc-num-box { background:#000; color:white; padding:6px 10px; text-align:center; min-width:70px; }
+.doc-top { display:grid; grid-template-columns:110px 1fr auto; align-items:stretch; margin-bottom:6px; gap:0; flex-shrink:0; border:1px solid #ddd; overflow:hidden; }
+.doc-logo-box { background:white; padding:8px 10px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
+.doc-title-center { background:#cc0000; display:flex; align-items:center; justify-content:center; padding:8px; }
+.doc-title-main { font-size:22px; font-weight:900; color:white; letter-spacing:2px; line-height:1; font-family:Arial,sans-serif; }
+.doc-title-sub { display:none; }
+.doc-num-box { background:#000; color:white; padding:6px 10px; text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .doc-num-label { font-size:7px; letter-spacing:1px; color:#aaa; font-weight:600; }
 .doc-num-val { font-size:12px; font-weight:900; color:white; white-space:nowrap; }
 .doc-info-section { border:1px solid #bbb; margin-bottom:5px; flex-shrink:0; }
