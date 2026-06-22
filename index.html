@@ -29,7 +29,6 @@
             padding-bottom: 100px;
         }
 
-        /* TOPBAR — výraznější */
         .topbar {
             background: #000000;
             padding: 50px 20px 15px;
@@ -55,7 +54,6 @@
             font-weight: 600;
         }
 
-        /* TABBAR — výraznější */
         .tabbar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -350,6 +348,19 @@
             border-radius: 6px;
             transition: width 0.4s ease;
         }
+
+        /* Indikátor uložení */
+        .save-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #636366;
+            transition: color 0.3s;
+        }
+        .save-indicator.saving { color: #ffaa00; }
+        .save-indicator.saved  { color: var(--green); }
+        .save-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
         .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
         .navod-section:last-child { border-bottom: none; }
@@ -857,7 +868,13 @@
 
 <div class="topbar">
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
-    <div class="version-badge">v3.9.1</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div class="save-indicator" id="save-indicator">
+            <div class="save-dot"></div>
+            <span id="save-label">Uloženo</span>
+        </div>
+        <div class="version-badge">v3.9.2</div>
+    </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -882,42 +899,42 @@
     </div>
     <div class="card">
         <div class="card-header">📋 Hlavička dokumentu</div>
-        <div class="form-row"><span class="form-label">Číslo Nº <span style="color:var(--red)">*</span></span><input class="form-input" type="text" id="f-number" placeholder="QABMW001" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Zákazník</span><input class="form-input" type="text" id="f-customer" value="BMW" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Projekt</span><input class="form-input" type="text" id="f-project" value="G2x/G8x" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Pracoviště</span><input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Díl</span><input class="form-input" type="text" id="f-dil" placeholder="Název dílu" autocomplete="off" oninput="update()"></div>
+        <div class="form-row"><span class="form-label">Číslo Nº <span style="color:var(--red)">*</span></span><input class="form-input" type="text" id="f-number" placeholder="QABMW001" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Zákazník</span><input class="form-input" type="text" id="f-customer" value="BMW" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Projekt</span><input class="form-input" type="text" id="f-project" value="G2x/G8x" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Pracoviště</span><input class="form-input" type="text" id="f-pracoviste" placeholder="F4-S2-ML-020" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Díl</span><input class="form-input" type="text" id="f-dil" placeholder="Název dílu" autocomplete="off" oninput="planovatUlozeni()"></div>
     </div>
     <div class="card">
         <div class="card-header">📅 Datum a autor</div>
-        <div class="form-row"><span class="form-label">Vydal <span style="color:var(--red)">*</span></span><input class="form-input" type="text" id="f-vydal" placeholder="Jméno Příjmení" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Počátek</span><input class="form-input" type="date" id="f-pocatek" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Konec</span><input class="form-input" type="date" id="f-konec" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Datum vystavení</span><input class="form-input" type="date" id="f-datum" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Autor</span><input class="form-input" type="text" id="f-autor" placeholder="J. Leško" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Důvod vystavení</span><input class="form-input" type="text" id="f-duvod" placeholder="Customer claim" autocomplete="off" oninput="update()"></div>
+        <div class="form-row"><span class="form-label">Vydal <span style="color:var(--red)">*</span></span><input class="form-input" type="text" id="f-vydal" placeholder="Jméno Příjmení" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Počátek</span><input class="form-input" type="date" id="f-pocatek" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Konec</span><input class="form-input" type="date" id="f-konec" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Datum vystavení</span><input class="form-input" type="date" id="f-datum" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Autor</span><input class="form-input" type="text" id="f-autor" placeholder="J. Leško" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Důvod vystavení</span><input class="form-input" type="text" id="f-duvod" placeholder="Customer claim" autocomplete="off" oninput="planovatUlozeni()"></div>
     </div>
     <div class="card" id="card-typqa">
         <div class="card-header">🏭 Typ QA</div>
-        <div class="toggle-row"><span>Engineering</span><label class="toggle"><input type="checkbox" id="qa-engineering" onchange="update()"><span class="toggle-slider"></span></label></div>
-        <div class="toggle-row"><span>Maintenance</span><label class="toggle"><input type="checkbox" id="qa-maintenance" onchange="update()"><span class="toggle-slider"></span></label></div>
-        <div class="toggle-row"><span>Logistics</span><label class="toggle"><input type="checkbox" id="qa-logistics" onchange="update()"><span class="toggle-slider"></span></label></div>
-        <div class="toggle-row"><span>Production</span><label class="toggle"><input type="checkbox" id="qa-production" checked onchange="update()"><span class="toggle-slider"></span></label></div>
-        <div class="toggle-row"><span>Quality</span><label class="toggle"><input type="checkbox" id="qa-quality" onchange="update()"><span class="toggle-slider"></span></label></div>
-        <div class="toggle-row"><span>EOL</span><label class="toggle"><input type="checkbox" id="qa-eol" onchange="update()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Engineering</span><label class="toggle"><input type="checkbox" id="qa-engineering" onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Maintenance</span><label class="toggle"><input type="checkbox" id="qa-maintenance" onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Logistics</span><label class="toggle"><input type="checkbox" id="qa-logistics" onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Production</span><label class="toggle"><input type="checkbox" id="qa-production" checked onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>Quality</span><label class="toggle"><input type="checkbox" id="qa-quality" onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-row"><span>EOL</span><label class="toggle"><input type="checkbox" id="qa-eol" onchange="planovatUlozeni()"><span class="toggle-slider"></span></label></div>
     </div>
     <div class="card">
         <div class="card-header" id="defect-header">⚠️ Popis defektu <span style="color:var(--red)">*</span></div>
-        <div class="form-row"><input class="form-input" type="text" id="f-defect" placeholder="Kontrola zajištění KST" style="text-align:left;" oninput="update()"></div>
+        <div class="form-row"><input class="form-input" type="text" id="f-defect" placeholder="Kontrola zajištění KST" style="text-align:left;" oninput="planovatUlozeni()"></div>
     </div>
     <div class="card">
         <div class="card-header" id="control-header">📝 Popis kontroly / pracovní postup</div>
-        <div class="form-row"><textarea class="form-input" id="f-control" oninput="update()" placeholder="Proveď manuální kontrolu..."></textarea></div>
+        <div class="form-row"><textarea class="form-input" id="f-control" oninput="planovatUlozeni()" placeholder="Proveď manuální kontrolu..."></textarea></div>
     </div>
     <div class="card">
         <div class="card-header">✍️ Podpisy</div>
-        <div class="form-row"><span class="form-label">Podpis QA</span><input class="form-input" type="text" id="f-podpisqa" placeholder="Originál" autocomplete="off" oninput="update()"></div>
-        <div class="form-row"><span class="form-label">Schválení výroby</span><input class="form-input" type="text" id="f-schvaleni" placeholder="Production approval" autocomplete="off" oninput="update()"></div>
+        <div class="form-row"><span class="form-label">Podpis QA</span><input class="form-input" type="text" id="f-podpisqa" placeholder="Originál" autocomplete="off" oninput="planovatUlozeni()"></div>
+        <div class="form-row"><span class="form-label">Schválení výroby</span><input class="form-input" type="text" id="f-schvaleni" placeholder="Production approval" autocomplete="off" oninput="planovatUlozeni()"></div>
     </div>
     <div class="card">
         <div class="card-header">📷 Fotografie</div>
@@ -1049,7 +1066,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.1</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.2</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">22. 6. 2026</span></div>
@@ -1075,6 +1092,16 @@
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Tiskový dialog → <strong style="color:white;">Další nastavení</strong> → odškrtni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Vyber <strong style="color:white;">Uložit jako PDF</strong> → přilož do emailu</div></div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">💾 Automatické ukládání</div>
+        <div class="navod-section">
+            <div class="navod-text">Text formuláře se automaticky ukládá. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvé.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00;flex-shrink:0;"></div><div class="navod-text">Žlutá tečka — ukládám...</div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#009900;flex-shrink:0;"></div><div class="navod-text">Zelená tečka — uloženo ✅</div></div>
             </div>
         </div>
     </div>
@@ -1134,6 +1161,93 @@
     let typ   = 'qa';
     let pocet = 2;
     let fotky = [];
+    let _timer = null;
+    let _timerInd = null;
+
+    // ── localStorage — pouze text ─────────────────────────
+    const KLIC = 'qa-form-v4';
+
+    function indikator(stav) {
+        const el = document.getElementById('save-indicator');
+        const lb = document.getElementById('save-label');
+        el.className = 'save-indicator ' + stav;
+        if (stav === 'saving') {
+            lb.textContent = 'Ukládám…';
+        } else {
+            lb.textContent = 'Uloženo';
+            clearTimeout(_timerInd);
+            _timerInd = setTimeout(() => {
+                el.className = 'save-indicator';
+            }, 2000);
+        }
+    }
+
+    function ulozit() {
+        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                     'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                     'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const d = { typ, pocet: parseInt(document.getElementById('photo-count').value) };
+        ids.forEach(id => {
+            const e = document.getElementById(id);
+            if (e) d[id] = e.value;
+        });
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
+            const e = document.getElementById('qa-' + t);
+            if (e) d['qa-' + t] = e.checked;
+        });
+        // Uložit jen názvy fotek — BEZ base64 dat
+        d.nazvy = fotky.map(f => f.name);
+        try {
+            localStorage.setItem(KLIC, JSON.stringify(d));
+            indikator('saved');
+        } catch(e) {
+            console.warn('Chyba ukládání:', e);
+        }
+    }
+
+    function nacist() {
+        try {
+            const raw = localStorage.getItem(KLIC);
+            if (!raw) return false;
+            const d = JSON.parse(raw);
+            // Typ dokumentu
+            if (d.typ) {
+                typ = d.typ;
+                document.getElementById('btn-qa').className = 'doc-type-btn' + (typ === 'qa' ? ' active-qa' : '');
+                document.getElementById('btn-wi').className = 'doc-type-btn' + (typ === 'wi' ? ' active-wi' : '');
+                document.getElementById('card-typqa').style.display = typ === 'qa' ? 'block' : 'none';
+            }
+            // Počet fotek
+            if (d.pocet) document.getElementById('photo-count').value = d.pocet;
+            // Textová pole
+            ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+             'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+             'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
+                const e = document.getElementById(id);
+                if (e && d[id] !== undefined) e.value = d[id];
+            });
+            // Checkboxy
+            ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
+                const e = document.getElementById('qa-' + t);
+                if (e && d['qa-' + t] !== undefined) e.checked = d['qa-' + t];
+            });
+            return true;
+        } catch(e) {
+            console.warn('Chyba načítání:', e);
+            return false;
+        }
+    }
+
+    function planovatUlozeni() {
+        clearTimeout(_timer);
+        indikator('saving');
+        _timer = setTimeout(() => {
+            update();
+            ulozit();
+        }, 400);
+    }
+
+    // ── Pomocné funkce ────────────────────────────────────
 
     function esc(t) {
         return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1264,6 +1378,7 @@
             document.getElementById('f-control').placeholder = 'Proveď manuální kontrolu...';
         }
         sestavitFotky(true);
+        ulozit();
     }
 
     function htmlFotky(i, nm, src, def) {
@@ -1313,7 +1428,7 @@
 
     function zmenNazev(i) {
         fotky[i].name = document.getElementById(`pn-${i}`).value;
-        update();
+        planovatUlozeni();
     }
 
     function nacistFotku(i) {
@@ -1416,9 +1531,12 @@
     }
 
     function vymazat() {
-        if (!confirm('Opravdu chceš vymazat celý formulář včetně fotek?')) return;
+        if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
+        try { localStorage.removeItem(KLIC); } catch(_) {}
         location.reload();
     }
+
+    // ── SDÍLENÍ ──────────────────────────────────────────
 
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id) || {}).value || '';
@@ -1441,7 +1559,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v3.9.1`;
+Vygenerováno: Quality Alert v3.9.2`;
     }
 
     function sestavitPredmet() {
@@ -1535,7 +1653,7 @@ body { font-family:Arial,sans-serif; background:white; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   @page { size:A4 portrait; margin:6mm; }
-  .doc-page1 { height:calc(297mm - 12mm) !important; max-height:calc(297mm - 12mm) !important; overflow:hidden !important; page-break-after:always !important; }
+  .doc-page1 { height:calc(297mm - 12mm) !important; overflow:hidden !important; page-break-after:always !important; }
   .doc-imgs-wrap { flex:0 0 155mm !important; height:155mm !important; overflow:hidden !important; }
   .doc-imgs { height:100% !important; overflow:hidden !important; }
   .doc-page2 { page-break-before:always !important; }
@@ -1628,11 +1746,22 @@ body { font-family:Arial,sans-serif; background:white; }
 
     window.onload = () => {
         document.getElementById('sig-tbody-1').innerHTML = podpisy();
+        // Načíst uložená data
+        const maNactenaData = nacist();
+        // Sestavit fotky (bez uložených dat — jen názvy)
         sestavitFotky(false);
+        // Nastavit dnešní datum pokud není uloženo
         const dnes = new Date().toISOString().split('T')[0];
-        document.getElementById('f-datum').value   = dnes;
-        document.getElementById('f-pocatek').value = dnes;
+        if (!document.getElementById('f-datum').value)   document.getElementById('f-datum').value   = dnes;
+        if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
+        // Nastavit popisky podle typu
+        if (typ === 'wi') {
+            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
+        }
         update();
+        indikator('saved');
+        if (maNactenaData) toast('📂 Formulář obnoven', 2000);
     };
 </script>
 </body>
