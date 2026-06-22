@@ -659,7 +659,7 @@
         .doc-control-val { font-size: 13px; font-weight: 900; color: #000; padding: 8px 8px 10px; line-height: 1.6; background: #ffff00; white-space: pre-wrap; }
 
         .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 5px; overflow: hidden; }
-        .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 4px; }
+        .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 4px; overflow: hidden; }
         .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
         .qa-cell-ok  { border: 2.5px solid #009900; }
         .qa-cell-nok { border: 2.5px solid #cc0000; }
@@ -727,32 +727,126 @@
         .toast.show { opacity: 1; }
 
         @media print {
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            @page { size: A4 portrait; margin: 6mm; }
-            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 6mm;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
             .topbar, .tabbar, .action-buttons, .share-hint, .gen-btn,
             #page-form, #page-install, #page-navod,
-            .toast, .progress-bar-wrap,
-            .modal-overlay { display: none !important; }
-            #page-preview { display: block !important; padding: 0 !important; margin: 0 !important; }
-            #doc-wrapper { box-shadow: none !important; border-radius: 0 !important; }
+            .toast, .progress-bar-wrap, .modal-overlay {
+                display: none !important;
+            }
+
+            #page-preview {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            #doc-wrapper {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+
+            /* STRÁNKA 1 */
             .doc-page1 {
                 padding: 4px !important;
+                width: 100% !important;
                 height: calc(297mm - 12mm) !important;
                 max-height: calc(297mm - 12mm) !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
+                page-break-inside: avoid !important;
+                display: flex !important;
+                flex-direction: column !important;
+                box-sizing: border-box !important;
+            }
+
+            /* SEKCE — nesmí růst */
+            .doc-top,
+            .doc-info-section,
+            .doc-typqa-section,
+            .doc-defect-section,
+            .doc-control-section,
+            .doc-footer,
+            .doc-page-footer {
+                flex-shrink: 0 !important;
+                page-break-inside: avoid !important;
+            }
+
+            /* FOTKY — zaberou zbývající místo */
+            .doc-imgs-wrap {
+                flex: 1 !important;
+                min-height: 0 !important;
+                max-height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+                page-break-inside: avoid !important;
+            }
+
+            .doc-imgs {
+                flex: 1 !important;
+                min-height: 0 !important;
+                max-height: 100% !important;
+                overflow: hidden !important;
+                display: grid !important;
+            }
+
+            .doc-img-cell {
+                min-height: 0 !important;
+                max-height: 100% !important;
+                overflow: hidden !important;
+                page-break-inside: avoid !important;
+            }
+
+            .doc-img-body {
+                flex: 1 !important;
+                min-height: 0 !important;
+                max-height: 100% !important;
+                overflow: hidden !important;
+            }
+
+            .doc-img-body img {
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+
+            /* STRÁNKA 2 — podpisy */
+            .doc-page2 {
+                padding: 4px !important;
+                border-top: none !important;
+                margin-top: 0 !important;
+                page-break-before: always !important;
+                min-height: calc(297mm - 12mm) !important;
                 display: flex !important;
                 flex-direction: column !important;
             }
-            .doc-imgs-wrap { flex: 1 !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
-            .doc-imgs { flex: 1 !important; min-height: 0 !important; }
-            .doc-img-cell { min-height: 0 !important; overflow: hidden !important; }
-            .doc-img-body { flex: 1 !important; min-height: 0 !important; overflow: hidden !important; }
-            .doc-img-body img { width: 100% !important; height: 100% !important; object-fit: contain !important; }
-            .doc-page2 { padding: 4px !important; border-top: none !important; margin-top: 0 !important; page-break-before: always !important; min-height: calc(297mm - 12mm) !important; }
-            .sig-table { height: calc(297mm - 40mm) !important; }
-            .sig-table td { height: 28px !important; }
+
+            .sig-table {
+                flex: 1 !important;
+                height: auto !important;
+            }
+
+            .sig-table td {
+                height: 28px !important;
+            }
         }
     </style>
 </head>
@@ -764,7 +858,6 @@
         <div class="modal-handle"></div>
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
-
             <button class="share-option" onclick="stahnoutHTML()">
                 <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📎</div>
                 <div>
@@ -772,7 +865,6 @@
                     <div class="share-option-sub">Uloží .html soubor – lze přiložit do emailu</div>
                 </div>
             </button>
-
             <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
                 <div class="share-option-icon" style="background:rgba(10,132,255,0.15);">📱</div>
                 <div>
@@ -780,15 +872,13 @@
                     <div class="share-option-sub">Mail, WhatsApp, Teams, AirDrop...</div>
                 </div>
             </button>
-
             <button class="share-option" onclick="zobrazitEmailForm()">
                 <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
                 <div>
-                    <div class="share-option-title">Odeslat emailem</div>
-                    <div class="share-option-sub">Otevře Mail s předvyplněným textem</div>
+                    <div class="share-option-title">Připravit email</div>
+                    <div class="share-option-sub">Otevře Outlook s předvyplněným textem</div>
                 </div>
             </button>
-
             <button class="share-option" onclick="kopirovatShrnutí()">
                 <div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div>
                 <div>
@@ -796,9 +886,7 @@
                     <div class="share-option-sub">Text do schránky</div>
                 </div>
             </button>
-
         </div>
-
         <div class="modal-info">
             💡 <strong>Tip:</strong> Stáhni dokument → otevři email → přilož soubor ručně.
         </div>
@@ -809,7 +897,7 @@
 <div class="modal-overlay" id="modal-email" onclick="zavritEmailModal(event)">
     <div class="modal">
         <div class="modal-handle"></div>
-        <div class="modal-title">✉️ Odeslat emailem</div>
+        <div class="modal-title">✉️ Připravit email</div>
         <label class="modal-label">Příjemce</label>
         <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email">
         <label class="modal-label">Kopie (CC) – volitelné</label>
@@ -818,16 +906,20 @@
         <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
         <label class="modal-label">Poznámka (volitelné)</label>
         <input class="modal-input" type="text" id="email-note" placeholder="Prosím o potvrzení přijetí...">
+        <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-top:4px;">
+            ⚠️ Aplikace pouze <strong>připraví email</strong> v Outlooku.<br>
+            Email musíš <strong>odeslat ručně</strong> v Outlooku.
+        </div>
         <div class="modal-btn-row">
             <button class="modal-btn cancel" onclick="zavritEmailModal(null)">Zrušit</button>
-            <button class="modal-btn send" onclick="odeslat()">✉️ Otevřít email</button>
+            <button class="modal-btn send" onclick="odeslat()">✉️ Připravit →</button>
         </div>
     </div>
 </div>
 
 <div class="topbar">
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
-    <div class="version-badge">v3.9.0</div>
+    <div class="version-badge">v3.9.1</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -999,11 +1091,10 @@
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
     <div class="share-hint">
+        <strong>💡 PDF bez URL adresy:</strong><br>
+        Tiskový dialog → <strong>Další nastavení</strong> → odškrtni <strong>Záhlaví a zápatí</strong><br><br>
         <strong>💡 Jak sdílet:</strong><br>
-        1. Klikni <strong>📤 Sdílet</strong> → <strong>Stáhnout dokument</strong><br>
-        2. Soubor se uloží do Souborů<br>
-        3. Otevři email → přilož soubor ručně<br><br>
-        <strong>Nebo:</strong> Uložit PDF → Sdílet → Mail
+        📤 Sdílet → Stáhnout dokument → přiložit do emailu
     </div>
 </div>
 
@@ -1022,7 +1113,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#636366;">3.9.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#636366;">3.9.1</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#636366;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#636366;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#636366;">22. 6. 2026</span></div>
@@ -1033,29 +1124,35 @@
 <!-- NÁVOD -->
 <div class="page" id="page-navod">
     <div class="card">
+        <div class="card-header">📄 PDF bez URL adresy</div>
+        <div class="navod-section">
+            <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
+                <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:8px;">✅ Jak odstranit URL z PDF</div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">V tiskovém dialogu klikni <strong style="color:white;">Další nastavení</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div class="navod-text">Odškrtni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">4</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong> → PDF bez URL ✅</div></div>
+                <div class="navod-text" style="margin-top:8px;color:#636366;">Toto nastavení si Edge zapamatuje pro příště.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
         <div class="card-header">📤 Jak sdílet dokument</div>
         <div class="navod-section">
             <div style="display:flex;flex-direction:column;gap:10px;">
-
                 <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
                     <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:8px;">✅ Způsob 1 – Stáhnout a přiložit (doporučeno)</div>
                     <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Stáhnout dokument</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Soubor se uloží do <strong style="color:white;">Souborů</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div class="navod-text">Otevři <strong style="color:white;">Mail</strong> → nový email → přilož soubor</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Soubor se uloží do <strong style="color:white;">Stažených souborů</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div class="navod-text">Otevři <strong style="color:white;">Outlook</strong> → nový email → přilož soubor</div></div>
                 </div>
-
                 <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF přes tisk</div>
+                    <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF</div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text"><strong style="color:white;">Přiblíž prsty</strong> na náhled → otevře se PDF</div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Klikni <strong style="color:white;">Sdílet → Uložit do Souborů</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Vyber <strong style="color:white;">Uložit jako PDF</strong> místo tiskárny</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Přilož PDF do emailu ručně</div></div>
                 </div>
-
-                <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:8px;">✉️ Způsob 3 – Email s textem</div>
-                    <div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Odeslat emailem</strong>. Otevře se Mail s předvyplněným shrnutím.</div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -1180,11 +1277,12 @@
         const { sl, ra } = gridLayout(n);
         grid.style.gridTemplateColumns = `repeat(${sl}, 1fr)`;
         grid.style.gridTemplateRows    = `repeat(${ra}, 1fr)`;
+        grid.style.height              = '100%';
         grid.innerHTML = fotky.map((foto, idx) => {
             const nm = foto.name || 'Foto';
             const s  = stylFotky(nm);
             const im = foto.src
-                ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;" alt="${esc(nm)}">`
+                ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
                 : `<div class="doc-img-placeholder-icon">📷</div>`;
             return `<div class="doc-img-cell ${s.cls}">
                         <div class="doc-img-header" style="${s.h}">${esc(nm)}</div>
@@ -1425,7 +1523,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v3.9.0`;
+Vygenerováno: Quality Alert v3.9.1`;
     }
 
     function sestavitPredmet() {
@@ -1457,7 +1555,7 @@ Vygenerováno: Quality Alert v3.9.0`;
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quality Alert ${cislo}</title>
+<title>Quality Alert ${esc(cislo)}</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:Arial,sans-serif; background:white; }
@@ -1502,7 +1600,7 @@ body { font-family:Arial,sans-serif; background:white; }
 .doc-control-label { background:#1a4a8a; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
 .doc-control-val { font-size:13px; font-weight:900; color:#000; padding:8px 8px 10px; line-height:1.6; background:#ffff00; white-space:pre-wrap; }
 .doc-imgs-wrap { flex:1; min-height:0; display:flex; flex-direction:column; margin-bottom:5px; overflow:hidden; }
-.doc-imgs { flex:1; min-height:0; display:grid; gap:4px; }
+.doc-imgs { flex:1; min-height:0; display:grid; gap:4px; height:100%; overflow:hidden; }
 .doc-img-cell { display:flex; flex-direction:column; overflow:hidden; min-height:0; }
 .qa-cell-ok { border:2.5px solid #009900; }
 .qa-cell-nok { border:2.5px solid #cc0000; }
@@ -1519,7 +1617,12 @@ body { font-family:Arial,sans-serif; background:white; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   @page { size:A4 portrait; margin:6mm; }
-  .doc-page1 { height:calc(297mm - 12mm) !important; page-break-after:always !important; }
+  .doc-page1 { height:calc(297mm - 12mm) !important; max-height:calc(297mm - 12mm) !important; overflow:hidden !important; page-break-after:always !important; }
+  .doc-imgs-wrap { flex:1 !important; overflow:hidden !important; }
+  .doc-imgs { flex:1 !important; overflow:hidden !important; }
+  .doc-img-cell { overflow:hidden !important; }
+  .doc-img-body { overflow:hidden !important; }
+  .doc-img-body img { width:100% !important; height:100% !important; object-fit:contain !important; }
   .doc-page2 { page-break-before:always !important; min-height:calc(297mm - 12mm) !important; }
 }
 </style>
@@ -1589,7 +1692,7 @@ ${docHTML}
         if (params.length) mailto += '?' + params.join('&');
         window.location.href = mailto;
         document.getElementById('modal-email').classList.remove('show');
-        toast('✉️ Otevírám email...', 3000);
+        toast('✉️ Otevírám Outlook...', 3000);
     }
 
     async function kopirovatShrnutí() {
