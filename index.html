@@ -627,7 +627,6 @@
         .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
         .sig-table td { border: 1px solid #000; padding: 0; height: 28px; }
 
-        /* HLAVIČKA */
         .doc-top {
             display: grid;
             grid-template-columns: 110px 1fr auto;
@@ -777,9 +776,9 @@
 
         .toast.show { opacity: 1; }
 
-        /* ═══════════════════════════════════
-           TISK — celá stránka bez okrajů
-        ═══════════════════════════════════ */
+        /* ═══════════════════════════════════════════
+           TISK — scale 0.78 s kompenzací prázdného místa
+        ═══════════════════════════════════════════ */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -807,23 +806,31 @@
                 display: block !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                width: 210mm !important;
+                overflow: hidden !important;
             }
 
             #doc-wrapper {
                 box-shadow: none !important;
                 border-radius: 0 !important;
+                /* Scale 0.78 — vejde se na stránku */
+                transform: scale(0.78) !important;
+                transform-origin: top left !important;
+                /* Kompenzace šířky */
+                width: calc(210mm / 0.78) !important;
             }
 
-            /* STRÁNKA 1 — vyplní celý A4 */
+            /* STRÁNKA 1 */
             .doc-page1 {
                 font-family: Arial, sans-serif !important;
                 font-size: 9px !important;
                 color: #000 !important;
                 background: white !important;
-                padding: 8mm !important;
-                width: 210mm !important;
-                height: 297mm !important;
-                max-height: 297mm !important;
+                padding: 6px !important;
+                /* Kompenzace výšky pro scale */
+                width: calc(210mm / 0.78) !important;
+                height: calc(297mm / 0.78) !important;
+                max-height: calc(297mm / 0.78) !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
@@ -832,7 +839,6 @@
                 box-sizing: border-box !important;
             }
 
-            /* Pevné sekce — nesmí růst */
             .doc-top          { flex-shrink: 0 !important; margin-bottom: 4px !important; }
             .doc-info-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
             .doc-typqa-section{ flex-shrink: 0 !important; margin-bottom: 4px !important; }
@@ -841,7 +847,7 @@
             .doc-footer       { flex-shrink: 0 !important; }
             .doc-page-footer  { flex-shrink: 0 !important; }
 
-            /* FOTKY — zaberou veškerý zbývající prostor */
+            /* FOTKY — zaberou zbytek */
             .doc-imgs-wrap {
                 flex: 1 !important;
                 min-height: 0 !important;
@@ -859,17 +865,8 @@
                 height: 100% !important;
             }
 
-            .doc-img-cell {
-                overflow: hidden !important;
-                min-height: 0 !important;
-            }
-
-            .doc-img-body {
-                flex: 1 !important;
-                min-height: 0 !important;
-                overflow: hidden !important;
-            }
-
+            .doc-img-cell { overflow: hidden !important; min-height: 0 !important; }
+            .doc-img-body { flex: 1 !important; min-height: 0 !important; overflow: hidden !important; }
             .doc-img-body img {
                 width: 100% !important;
                 height: 100% !important;
@@ -879,16 +876,16 @@
                 display: block !important;
             }
 
-            /* STRÁNKA 2 — podpisy */
+            /* STRÁNKA 2 */
             .doc-page2 {
                 font-family: Arial, sans-serif !important;
                 background: white !important;
-                padding: 8mm !important;
+                padding: 6px !important;
                 border-top: none !important;
                 margin-top: 0 !important;
                 page-break-before: always !important;
-                width: 210mm !important;
-                height: 297mm !important;
+                width: calc(210mm / 0.78) !important;
+                height: calc(297mm / 0.78) !important;
                 display: flex !important;
                 flex-direction: column !important;
                 box-sizing: border-box !important;
@@ -973,7 +970,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v4.0.1</div>
+        <div class="version-badge">v4.0.2</div>
     </div>
 </div>
 
@@ -1058,7 +1055,6 @@
     <div id="doc-wrapper">
         <div class="doc-page1">
             <div class="doc-top">
-                <!-- LEAR LOGO -->
                 <div class="doc-logo-box">
                     <div style="display:flex;flex-direction:column;align-items:flex-start;">
                         <div style="display:flex;align-items:center;gap:5px;">
@@ -1070,11 +1066,9 @@
                         <div style="font-size:6px;color:#333;letter-spacing:2px;font-family:Arial,sans-serif;margin-top:2px;margin-left:31px;">CORPORATION</div>
                     </div>
                 </div>
-                <!-- QUALITY ALERT -->
                 <div class="doc-title-center">
                     <div class="doc-title-main" id="d-doc-title">QUALITY ALERT</div>
                 </div>
-                <!-- ČÍSLO -->
                 <div class="doc-num-box">
                     <div class="doc-num-label">N°</div>
                     <div class="doc-num-val" id="d-number">—</div>
@@ -1155,7 +1149,8 @@
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
     <div class="share-hint">
-        <strong>💡 PDF bez URL:</strong> Tiskový dialog → Volby → vypni Záhlaví a zápatí<br><br>
+        <strong>💡 PDF:</strong> Nechej 100% — velikost je nastavena automaticky<br>
+        Vypni Záhlaví a zápatí: Volby → Záhlaví a zápatí → vypnout<br><br>
         <strong>💡 Sdílení:</strong> 📤 Sdílet → Stáhnout dokument → přiložit do emailu
     </div>
 </div>
@@ -1175,7 +1170,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.1</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.2</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">22. 6. 2026</span></div>
@@ -1198,8 +1193,9 @@
                 <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
                     <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF</div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Klikni <strong style="color:white;">Volby</strong> → vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong> → přilož do emailu</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Nechej <strong style="color:white;">100%</strong> — velikost je automatická</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Volby → vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong> → přilož do emailu</div></div>
                 </div>
             </div>
         </div>
@@ -1644,7 +1640,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v4.0.1`;
+Vygenerováno: Quality Alert v4.0.2`;
     }
 
     function sestavitPredmet() {
@@ -1731,10 +1727,11 @@ body { font-family:Arial,sans-serif; background:white; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   @page { size:A4 portrait; margin:0; }
-  .doc-page1 { padding:8mm !important; width:210mm !important; height:297mm !important; overflow:hidden !important; page-break-after:always !important; }
+  #doc-wrapper { transform:scale(0.78); transform-origin:top left; width:calc(210mm / 0.78) !important; }
+  .doc-page1 { width:calc(210mm / 0.78) !important; height:calc(297mm / 0.78) !important; overflow:hidden !important; page-break-after:always !important; }
   .doc-imgs-wrap { flex:1 !important; overflow:hidden !important; }
   .doc-imgs { flex:1 !important; height:100% !important; overflow:hidden !important; }
-  .doc-page2 { padding:8mm !important; width:210mm !important; height:297mm !important; page-break-before:always !important; }
+  .doc-page2 { width:calc(210mm / 0.78) !important; height:calc(297mm / 0.78) !important; page-break-before:always !important; }
 }
 </style></head>
 <body>${docHTML}</body></html>`;
