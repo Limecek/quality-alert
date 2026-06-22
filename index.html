@@ -571,6 +571,7 @@
             margin-top: 4px;
         }
 
+        /* DOKUMENT */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -732,69 +733,129 @@
 
         .toast.show { opacity: 1; }
 
+        /* ═══════════════════════════════════════
+           TISK — zoom 78% = vše na 2 stránky
+        ═══════════════════════════════════════ */
         @media print {
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            @page { size: A4 portrait; margin: 6mm; }
-            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
             .topbar, .tabbar, .action-buttons, .share-hint, .gen-btn,
             #page-form, #page-install, #page-navod,
             .toast, .progress-bar-wrap, .modal-overlay {
                 display: none !important;
             }
-            #page-preview { display: block !important; padding: 0 !important; margin: 0 !important; }
-            #doc-wrapper { box-shadow: none !important; border-radius: 0 !important; }
+
+            #page-preview {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            #doc-wrapper {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+
+            /* STRÁNKA 1 — zoom 78% */
             .doc-page1 {
-                padding: 4px !important;
-                width: 100% !important;
-                height: calc(297mm - 12mm) !important;
-                max-height: calc(297mm - 12mm) !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 9px !important;
+                color: #000 !important;
+                background: white !important;
+                padding: 6mm !important;
+                /* Zoom 78% pomocí transform */
+                width: calc(210mm) !important;
+                height: calc(297mm) !important;
+                max-height: calc(297mm) !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
                 display: flex !important;
                 flex-direction: column !important;
                 box-sizing: border-box !important;
+                /* Klíčový zoom */
+                zoom: 0.78 !important;
             }
-            .doc-top, .doc-info-section, .doc-typqa-section,
-            .doc-defect-section, .doc-control-section,
-            .doc-footer, .doc-page-footer { flex-shrink: 0 !important; }
+
+            .doc-top { flex-shrink: 0 !important; margin-bottom: 4px !important; }
+            .doc-info-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
+            .doc-typqa-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
+            .doc-defect-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
+            .doc-control-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
+            .doc-footer { flex-shrink: 0 !important; }
+            .doc-page-footer { flex-shrink: 0 !important; }
+
+            /* FOTKY */
             .doc-imgs-wrap {
-                flex: 0 0 155mm !important;
-                height: 155mm !important;
-                max-height: 155mm !important;
+                flex: 1 !important;
                 min-height: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
                 overflow: hidden !important;
-                margin-bottom: 3px !important;
+                margin-bottom: 4px !important;
             }
+
             .doc-imgs {
-                width: 100% !important;
-                height: 100% !important;
-                max-height: 100% !important;
+                flex: 1 !important;
+                min-height: 0 !important;
                 display: grid !important;
                 overflow: hidden !important;
+                height: 100% !important;
             }
-            .doc-img-cell { overflow: hidden !important; max-height: 100% !important; }
-            .doc-img-body { overflow: hidden !important; max-height: 100% !important; }
+
+            .doc-img-cell {
+                overflow: hidden !important;
+                min-height: 0 !important;
+            }
+
+            .doc-img-body {
+                flex: 1 !important;
+                min-height: 0 !important;
+                overflow: hidden !important;
+            }
+
             .doc-img-body img {
                 width: 100% !important;
                 height: 100% !important;
                 max-width: 100% !important;
                 max-height: 100% !important;
                 object-fit: contain !important;
+                display: block !important;
             }
+
+            /* STRÁNKA 2 — zoom 78% */
             .doc-page2 {
-                padding: 4px !important;
+                font-family: Arial, sans-serif !important;
+                background: white !important;
+                padding: 6mm !important;
                 border-top: none !important;
                 margin-top: 0 !important;
                 page-break-before: always !important;
-                min-height: calc(297mm - 12mm) !important;
+                width: calc(210mm) !important;
+                height: calc(297mm) !important;
                 display: flex !important;
                 flex-direction: column !important;
+                box-sizing: border-box !important;
+                /* Klíčový zoom */
+                zoom: 0.78 !important;
             }
+
             .sig-table { flex: 1 !important; height: auto !important; }
-            .sig-table td { height: 28px !important; }
+            .sig-table td { height: 26px !important; }
         }
     </style>
 </head>
@@ -872,7 +933,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v3.9.3</div>
+        <div class="version-badge">v3.9.4</div>
     </div>
 </div>
 
@@ -1045,7 +1106,7 @@
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
     <div class="share-hint">
-        <strong>💡 PDF bez URL:</strong> Tiskový dialog → Další nastavení → odškrtni Záhlaví a zápatí<br><br>
+        <strong>💡 PDF:</strong> Automaticky 2 stránky — stránka 1 dokument, stránka 2 podpisy<br><br>
         <strong>💡 Sdílení:</strong> 📤 Sdílet → Stáhnout dokument → přiložit do emailu
     </div>
 </div>
@@ -1065,7 +1126,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.3</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">3.9.4</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">22. 6. 2026</span></div>
@@ -1088,8 +1149,8 @@
                 <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
                     <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF</div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Tiskový dialog → <strong style="color:white;">Další nastavení</strong> → odškrtni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Vyber <strong style="color:white;">Uložit jako PDF</strong> → přilož do emailu</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Nechej <strong style="color:white;">100%</strong> — zoom je nastaven automaticky</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong> → přilož do emailu</div></div>
                 </div>
             </div>
         </div>
@@ -1166,8 +1227,6 @@
 
     const KLIC = 'qa-form-v4';
 
-    // ── localStorage — pouze text ─────────────────────────
-
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
@@ -1177,9 +1236,7 @@
         } else {
             lb.textContent = 'Uloženo';
             clearTimeout(_timerInd);
-            _timerInd = setTimeout(() => {
-                el.className = 'save-indicator';
-            }, 2000);
+            _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000);
         }
     }
 
@@ -1188,22 +1245,13 @@
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
                      'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
         const d = { typ, pocet: parseInt(document.getElementById('photo-count').value) };
-        ids.forEach(id => {
-            const e = document.getElementById(id);
-            if (e) d[id] = e.value;
-        });
+        ids.forEach(id => { const e = document.getElementById(id); if (e) d[id] = e.value; });
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const e = document.getElementById('qa-' + t);
-            if (e) d['qa-' + t] = e.checked;
+            const e = document.getElementById('qa-' + t); if (e) d['qa-' + t] = e.checked;
         });
-        // Uložit jen názvy fotek — BEZ base64
         d.nazvy = fotky.map(f => f.name);
-        try {
-            localStorage.setItem(KLIC, JSON.stringify(d));
-            indikator('saved');
-        } catch(e) {
-            console.warn('Chyba ukládání:', e);
-        }
+        try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); }
+        catch(e) { console.warn('Chyba ukládání:', e); }
     }
 
     function nacist() {
@@ -1229,22 +1277,14 @@
                 if (e && d['qa-' + t] !== undefined) e.checked = d['qa-' + t];
             });
             return true;
-        } catch(e) {
-            console.warn('Chyba načítání:', e);
-            return false;
-        }
+        } catch(e) { console.warn('Chyba načítání:', e); return false; }
     }
 
     function planovatUlozeni() {
         clearTimeout(_timer);
         indikator('saving');
-        _timer = setTimeout(() => {
-            update();
-            ulozit();
-        }, 400);
+        _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
-
-    // ── Inicializace ──────────────────────────────────────
 
     function inicializovat() {
         if (_inicializovano) return;
@@ -1264,21 +1304,10 @@
         if (maNactenaData) toast('📂 Formulář obnoven', 2000);
     }
 
-    // pageshow — správně zachytí i návrat z emailu na mobilu
     window.addEventListener('pageshow', (e) => {
-        if (e.persisted) {
-            // Návrat z cache (Back-Forward Cache)
-            // Stránka je v paměti — text i fotky zůstaly
-            // Jen aktualizujeme náhled
-            update();
-            indikator('saved');
-            return;
-        }
-        // Normální načtení stránky
+        if (e.persisted) { update(); indikator('saved'); return; }
         inicializovat();
     });
-
-    // ── Pomocné funkce ────────────────────────────────────
 
     function esc(t) {
         return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1302,10 +1331,7 @@
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
                      'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
-        const n = ids.filter(id => {
-            const e = document.getElementById(id);
-            return e && e.value.trim();
-        }).length;
+        const n = ids.filter(id => { const e = document.getElementById(id); return e && e.value.trim(); }).length;
         const p = Math.round(n / ids.length * 100);
         document.getElementById('progress-fill').style.width = p + '%';
         document.getElementById('progress-pct').textContent  = p + ' %';
@@ -1355,10 +1381,7 @@
                     </div>`;
         }).join('');
         fotky.forEach((foto, idx) => {
-            if (foto.src) {
-                const img = document.getElementById(`di-${idx}`);
-                if (img) img.src = foto.src;
-            }
+            if (foto.src) { const img = document.getElementById(`di-${idx}`); if (img) img.src = foto.src; }
         });
     }
 
@@ -1369,7 +1392,6 @@
         document.getElementById('d-typqa-section').style.display = wi ? 'none' : 'grid';
         document.getElementById('d-defect-label').textContent    = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
         document.getElementById('d-control-label').textContent   = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup / Description of checks';
-
         [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
          ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
          ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
@@ -1378,16 +1400,13 @@
             const el = document.getElementById(dId);
             if (el) el.textContent = document.getElementById(fId).value || '—';
         });
-
         document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
         document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
         document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
-
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const el = document.getElementById('dqa-' + t);
             if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-' + t).checked ? ' active' : '');
         });
-
         sestavitGrid();
         progress();
     }
@@ -1432,8 +1451,7 @@
     function sestavitFotky(zachovat) {
         const novyPocet = parseInt(document.getElementById('photo-count').value);
         const stare = zachovat ? fotky.slice() : [];
-        pocet = novyPocet;
-        fotky = [];
+        pocet = novyPocet; fotky = [];
         const kont = document.getElementById('photos-container');
         kont.innerHTML = '';
         for (let i = 0; i < pocet; i++) {
@@ -1472,11 +1490,7 @@
             fotky[i].src = e.target.result;
             const pu = document.getElementById(`pu-${i}`);
             pu.classList.add('has-image');
-            pu.innerHTML = `
-                <input type="file" accept="image/*" onchange="nacistFotku(${i})">
-                <img id="pp-${i}" alt="foto">
-                <button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>
-            `;
+            pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})"><img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
             document.getElementById(`pp-${i}`).src = e.target.result;
             update();
             toast(`✅ Fotka nahrána (${mb} MB)`);
@@ -1490,14 +1504,7 @@
         fotky[i].src = null;
         const pu = document.getElementById(`pu-${i}`);
         pu.classList.remove('has-image');
-        pu.innerHTML = `
-            <input type="file" accept="image/*" onchange="nacistFotku(${i})">
-            <div class="img-upload-placeholder">
-                <div class="img-upload-icon">📷</div>
-                <div class="img-upload-text">Klikni pro nahrání fotky</div>
-            </div>
-            <img id="pp-${i}" style="display:none" alt="">
-        `;
+        pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})"><div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`;
         update();
         toast('🗑️ Fotka odstraněna');
     }
@@ -1552,12 +1559,7 @@
 
     function podpisy() {
         return Array.from({ length: 30 }, () =>
-            `<tr>
-                <td style="border:1px solid #000;height:28px;"></td>
-                <td style="border:1px solid #000;"></td>
-                <td style="border:1px solid #000;"></td>
-                <td style="border:1px solid #000;"></td>
-            </tr>`
+            `<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`
         ).join('');
     }
 
@@ -1566,8 +1568,6 @@
         try { localStorage.removeItem(KLIC); } catch(_) {}
         location.reload();
     }
-
-    // ── SDÍLENÍ ──────────────────────────────────────────
 
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id) || {}).value || '';
@@ -1590,7 +1590,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v3.9.3`;
+Vygenerováno: Quality Alert v3.9.4`;
     }
 
     function sestavitPredmet() {
@@ -1618,11 +1618,7 @@ Vygenerováno: Quality Alert v3.9.3`;
             const cislo   = (document.getElementById('f-number') || {}).value || 'dokument';
             const datum   = new Date().toISOString().split('T')[0];
             const html = `<!DOCTYPE html>
-<html lang="cs">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quality Alert ${esc(cislo)}</title>
+<html lang="cs"><head><meta charset="UTF-8"><title>Quality Alert ${esc(cislo)}</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:Arial,sans-serif; background:white; }
@@ -1683,25 +1679,20 @@ body { font-family:Arial,sans-serif; background:white; }
 .doc-footer-val { font-size:10px; font-weight:700; color:#000; padding:5px 6px 6px; min-height:28px; background:#fff; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
-  @page { size:A4 portrait; margin:6mm; }
-  .doc-page1 { height:calc(297mm - 12mm) !important; overflow:hidden !important; page-break-after:always !important; }
-  .doc-imgs-wrap { flex:0 0 155mm !important; height:155mm !important; overflow:hidden !important; }
-  .doc-imgs { height:100% !important; overflow:hidden !important; }
-  .doc-page2 { page-break-before:always !important; }
+  @page { size:A4 portrait; margin:0; }
+  .doc-page1 { zoom:0.78; height:297mm !important; overflow:hidden !important; page-break-after:always !important; }
+  .doc-imgs-wrap { flex:1 !important; overflow:hidden !important; }
+  .doc-imgs { flex:1 !important; height:100% !important; overflow:hidden !important; }
+  .doc-page2 { zoom:0.78; page-break-before:always !important; }
 }
-</style>
-</head>
-<body>${docHTML}</body>
-</html>`;
+</style></head>
+<body>${docHTML}</body></html>`;
             const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
             const url  = URL.createObjectURL(blob);
             const a    = document.createElement('a');
-            a.href     = url;
-            a.download = `QA_${cislo}_${datum}.html`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            a.href = url; a.download = `QA_${cislo}_${datum}.html`;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
             toast('✅ Dokument stažen!', 3000);
         }, 150);
     }
@@ -1712,9 +1703,7 @@ body { font-family:Arial,sans-serif; background:white; }
         try {
             await navigator.share({ title: sestavitPredmet(), text: sestavitShrnutí() });
             toast('✅ Sdíleno!');
-        } catch (e) {
-            if (e.name !== 'AbortError') toast('❌ Sdílení se nezdařilo', 3000);
-        }
+        } catch (e) { if (e.name !== 'AbortError') toast('❌ Sdílení se nezdařilo', 3000); }
     }
 
     function zobrazitEmailForm() {
@@ -1765,10 +1754,8 @@ body { font-family:Arial,sans-serif; background:white; }
             toast('✅ Shrnutí zkopírováno!');
         } catch (e) {
             const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.cssText = 'position:fixed;opacity:0;';
-            document.body.appendChild(ta);
-            ta.select();
+            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;';
+            document.body.appendChild(ta); ta.select();
             try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); }
             catch (_) { toast('❌ Kopírování se nezdařilo', 3000); }
             document.body.removeChild(ta);
