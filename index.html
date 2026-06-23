@@ -116,7 +116,6 @@
         .photo-name-label { font-size: 12px; color: #636366; white-space: nowrap; }
         .photo-name-input { flex: 1; background: none; border: none; outline: none; font-size: 14px; color: var(--text); font-family: inherit; }
         .photo-name-input::placeholder { color: #636366; }
-
         .img-upload { margin: 10px; border: 2px dashed var(--border); border-radius: 10px; cursor: pointer; transition: all 0.3s; position: relative; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .img-upload:active { transform: scale(0.98); }
         .img-upload.has-image { border-style: solid; height: auto; min-height: 120px; }
@@ -144,15 +143,44 @@
         .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
         .navod-section:last-child { border-bottom: none; }
         .navod-text { font-size: 14px; color: var(--subtext); line-height: 1.6; }
-
         .install-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: var(--subtext); }
         .step-num { background: var(--red); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
 
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-        .pdf-btn { width: 100%; padding: 16px; background: #1c1c1e; color: white; border: 2px solid var(--red); border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .pdf-btn:active { transform: scale(0.97); }
+        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+
+        .download-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .download-btn:active { transform: scale(0.97); background: #aa0000; }
+
         .share-btn { width: 100%; padding: 16px; background: #1c1c1e; color: white; border: 2px solid #0a84ff; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .share-btn:active { transform: scale(0.97); background: rgba(10,132,255,0.1); }
+
+        .pc-hint {
+            background: linear-gradient(135deg, rgba(10,132,255,0.1), rgba(10,132,255,0.05));
+            border: 1px solid #0a84ff;
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 4px;
+        }
+        .pc-hint-title { font-size: 13px; font-weight: 700; color: #0a84ff; margin-bottom: 10px; }
+        .pc-hint-step { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--subtext); }
+        .pc-hint-step:last-child { margin-bottom: 0; }
+        .pc-step-num { background: #0a84ff; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .modal-overlay.show { opacity: 1; pointer-events: all; }
@@ -179,9 +207,6 @@
         .share-option-sub { font-size: 12px; color: #636366; margin-top: 2px; }
         .modal-info { background: rgba(10,132,255,0.1); border: 1px solid #0a84ff; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #0a84ff; line-height: 1.5; margin-top: 4px; }
 
-        .share-hint { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 13px; color: var(--subtext); line-height: 1.6; }
-        .share-hint strong { color: var(--red); }
-
         .install-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #0f3460; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
         .install-card h3 { font-size: 18px; margin-bottom: 8px; color: #4fc3f7; }
 
@@ -191,20 +216,20 @@
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(50,50,50,0.95); color: white; padding: 12px 24px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; white-space: nowrap; max-width: 90vw; text-align: center; pointer-events: none; }
         .toast.show { opacity: 1; }
 
-        /* ── DOKUMENT – obrazovka ── */
+        /* ── DOKUMENT náhled na obrazovce ── */
         #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 
-        .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 277mm; display: flex; flex-direction: column; overflow: hidden; }
-        .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; }
+        .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 260mm; display: flex; flex-direction: column; overflow: hidden; }
+        .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; min-height: 200px; }
 
         .doc-page-footer { text-align: center; font-size: 8px; font-weight: 600; color: #000; padding: 4px 0 2px; border-top: 1px solid #ccc; margin-top: 4px; flex-shrink: 0; }
         .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 10px; display: block; flex-shrink: 0; }
 
-        .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; flex: 1; }
+        .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; }
         .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
-        .sig-table td { border: 1px solid #000; padding: 0; height: 28px; }
+        .sig-table td { border: 1px solid #000; padding: 0; height: 22px; }
 
-        .doc-top { display: grid; grid-template-columns: 110px 1fr auto; align-items: stretch; margin-bottom: 6px; gap: 0; flex-shrink: 0; border: 1px solid #ddd; overflow: hidden; }
+        .doc-top { display: grid; grid-template-columns: 110px 1fr auto; align-items: stretch; margin-bottom: 4px; gap: 0; flex-shrink: 0; border: 1px solid #ddd; overflow: hidden; }
         .doc-logo-box { background: white; padding: 8px 10px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #ddd; }
         .doc-title-center { background: #cc0000; display: flex; align-items: center; justify-content: center; padding: 8px; }
         .doc-title-main { font-size: 22px; font-weight: 900; color: white; letter-spacing: 2px; line-height: 1; font-family: Arial, sans-serif; }
@@ -212,7 +237,7 @@
         .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
         .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
 
-        .doc-info-section { border: 1px solid #bbb; margin-bottom: 5px; flex-shrink: 0; }
+        .doc-info-section { border: 1px solid #bbb; margin-bottom: 4px; flex-shrink: 0; }
         .doc-info-row { display: grid; border-bottom: 1px solid #bbb; }
         .doc-info-row:last-child { border-bottom: none; }
         .doc-info-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
@@ -220,33 +245,33 @@
         .doc-info-cell { border-right: 1px solid #bbb; overflow: hidden; }
         .doc-info-cell:last-child { border-right: none; }
         .doc-cell-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-cell-val { font-size: 10px; font-weight: 700; color: #000; padding: 4px 6px 5px; min-height: 16px; background: #fff; }
+        .doc-cell-val { font-size: 10px; font-weight: 700; color: #000; padding: 3px 6px 4px; background: #fff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-        .doc-typqa-section { display: grid; grid-template-columns: 1fr auto; border: 1px solid #bbb; margin-bottom: 5px; flex-shrink: 0; }
+        .doc-typqa-section { display: grid; grid-template-columns: 1fr auto; border: 1px solid #bbb; margin-bottom: 4px; flex-shrink: 0; }
         .doc-typqa-left { border-right: 1px solid #bbb; }
         .doc-typqa-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-typqa-items { display: flex; gap: 4px; flex-wrap: wrap; padding: 5px 6px; }
+        .doc-typqa-items { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px 6px; }
         .doc-typqa-item { border: 1.5px solid #999; padding: 2px 7px; font-size: 7px; font-weight: 700; color: #666; text-transform: uppercase; border-radius: 2px; }
         .doc-typqa-item.active { background: #cc0000; color: white; border-color: #cc0000; }
 
-        .doc-defect-section { border: 1px solid #bbb; margin-bottom: 5px; overflow: hidden; flex-shrink: 0; }
+        .doc-defect-section { border: 1px solid #bbb; margin-bottom: 4px; overflow: hidden; flex-shrink: 0; }
         .doc-defect-label { background: #cc0000; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-defect-val { display: flex; align-items: center; gap: 6px; padding: 5px 8px 6px; background: #fdf0ed; }
-        .doc-defect-icon { font-size: 14px; color: #cc0000; }
-        .doc-defect-text { font-size: 15px; font-weight: 900; color: #000; }
+        .doc-defect-val { display: flex; align-items: center; gap: 6px; padding: 4px 8px 5px; background: #fdf0ed; }
+        .doc-defect-icon { font-size: 12px; color: #cc0000; flex-shrink: 0; }
+        .doc-defect-text { font-size: 13px; font-weight: 900; color: #000; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-        .doc-control-section { border: 1px solid #bbb; margin-bottom: 5px; overflow: hidden; flex-shrink: 0; }
+        .doc-control-section { border: 1px solid #bbb; margin-bottom: 4px; overflow: hidden; flex-shrink: 0; }
         .doc-control-label { background: #1a4a8a; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-control-val { font-size: 13px; font-weight: 900; color: #000; padding: 8px 8px 10px; line-height: 1.6; background: #ffff00; white-space: pre-wrap; }
+        .doc-control-val { font-size: 11px; font-weight: 700; color: #000; padding: 5px 8px 6px; line-height: 1.5; background: #ffff00; white-space: pre-wrap; max-height: 28mm; overflow: hidden; }
 
-        .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 5px; overflow: hidden; }
-        .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 4px; overflow: hidden; }
+        .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 4px; overflow: hidden; }
+        .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 3px; overflow: hidden; }
         .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
         .qa-cell-ok { border: 2.5px solid #009900; }
         .qa-cell-nok { border: 2.5px solid #cc0000; }
         .wi-cell { border: 2.5px solid #ffaa00; }
-        .doc-img-header { padding: 3px 5px; font-size: 9px; font-weight: 900; letter-spacing: 0.5px; text-align: center; flex-shrink: 0; }
-        .doc-img-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 3px; overflow: hidden; }
+        .doc-img-header { padding: 2px 5px; font-size: 8px; font-weight: 900; letter-spacing: 0.5px; text-align: center; flex-shrink: 0; }
+        .doc-img-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 2px; overflow: hidden; }
         .doc-img-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .doc-img-placeholder-icon { font-size: 20px; color: #ccc; }
 
@@ -254,186 +279,7 @@
         .doc-footer-cell { border-right: 1px solid #bbb; }
         .doc-footer-cell:last-child { border-right: none; }
         .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-footer-val { font-size: 10px; font-weight: 700; color: #000; padding: 5px 6px 6px; min-height: 28px; background: #fff; }
-
-        /* ═══════════════════════════════════════
-           TISK – Safari iOS fix
-           Klíč: position:absolute uvnitř
-           position:relative kontejneru
-        ═══════════════════════════════════════ */
-        @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            @page {
-                size: A4 portrait;
-                margin: 0mm;
-            }
-
-            html, body {
-                width: 210mm !important;
-                height: 297mm !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: white !important;
-            }
-
-            /* Skrýt UI */
-            .topbar, .tabbar, .action-buttons, .share-hint,
-            .gen-btn, #page-form, #page-install, #page-navod,
-            .toast, .progress-bar-wrap, .modal-overlay {
-                display: none !important;
-            }
-
-            #page-preview {
-                display: block !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            #doc-wrapper {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                background: white !important;
-            }
-
-            /* ── STRÁNKA 1 ──
-               Pevná výška 297mm, overflow hidden,
-               žádný flex – jen block s pevnými výškami
-            */
-            .doc-page1 {
-                display: block !important;
-                width: 210mm !important;
-                height: 297mm !important;
-                overflow: hidden !important;
-                padding: 5mm !important;
-                box-sizing: border-box !important;
-                page-break-after: always !important;
-                page-break-inside: avoid !important;
-                position: relative !important;
-                background: white !important;
-                border: none !important;
-                margin: 0 !important;
-            }
-
-            /* Pevné výšky sekcí stránky 1 */
-            .doc-top            { height: 18mm !important; overflow: hidden !important; margin-bottom: 2mm !important; display: grid !important; }
-            .doc-info-section   { height: 18mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
-            .doc-typqa-section  { height: 12mm !important; overflow: hidden !important; margin-bottom: 2mm !important; display: grid !important; }
-            .doc-defect-section { height: 12mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
-            .doc-control-section{ height: 22mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
-            .doc-footer         { height: 14mm !important; overflow: hidden !important; margin-bottom: 0 !important; display: grid !important; }
-            .doc-page-footer    { height: 5mm !important; overflow: hidden !important; margin-top: 1mm !important; }
-
-            /* Fotky zaberou zbytek:
-               297mm - 5mm*2 (padding) - 18 - 2 - 18 - 2 - 12 - 2 - 12 - 2 - 22 - 2 - 14 - 1 - 5 = 97mm */
-            .doc-imgs-wrap {
-                height: 97mm !important;
-                overflow: hidden !important;
-                margin-bottom: 2mm !important;
-                display: block !important;
-            }
-
-            .doc-imgs {
-                width: 100% !important;
-                height: 100% !important;
-                display: grid !important;
-                gap: 2mm !important;
-                overflow: hidden !important;
-            }
-
-            .doc-img-cell {
-                overflow: hidden !important;
-                display: flex !important;
-                flex-direction: column !important;
-            }
-
-            .doc-img-header {
-                flex-shrink: 0 !important;
-                height: 6mm !important;
-                line-height: 6mm !important;
-                padding: 0 3px !important;
-                font-size: 8px !important;
-            }
-
-            .doc-img-body {
-                flex: 1 !important;
-                overflow: hidden !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                padding: 1mm !important;
-            }
-
-            .doc-img-body img {
-                max-width: 100% !important;
-                max-height: 100% !important;
-                width: auto !important;
-                height: auto !important;
-                object-fit: contain !important;
-                display: block !important;
-            }
-
-            /* Skrýt border mezi stránkami */
-            .doc-page2 {
-                display: block !important;
-                width: 210mm !important;
-                height: 297mm !important;
-                overflow: hidden !important;
-                padding: 5mm !important;
-                box-sizing: border-box !important;
-                page-break-before: always !important;
-                page-break-inside: avoid !important;
-                border-top: none !important;
-                margin-top: 0 !important;
-                background: white !important;
-            }
-
-            .doc-page2-title {
-                display: block !important;
-                height: 12mm !important;
-                overflow: hidden !important;
-                margin-bottom: 2mm !important;
-                font-size: 8px !important;
-                line-height: 1.4 !important;
-            }
-
-            /* Tabulka podpisů – zbytek stránky 2
-               297mm - 5mm*2 - 12mm - 2mm - 5mm(footer) - 1mm = 267mm */
-            .sig-table {
-                width: 100% !important;
-                height: 267mm !important;
-                border-collapse: collapse !important;
-                table-layout: fixed !important;
-                overflow: hidden !important;
-            }
-
-            .sig-table th {
-                height: 8mm !important;
-                font-size: 8px !important;
-                padding: 0 4px !important;
-            }
-
-            .sig-table td {
-                height: 8mm !important;
-                padding: 0 !important;
-                font-size: 8px !important;
-            }
-
-            .doc-page2 .doc-page-footer {
-                height: 5mm !important;
-                overflow: hidden !important;
-                margin-top: 1mm !important;
-            }
-
-            /* Skrýt info buňky co přetékají */
-            .doc-cell-val { overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
-            .doc-defect-text { overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
-            .doc-control-val { overflow: hidden !important; font-size: 11px !important; padding: 3mm 3mm !important; }
-            .doc-footer-val { overflow: hidden !important; white-space: nowrap !important; }
-        }
+        .doc-footer-val { font-size: 9px; font-weight: 700; color: #000; padding: 4px 6px 5px; min-height: 20px; background: #fff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
@@ -444,13 +290,9 @@
         <div class="modal-handle"></div>
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
-            <button class="share-option" onclick="stahnoutHTML()">
-                <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📎</div>
-                <div><div class="share-option-title">Stáhnout dokument</div><div class="share-option-sub">Uloží .html soubor – lze přiložit do emailu</div></div>
-            </button>
             <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
                 <div class="share-option-icon" style="background:rgba(10,132,255,0.15);">📱</div>
-                <div><div class="share-option-title">Sdílet přes systém</div><div class="share-option-sub">Mail, WhatsApp, Teams, AirDrop...</div></div>
+                <div><div class="share-option-title">Sdílet přes systém</div><div class="share-option-sub">AirDrop, Teams, WhatsApp, Mail...</div></div>
             </button>
             <button class="share-option" onclick="zobrazitEmailForm()">
                 <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
@@ -461,7 +303,9 @@
                 <div><div class="share-option-title">Kopírovat shrnutí</div><div class="share-option-sub">Text do schránky</div></div>
             </button>
         </div>
-        <div class="modal-info">💡 <strong>Tip:</strong> Stáhni dokument → otevři email → přilož soubor ručně.</div>
+        <div class="modal-info">
+            💡 Soubor .html stáhni tlačítkem níže → pošli emailem → na PC otevři v Chrome a tiskni.
+        </div>
     </div>
 </div>
 
@@ -479,7 +323,7 @@
         <label class="modal-label">Poznámka (volitelné)</label>
         <input class="modal-input" type="text" id="email-note" placeholder="Prosím o potvrzení přijetí...">
         <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-top:4px;">
-            ⚠️ Aplikace pouze <strong>připraví email</strong> v Outlooku.<br>Email musíš <strong>odeslat ručně</strong>.
+            ⚠️ Aplikace pouze <strong>připraví email</strong>. Odeslat musíš ručně.
         </div>
         <div class="modal-btn-row">
             <button class="modal-btn cancel" onclick="zavritEmailModal(null)">Zrušit</button>
@@ -492,7 +336,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v4.1.0</div>
+        <div class="version-badge">v5.0.0</div>
     </div>
 </div>
 
@@ -661,14 +505,20 @@
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
     </div>
+
     <div class="action-buttons">
-        <button class="pdf-btn" onclick="ulozitPDF()">📄 Uložit PDF</button>
+        <button class="download-btn" onclick="stahnoutHTML()">
+            📥 Stáhnout dokument (.html)
+        </button>
         <button class="share-btn" onclick="otevritSdileni()">📤 Sdílet</button>
     </div>
-    <div class="share-hint">
-        <strong>💡 PDF:</strong> Nechej 100 % — velikost je nastavena automaticky<br>
-        Vypni Záhlaví a zápatí: Volby → Záhlaví a zápatí → vypnout<br><br>
-        <strong>💡 Sdílení:</strong> 📤 Sdílet → Stáhnout dokument → přiložit do emailu
+
+    <div class="pc-hint">
+        <div class="pc-hint-title">💻 Jak vytisknout PDF na PC</div>
+        <div class="pc-hint-step"><div class="pc-step-num">1</div><div>Stáhni dokument tlačítkem výše</div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">2</div><div>Pošli soubor emailem nebo přes Teams na PC</div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">3</div><div>Na PC otevři soubor v <strong>Chrome</strong> nebo <strong>Edge</strong></div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">4</div><div>Stiskni <strong>Ctrl+P</strong> → Okraje: Žádné → Uložit jako PDF</div></div>
     </div>
 </div>
 
@@ -687,7 +537,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">4.1.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.0.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 6. 2026</span></div>
@@ -698,29 +548,28 @@
 <!-- NÁVOD -->
 <div class="page" id="page-navod">
     <div class="card">
-        <div class="card-header">📤 Jak sdílet dokument</div>
+        <div class="card-header">💻 Jak tisknout PDF na PC</div>
         <div class="navod-section">
-            <div style="display:flex;flex-direction:column;gap:10px;">
-                <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:8px;">✅ Způsob 1 – Stáhnout a přiložit</div>
-                    <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Stáhnout dokument</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Soubor se uloží do <strong style="color:white;">Stažených souborů</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div class="navod-text">Otevři <strong style="color:white;">Outlook</strong> → přilož soubor → odešli</div></div>
-                </div>
-                <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF</div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Nechej <strong style="color:white;">100 %</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Volby → vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong></div></div>
-                </div>
+            <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
+                <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:10px;">✅ Doporučený postup</div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">1</div><div class="navod-text">Na telefonu: <strong style="color:white;">📥 Stáhnout dokument</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">2</div><div class="navod-text">Pošli soubor <strong style="color:white;">emailem nebo Teams</strong> na PC</div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">3</div><div class="navod-text">Na PC otevři v <strong style="color:white;">Chrome nebo Edge</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">4</div><div class="navod-text">Stiskni <strong style="color:white;">Ctrl+P</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">5</div><div class="navod-text">Nastav: Okraje = <strong style="color:white;">Žádné</strong>, Měřítko = <strong style="color:white;">100%</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">6</div><div class="navod-text">Vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">7</div><div class="navod-text">Klikni <strong style="color:white;">Uložit jako PDF</strong> nebo Tisk</div></div>
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
         <div class="navod-section">
-            <div class="navod-text">Text formuláře se automaticky ukládá. Fotky se <strong style="color:white;">neukládají</strong>.</div>
+            <div class="navod-text">Text formuláře se automaticky ukládá do paměti telefonu. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00;flex-shrink:0;"></div><div class="navod-text">Žlutá tečka — ukládám...</div></div>
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#009900;flex-shrink:0;"></div><div class="navod-text">Zelená tečka — uloženo ✅</div></div>
+            </div>
         </div>
     </div>
     <div class="card">
@@ -729,15 +578,15 @@
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(0,153,0,0.1);border:1px solid #009900;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#009900;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">✅</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#009900;">Zelený</div><div style="font-size:12px;color:#636366;">Název obsahuje OK</div></div>
+                    <div><div style="font-size:13px;font-weight:700;color:#009900;">Zelený rámeček</div><div style="font-size:12px;color:#636366;">Název obsahuje OK (ne NOK)</div></div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#cc0000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">❌</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#cc0000;">Červený</div><div style="font-size:12px;color:#636366;">Název obsahuje NOK</div></div>
+                    <div><div style="font-size:13px;font-weight:700;color:#cc0000;">Červený rámeček</div><div style="font-size:12px;color:#636366;">Název obsahuje NOK</div></div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#ffaa00;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📋</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#ffaa00;">Žlutý</div><div style="font-size:12px;color:#636366;">Cokoliv jiného</div></div>
+                    <div><div style="font-size:13px;font-weight:700;color:#ffaa00;">Žlutý rámeček</div><div style="font-size:12px;color:#636366;">Cokoliv jiného</div></div>
                 </div>
             </div>
         </div>
@@ -771,7 +620,7 @@
     let _timer = null;
     let _timerInd = null;
     let _inicializovano = false;
-    const KLIC = 'qa-form-v4';
+    const KLIC = 'qa-form-v5';
 
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
@@ -795,10 +644,19 @@
             const raw = localStorage.getItem(KLIC);
             if (!raw) return false;
             const d = JSON.parse(raw);
-            if (d.typ) { typ = d.typ; document.getElementById('btn-qa').className = 'doc-type-btn'+(typ==='qa'?' active-qa':''); document.getElementById('btn-wi').className = 'doc-type-btn'+(typ==='wi'?' active-wi':''); document.getElementById('card-typqa').style.display = typ==='qa'?'block':'none'; }
+            if (d.typ) {
+                typ = d.typ;
+                document.getElementById('btn-qa').className = 'doc-type-btn'+(typ==='qa'?' active-qa':'');
+                document.getElementById('btn-wi').className = 'doc-type-btn'+(typ==='wi'?' active-wi':'');
+                document.getElementById('card-typqa').style.display = typ==='qa'?'block':'none';
+            }
             if (d.pocet) document.getElementById('photo-count').value = d.pocet;
-            ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => { const e = document.getElementById(id); if (e && d[id]!==undefined) e.value = d[id]; });
-            ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const e = document.getElementById('qa-'+t); if (e && d['qa-'+t]!==undefined) e.checked = d['qa-'+t]; });
+            ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
+                const e = document.getElementById(id); if (e && d[id]!==undefined) e.value = d[id];
+            });
+            ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
+                const e = document.getElementById('qa-'+t); if (e && d['qa-'+t]!==undefined) e.checked = d['qa-'+t];
+            });
             return true;
         } catch(e) { return false; }
     }
@@ -817,7 +675,10 @@
         const dnes = new Date().toISOString().split('T')[0];
         if (!document.getElementById('f-datum').value) document.getElementById('f-datum').value = dnes;
         if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
-        if (typ === 'wi') { document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent = '📋 Popis pracovního postupu'; }
+        if (typ === 'wi') {
+            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
+        }
         update(); indikator('saved');
         if (ok) toast('📂 Formulář obnoven', 2000);
     }
@@ -876,7 +737,9 @@
         grid.style.height = '100%';
         grid.innerHTML = fotky.map((foto,idx) => {
             const nm = foto.name||'Foto'; const s = stylFotky(nm);
-            const im = foto.src ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">` : `<div class="doc-img-placeholder-icon">📷</div>`;
+            const im = foto.src
+                ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
+                : `<div class="doc-img-placeholder-icon">📷</div>`;
             return `<div class="doc-img-cell ${s.cls}"><div class="doc-img-header" style="${s.h}">${esc(nm)}</div><div class="doc-img-body" style="${s.b}">${im}</div></div>`;
         }).join('');
         fotky.forEach((foto,idx) => { if (foto.src) { const img = document.getElementById(`di-${idx}`); if (img) img.src = foto.src; } });
@@ -890,11 +753,18 @@
         document.getElementById('d-control-label').textContent = wi?'📋 Popis pracovního postupu':'📋 Popis kontroly / Pracovní postup';
         const tc = document.querySelector('.doc-title-center');
         if (tc) tc.style.background = wi?'#ffaa00':'#cc0000';
-        [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']].forEach(([dId,fId]) => { const el = document.getElementById(dId); if (el) el.textContent = document.getElementById(fId).value||'—'; });
+        [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
+         ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
+         ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
+         ['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']
+        ].forEach(([dId,fId]) => { const el = document.getElementById(dId); if (el) el.textContent = document.getElementById(fId).value||'—'; });
         document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
         document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
         document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
-        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const el = document.getElementById('dqa-'+t); if (el) el.className = 'doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':''); });
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
+            const el = document.getElementById('dqa-'+t);
+            if (el) el.className = 'doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':'');
+        });
         sestavitGrid(); progress();
     }
 
@@ -903,8 +773,17 @@
         document.getElementById('btn-qa').className = 'doc-type-btn'+(t==='qa'?' active-qa':'');
         document.getElementById('btn-wi').className = 'doc-type-btn'+(t==='wi'?' active-wi':'');
         document.getElementById('card-typqa').style.display = t==='qa'?'block':'none';
-        if (t==='wi') { document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent='📋 Popis pracovního postupu'; document.getElementById('f-defect').placeholder='Název pracovní instrukce'; document.getElementById('f-control').placeholder='Popis pracovního postupu...'; }
-        else { document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup'; document.getElementById('f-defect').placeholder='Kontrola zajištění KST'; document.getElementById('f-control').placeholder='Proveď manuální kontrolu...'; }
+        if (t==='wi') {
+            document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent='📋 Popis pracovního postupu';
+            document.getElementById('f-defect').placeholder='Název pracovní instrukce';
+            document.getElementById('f-control').placeholder='Popis pracovního postupu...';
+        } else {
+            document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup';
+            document.getElementById('f-defect').placeholder='Kontrola zajištění KST';
+            document.getElementById('f-control').placeholder='Proveď manuální kontrolu...';
+        }
         sestavitFotky(true); ulozit();
     }
 
@@ -973,14 +852,8 @@
         window.scrollTo(0,0); toast('✅ Dokument aktualizován!');
     }
 
-    function ulozitPDF() {
-        const ch=validovat(); if (ch.length) { zobrazit('form',document.getElementById('tab-form')); toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
-        update(); toast('🖨️ Otevírám tiskový dialog...');
-        setTimeout(()=>window.print(),600);
-    }
-
     function podpisy() {
-        return Array.from({length:30},()=>`<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`).join('');
+        return Array.from({length:30},()=>`<tr><td style="border:1px solid #000;height:22px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`).join('');
     }
 
     function vymazat() {
@@ -991,149 +864,306 @@
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id)||{}).value||'';
         const label = typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v4.1.0`;
+        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.0.0`;
     }
 
     function sestavitPredmet() {
-        const cislo=(document.getElementById('f-number')||{}).value||''; const defekt=(document.getElementById('f-defect')||{}).value||'';
+        const cislo=(document.getElementById('f-number')||{}).value||'';
+        const defekt=(document.getElementById('f-defect')||{}).value||'';
         return `[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;
     }
 
+    /* ── Stažení HTML pro PC tisk ── */
+    function stahnoutHTML() {
+        const ch=validovat();
+        if (ch.length) { toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
+        update();
+        setTimeout(()=>{
+            const docHTML = document.getElementById('doc-wrapper').outerHTML;
+            const cislo   = (document.getElementById('f-number')||{}).value||'dokument';
+            const datum   = new Date().toISOString().split('T')[0];
+
+            const html = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Quality Alert ${esc(cislo)}</title>
+<style>
+/* ── Reset ── */
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background:white; font-family:Arial,sans-serif; }
+
+/* ── Dokument ── */
+#doc-wrapper { background:white; }
+
+.doc-page1 {
+    font-family:Arial,sans-serif;
+    font-size:9pt;
+    color:#000;
+    background:white;
+    width:210mm;
+    min-height:297mm;
+    padding:8mm;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+}
+
+.doc-page2 {
+    font-family:Arial,sans-serif;
+    font-size:9pt;
+    color:#000;
+    background:white;
+    width:210mm;
+    min-height:297mm;
+    padding:8mm;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    border-top:none;
+    margin-top:0;
+}
+
+.doc-page-footer { text-align:center; font-size:7pt; font-weight:600; padding:3px 0 2px; border-top:1px solid #ccc; margin-top:4px; flex-shrink:0; }
+.doc-page2-title { font-size:8pt; color:#cc0000; font-weight:700; padding:4px 0 8px; display:block; flex-shrink:0; line-height:1.4; }
+
+.sig-table { width:100%; border-collapse:collapse; font-size:8pt; flex:1; }
+.sig-table th { background:#2c2c2c; color:white; padding:5px 6px; text-align:center; border:1px solid #000; font-size:8pt; font-weight:700; }
+.sig-table td { border:1px solid #000; padding:0; height:8.5mm; }
+
+.doc-top { display:grid; grid-template-columns:100px 1fr auto; align-items:stretch; margin-bottom:3px; border:1px solid #ddd; overflow:hidden; flex-shrink:0; }
+.doc-logo-box { background:white; padding:6px 8px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
+.doc-title-center { background:#cc0000; display:flex; align-items:center; justify-content:center; padding:6px; }
+.doc-title-main { font-size:20pt; font-weight:900; color:white; letter-spacing:2px; line-height:1; font-family:Arial,sans-serif; }
+.doc-num-box { background:#000; color:white; padding:5px 8px; text-align:center; min-width:65px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.doc-num-label { font-size:6pt; letter-spacing:1px; color:#aaa; font-weight:600; }
+.doc-num-val { font-size:11pt; font-weight:900; color:white; white-space:nowrap; }
+
+.doc-info-section { border:1px solid #bbb; margin-bottom:3px; flex-shrink:0; }
+.doc-info-row { display:grid; border-bottom:1px solid #bbb; }
+.doc-info-row:last-child { border-bottom:none; }
+.doc-info-row-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+.doc-info-row-5 { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
+.doc-info-cell { border-right:1px solid #bbb; overflow:hidden; }
+.doc-info-cell:last-child { border-right:none; }
+.doc-cell-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
+.doc-cell-val { font-size:9pt; font-weight:700; color:#000; padding:3px 5px 4px; background:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+
+.doc-typqa-section { display:grid; grid-template-columns:1fr auto; border:1px solid #bbb; margin-bottom:3px; flex-shrink:0; }
+.doc-typqa-left { border-right:1px solid #bbb; }
+.doc-typqa-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
+.doc-typqa-items { display:flex; gap:3px; flex-wrap:wrap; padding:4px 5px; }
+.doc-typqa-item { border:1.5px solid #999; padding:2px 6px; font-size:6pt; font-weight:700; color:#666; text-transform:uppercase; border-radius:2px; }
+.doc-typqa-item.active { background:#cc0000; color:white; border-color:#cc0000; }
+
+.doc-defect-section { border:1px solid #bbb; margin-bottom:3px; overflow:hidden; flex-shrink:0; }
+.doc-defect-label { background:#cc0000; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
+.doc-defect-val { display:flex; align-items:center; gap:5px; padding:4px 7px 5px; background:#fdf0ed; }
+.doc-defect-icon { font-size:12pt; color:#cc0000; flex-shrink:0; }
+.doc-defect-text { font-size:13pt; font-weight:900; color:#000; }
+
+.doc-control-section { border:1px solid #bbb; margin-bottom:3px; overflow:hidden; flex-shrink:0; }
+.doc-control-label { background:#1a4a8a; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
+.doc-control-val { font-size:11pt; font-weight:700; color:#000; padding:6px 7px 7px; line-height:1.5; background:#ffff00; white-space:pre-wrap; }
+
+.doc-imgs-wrap { flex:1; display:flex; flex-direction:column; margin-bottom:3px; min-height:80mm; }
+.doc-imgs { flex:1; display:grid; gap:3px; }
+.doc-img-cell { display:flex; flex-direction:column; overflow:hidden; }
+.qa-cell-ok { border:2px solid #009900; }
+.qa-cell-nok { border:2px solid #cc0000; }
+.wi-cell { border:2px solid #ffaa00; }
+.doc-img-header { padding:2px 4px; font-size:8pt; font-weight:900; text-align:center; flex-shrink:0; }
+.doc-img-body { flex:1; display:flex; align-items:center; justify-content:center; padding:2px; min-height:40mm; }
+.doc-img-body img { max-width:100%; max-height:100%; object-fit:contain; display:block; width:100%; height:100%; }
+.doc-img-placeholder-icon { font-size:24pt; color:#ccc; }
+
+.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; }
+.doc-footer-cell { border-right:1px solid #bbb; }
+.doc-footer-cell:last-child { border-right:none; }
+.doc-footer-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
+.doc-footer-val { font-size:9pt; font-weight:700; color:#000; padding:4px 5px 5px; min-height:10mm; background:#fff; }
+
+/* ── TISK (PC – Chrome/Edge) ── */
+@media print {
+    * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    #doc-wrapper { background: white; }
+
+    .doc-page1 {
+        width: 210mm !important;
+        height: 297mm !important;
+        max-height: 297mm !important;
+        padding: 7mm !important;
+        overflow: hidden !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+    }
+
+    .doc-page2 {
+        width: 210mm !important;
+        height: 297mm !important;
+        max-height: 297mm !important;
+        padding: 7mm !important;
+        overflow: hidden !important;
+        page-break-before: always !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+        border-top: none !important;
+        margin-top: 0 !important;
+    }
+
+    .doc-top            { flex-shrink:0 !important; margin-bottom:2mm !important; }
+    .doc-info-section   { flex-shrink:0 !important; margin-bottom:2mm !important; }
+    .doc-typqa-section  { flex-shrink:0 !important; margin-bottom:2mm !important; }
+    .doc-defect-section { flex-shrink:0 !important; margin-bottom:2mm !important; }
+    .doc-control-section{ flex-shrink:0 !important; margin-bottom:2mm !important; }
+    .doc-footer         { flex-shrink:0 !important; }
+    .doc-page-footer    { flex-shrink:0 !important; }
+
+    .doc-imgs-wrap {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        margin-bottom: 2mm !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .doc-imgs {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        display: grid !important;
+    }
+
+    .doc-img-cell {
+        overflow: hidden !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .doc-img-body {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1mm !important;
+    }
+
+    .doc-img-body img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+
+    .sig-table { flex:1 !important; }
+    .sig-table td { height:8.5mm !important; }
+}
+</style>
+</head>
+<body>
+${docHTML}
+</body>
+</html>`;
+
+            const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href = url;
+            a.download = `QA_${cislo}_${datum}.html`;
+            document.body.appendChild(a);
+            try { a.click(); toast('✅ Dokument stažen! Otevři na PC v Chrome.',3500); }
+            finally { document.body.removeChild(a); URL.revokeObjectURL(url); }
+        }, 150);
+    }
+
     function otevritSdileni() {
-        const btn=document.getElementById('btn-system-share'); if (btn) btn.style.display=navigator.share?'flex':'none';
+        const btn = document.getElementById('btn-system-share');
+        if (btn) btn.style.display = navigator.share?'flex':'none';
         document.getElementById('modal-share').classList.add('show');
     }
 
-    function zavritModal(e) { if (e&&e.target!==document.getElementById('modal-share')) return; document.getElementById('modal-share').classList.remove('show'); }
-
-    function stahnoutHTML() {
-        document.getElementById('modal-share').classList.remove('show'); update();
-        setTimeout(()=>{
-            const docHTML=document.getElementById('doc-wrapper').outerHTML;
-            const cislo=(document.getElementById('f-number')||{}).value||'dokument';
-            const datum=new Date().toISOString().split('T')[0];
-            const html=`<!DOCTYPE html><html lang="cs"><head><meta charset="UTF-8"><title>QA ${esc(cislo)}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:white;}
-.doc-page1{font-family:Arial,sans-serif;font-size:9px;color:#000;background:white;padding:8px;height:277mm;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;}
-.doc-page2{font-family:Arial,sans-serif;font-size:9px;color:#000;background:white;padding:8px;display:flex;flex-direction:column;}
-.doc-page-footer{text-align:center;font-size:8px;font-weight:600;padding:4px 0 2px;border-top:1px solid #ccc;margin-top:4px;flex-shrink:0;}
-.doc-page2-title{font-size:9px;color:#cc0000;font-weight:700;padding:6px 0 10px;display:block;flex-shrink:0;}
-.sig-table{width:100%;border-collapse:collapse;font-size:9px;flex:1;}
-.sig-table th{background:#2c2c2c;color:white;padding:6px 8px;text-align:center;border:1px solid #000;font-size:9px;font-weight:700;}
-.sig-table td{border:1px solid #000;padding:0;height:28px;}
-.doc-top{display:grid;grid-template-columns:110px 1fr auto;align-items:stretch;margin-bottom:6px;flex-shrink:0;border:1px solid #ddd;overflow:hidden;}
-.doc-logo-box{background:white;padding:8px 10px;display:flex;align-items:center;justify-content:center;border-right:1px solid #ddd;}
-.doc-title-center{background:#cc0000;display:flex;align-items:center;justify-content:center;padding:8px;}
-.doc-title-main{font-size:22px;font-weight:900;color:white;letter-spacing:2px;line-height:1;font-family:Arial,sans-serif;}
-.doc-num-box{background:#000;color:white;padding:6px 10px;text-align:center;min-width:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.doc-num-label{font-size:7px;letter-spacing:1px;color:#aaa;font-weight:600;}
-.doc-num-val{font-size:12px;font-weight:900;color:white;white-space:nowrap;}
-.doc-info-section{border:1px solid #bbb;margin-bottom:5px;flex-shrink:0;}
-.doc-info-row{display:grid;border-bottom:1px solid #bbb;}
-.doc-info-row:last-child{border-bottom:none;}
-.doc-info-row-4{grid-template-columns:1fr 1fr 1fr 1fr;}
-.doc-info-row-5{grid-template-columns:1fr 1fr 1fr 1fr 1fr;}
-.doc-info-cell{border-right:1px solid #bbb;overflow:hidden;}
-.doc-info-cell:last-child{border-right:none;}
-.doc-cell-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
-.doc-cell-val{font-size:10px;font-weight:700;color:#000;padding:4px 6px 5px;background:#fff;}
-.doc-typqa-section{display:grid;grid-template-columns:1fr auto;border:1px solid #bbb;margin-bottom:5px;flex-shrink:0;}
-.doc-typqa-left{border-right:1px solid #bbb;}
-.doc-typqa-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
-.doc-typqa-items{display:flex;gap:4px;flex-wrap:wrap;padding:5px 6px;}
-.doc-typqa-item{border:1.5px solid #999;padding:2px 7px;font-size:7px;font-weight:700;color:#666;text-transform:uppercase;border-radius:2px;}
-.doc-typqa-item.active{background:#cc0000;color:white;border-color:#cc0000;}
-.doc-defect-section{border:1px solid #bbb;margin-bottom:5px;overflow:hidden;flex-shrink:0;}
-.doc-defect-label{background:#cc0000;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
-.doc-defect-val{display:flex;align-items:center;gap:6px;padding:5px 8px 6px;background:#fdf0ed;}
-.doc-defect-icon{font-size:14px;color:#cc0000;}
-.doc-defect-text{font-size:15px;font-weight:900;color:#000;}
-.doc-control-section{border:1px solid #bbb;margin-bottom:5px;overflow:hidden;flex-shrink:0;}
-.doc-control-label{background:#1a4a8a;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
-.doc-control-val{font-size:13px;font-weight:900;color:#000;padding:8px;line-height:1.6;background:#ffff00;white-space:pre-wrap;}
-.doc-imgs-wrap{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:5px;overflow:hidden;}
-.doc-imgs{flex:1;min-height:0;display:grid;gap:4px;height:100%;overflow:hidden;}
-.doc-img-cell{display:flex;flex-direction:column;overflow:hidden;min-height:0;}
-.qa-cell-ok{border:2.5px solid #009900;}.qa-cell-nok{border:2.5px solid #cc0000;}.wi-cell{border:2.5px solid #ffaa00;}
-.doc-img-header{padding:3px 5px;font-size:9px;font-weight:900;text-align:center;flex-shrink:0;}
-.doc-img-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:3px;overflow:hidden;}
-.doc-img-body img{width:100%;height:100%;object-fit:contain;display:block;}
-.doc-img-placeholder-icon{font-size:20px;color:#ccc;}
-.doc-footer{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #bbb;overflow:hidden;flex-shrink:0;}
-.doc-footer-cell{border-right:1px solid #bbb;}
-.doc-footer-cell:last-child{border-right:none;}
-.doc-footer-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
-.doc-footer-val{font-size:10px;font-weight:700;color:#000;padding:5px 6px 6px;min-height:28px;background:#fff;}
-@media print{
-  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
-  @page{size:A4 portrait;margin:0;}
-  html,body{width:210mm !important;height:297mm !important;margin:0 !important;padding:0 !important;}
-  .doc-page1{display:block !important;width:210mm !important;height:297mm !important;overflow:hidden !important;padding:5mm !important;box-sizing:border-box !important;page-break-after:always !important;page-break-inside:avoid !important;}
-  .doc-top{height:18mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
-  .doc-info-section{height:18mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
-  .doc-typqa-section{height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
-  .doc-defect-section{height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
-  .doc-control-section{height:22mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
-  .doc-imgs-wrap{height:97mm !important;overflow:hidden !important;margin-bottom:2mm !important;display:block !important;}
-  .doc-imgs{width:100% !important;height:100% !important;display:grid !important;gap:2mm !important;overflow:hidden !important;}
-  .doc-img-cell{overflow:hidden !important;display:flex !important;flex-direction:column !important;}
-  .doc-img-header{flex-shrink:0 !important;height:6mm !important;line-height:6mm !important;padding:0 3px !important;font-size:8px !important;}
-  .doc-img-body{flex:1 !important;overflow:hidden !important;display:flex !important;align-items:center !important;justify-content:center !important;}
-  .doc-img-body img{max-width:100% !important;max-height:100% !important;width:auto !important;height:auto !important;object-fit:contain !important;}
-  .doc-footer{height:14mm !important;overflow:hidden !important;}
-  .doc-page-footer{height:5mm !important;overflow:hidden !important;margin-top:1mm !important;}
-  .doc-page2{display:block !important;width:210mm !important;height:297mm !important;overflow:hidden !important;padding:5mm !important;box-sizing:border-box !important;page-break-before:always !important;page-break-inside:avoid !important;border-top:none !important;margin-top:0 !important;}
-  .doc-page2-title{display:block !important;height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;font-size:8px !important;}
-  .sig-table{width:100% !important;height:267mm !important;border-collapse:collapse !important;}
-  .sig-table th{height:8mm !important;font-size:8px !important;}
-  .sig-table td{height:8mm !important;}
-}
-</style></head><body>${docHTML}</body></html>`;
-            const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-            const url=URL.createObjectURL(blob);
-            const a=document.createElement('a'); a.href=url; a.download=`QA_${cislo}_${datum}.html`;
-            document.body.appendChild(a);
-            try { a.click(); toast('✅ Dokument stažen!',3000); } finally { document.body.removeChild(a); URL.revokeObjectURL(url); }
-        },150);
+    function zavritModal(e) {
+        if (e && e.target !== document.getElementById('modal-share')) return;
+        document.getElementById('modal-share').classList.remove('show');
     }
 
     async function sdiletSystemem() {
         document.getElementById('modal-share').classList.remove('show');
         if (!navigator.share) { toast('⚠️ Sdílení není podporováno',3000); return; }
-        try { await navigator.share({title:sestavitPredmet(),text:sestavitShrnutí()}); toast('✅ Sdíleno!'); }
+        try { await navigator.share({title:sestavitPredmet(), text:sestavitShrnutí()}); toast('✅ Sdíleno!'); }
         catch(e) { if (e.name!=='AbortError') toast('❌ Sdílení se nezdařilo',3000); }
     }
 
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
         document.getElementById('email-subject').value = sestavitPredmet();
-        setTimeout(()=>{ document.getElementById('modal-email').classList.add('show'); setTimeout(()=>document.getElementById('email-to').focus(),300); },200);
+        setTimeout(()=>{
+            document.getElementById('modal-email').classList.add('show');
+            setTimeout(()=>document.getElementById('email-to').focus(),300);
+        },200);
     }
 
     function zavritEmailModal(e) {
-        if (e&&e.target!==document.getElementById('modal-email')) return;
-        document.getElementById('modal-email').classList.remove('show'); document.getElementById('email-to').classList.remove('error');
+        if (e && e.target !== document.getElementById('modal-email')) return;
+        document.getElementById('modal-email').classList.remove('show');
+        document.getElementById('email-to').classList.remove('error');
     }
 
     function odeslat() {
-        const to=document.getElementById('email-to').value.trim(); const cc=document.getElementById('email-cc').value.trim();
-        const subject=document.getElementById('email-subject').value.trim(); const note=document.getElementById('email-note').value.trim();
+        const to      = document.getElementById('email-to').value.trim();
+        const cc      = document.getElementById('email-cc').value.trim();
+        const subject = document.getElementById('email-subject').value.trim();
+        const note    = document.getElementById('email-note').value.trim();
         if (!to) { document.getElementById('email-to').classList.add('error'); document.getElementById('email-to').focus(); toast('⚠️ Zadej emailovou adresu příjemce',3000); return; }
         document.getElementById('email-to').classList.remove('error');
-        const body=(note?`\n\nPoznámka: ${note}\n\n`:'\n\n')+sestavitShrnutí();
-        let mailto=`mailto:${encodeURIComponent(to)}`; const params=[];
+        const body = (note?`\n\nPoznámka: ${note}\n\n`:'\n\n') + sestavitShrnutí();
+        let mailto = `mailto:${encodeURIComponent(to)}`;
+        const params = [];
         if (cc) params.push(`cc=${encodeURIComponent(cc)}`);
         if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
         params.push(`body=${encodeURIComponent(body)}`);
-        if (params.length) mailto+='?'+params.join('&');
-        window.location.href=mailto; document.getElementById('modal-email').classList.remove('show'); toast('✉️ Otevírám Outlook...',3000);
+        if (params.length) mailto += '?' + params.join('&');
+        window.location.href = mailto;
+        document.getElementById('modal-email').classList.remove('show');
+        toast('✉️ Otevírám Outlook...',3000);
     }
 
     async function kopirovatShrnutí() {
         document.getElementById('modal-share').classList.remove('show');
-        const text=sestavitShrnutí();
+        const text = sestavitShrnutí();
         try { await navigator.clipboard.writeText(text); toast('✅ Shrnutí zkopírováno!'); }
-        catch(e) { const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0;'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); } catch(_) { toast('❌ Kopírování se nezdařilo',3000); } document.body.removeChild(ta); }
+        catch(e) {
+            const ta = document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0;';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); }
+            catch(_) { toast('❌ Kopírování se nezdařilo',3000); }
+            document.body.removeChild(ta);
+        }
     }
 </script>
 </body>
