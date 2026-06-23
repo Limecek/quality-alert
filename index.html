@@ -30,7 +30,7 @@
         }
 
         .topbar {
-            background: #000000;
+            background: #000;
             padding: 50px 20px 15px;
             position: sticky;
             top: 0;
@@ -40,7 +40,6 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .topbar h1 { font-size: 28px; font-weight: 700; }
         .topbar span { color: var(--red); }
 
@@ -50,20 +49,19 @@
             border-radius: 10px;
             padding: 4px 10px;
             font-size: 11px;
-            color: #aaaaaa;
+            color: #aaa;
             font-weight: 600;
         }
 
         .tabbar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: #000000;
+            background: #000;
             border-top: 2px solid var(--red);
             display: flex;
             padding: 10px 0 25px;
             z-index: 100;
         }
-
         .tab-btn {
             flex: 1;
             display: flex;
@@ -72,610 +70,145 @@
             gap: 4px;
             background: none;
             border: none;
-            color: #888888;
+            color: #888;
             font-size: 10px;
             cursor: pointer;
             padding: 5px;
             transition: color 0.2s;
         }
-
         .tab-btn.active { color: var(--red); }
         .tab-btn svg { width: 24px; height: 24px; }
 
         .page { display: none; padding: 20px; }
         .page.active { display: block; }
 
-        .card {
-            background: var(--card);
-            border-radius: 16px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
+        .card { background: var(--card); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
+        .card-header { padding: 14px 16px 10px; font-size: 12px; font-weight: 600; color: var(--red); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
 
-        .card-header {
-            padding: 14px 16px 10px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--red);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .form-row {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            gap: 12px;
-        }
-
+        .form-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
         .form-row:last-child { border-bottom: none; }
         .form-label { font-size: 15px; color: var(--text); min-width: 120px; }
-
-        .form-input {
-            flex: 1;
-            background: none;
-            border: none;
-            outline: none;
-            font-size: 15px;
-            color: var(--subtext);
-            text-align: right;
-            font-family: inherit;
-        }
-
+        .form-input { flex: 1; background: none; border: none; outline: none; font-size: 15px; color: var(--subtext); text-align: right; font-family: inherit; }
         .form-input.error { border-bottom: 2px solid var(--red); color: #ff6666; }
         .form-input::placeholder { color: #636366; }
         input[type="date"].form-input { color-scheme: dark; }
-
-        textarea.form-input {
-            text-align: left;
-            resize: none;
-            min-height: 80px;
-            padding-top: 4px;
-            line-height: 1.5;
-        }
-
-        select.form-input {
-            text-align: right;
-            cursor: pointer;
-            background: none;
-            color: var(--subtext);
-        }
-
+        textarea.form-input { text-align: left; resize: none; min-height: 80px; padding-top: 4px; line-height: 1.5; }
+        select.form-input { text-align: right; cursor: pointer; background: none; color: var(--subtext); }
         select.form-input option { background: var(--card); color: var(--text); }
 
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .toggle-row:last-child { border-bottom: none; }
         .toggle { position: relative; width: 51px; height: 31px; }
         .toggle input { display: none; }
-
-        .toggle-slider {
-            position: absolute;
-            inset: 0;
-            background: #39393d;
-            border-radius: 31px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .toggle-slider:before {
-            content: '';
-            position: absolute;
-            width: 27px; height: 27px;
-            left: 2px; top: 2px;
-            background: white;
-            border-radius: 50%;
-            transition: 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
+        .toggle-slider { position: absolute; inset: 0; background: #39393d; border-radius: 31px; transition: 0.3s; cursor: pointer; }
+        .toggle-slider:before { content: ''; position: absolute; width: 27px; height: 27px; left: 2px; top: 2px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .toggle input:checked + .toggle-slider { background: var(--red); }
         .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-        .doc-type-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 14px 16px;
-        }
-
-        .doc-type-btn {
-            padding: 12px 8px;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            background: var(--input);
-            color: #636366;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
+        .doc-type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 16px; }
+        .doc-type-btn { padding: 12px 8px; border-radius: 12px; border: 2px solid var(--border); background: var(--input); color: #636366; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
         .doc-type-btn.active-qa { border-color: var(--red); background: rgba(204,0,0,0.15); color: var(--red); }
         .doc-type-btn.active-wi { border-color: #ffaa00; background: rgba(255,170,0,0.15); color: #ffaa00; }
 
-        .photos-container {
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .photo-item {
-            background: var(--input);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .photo-name-row {
-            display: flex;
-            align-items: center;
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border);
-            gap: 8px;
-        }
-
+        .photos-container { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+        .photo-item { background: var(--input); border-radius: 12px; overflow: hidden; }
+        .photo-name-row { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); gap: 8px; }
         .photo-name-label { font-size: 12px; color: #636366; white-space: nowrap; }
-
-        .photo-name-input {
-            flex: 1;
-            background: none;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            color: var(--text);
-            font-family: inherit;
-        }
-
+        .photo-name-input { flex: 1; background: none; border: none; outline: none; font-size: 14px; color: var(--text); font-family: inherit; }
         .photo-name-input::placeholder { color: #636366; }
 
-        .img-upload {
-            margin: 10px;
-            border: 2px dashed var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
+        .img-upload { margin: 10px; border: 2px dashed var(--border); border-radius: 10px; cursor: pointer; transition: all 0.3s; position: relative; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .img-upload:active { transform: scale(0.98); }
         .img-upload.has-image { border-style: solid; height: auto; min-height: 120px; }
-
-        .img-upload input[type="file"] {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 1;
-        }
-
-        .img-upload-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            pointer-events: none;
-        }
-
+        .img-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 1; }
+        .img-upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
         .img-upload-icon { font-size: 28px; }
         .img-upload-text { font-size: 12px; color: #636366; }
+        .img-upload img { width: 100%; max-height: 200px; object-fit: contain; display: block; border-radius: 8px; }
+        .img-remove { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.65); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
 
-        .img-upload img {
-            width: 100%;
-            max-height: 200px;
-            object-fit: contain;
-            display: block;
-            border-radius: 8px;
-        }
-
-        .img-remove {
-            position: absolute;
-            top: 6px; right: 6px;
-            background: rgba(0,0,0,0.65);
-            border: none;
-            color: white;
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        .gen-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--red);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
+        .gen-btn { width: 100%; padding: 16px; background: var(--red); color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.2s; font-family: inherit; }
         .gen-btn:active { transform: scale(0.97); background: #aa0000; }
 
-        .progress-bar-wrap {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 16px;
-        }
-
-        .progress-bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #636366;
-            margin-bottom: 8px;
-        }
-
+        .progress-bar-wrap { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+        .progress-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: #636366; margin-bottom: 8px; }
         .progress-bar-label span:last-child { color: var(--red); font-weight: 700; }
+        .progress-bar-track { background: var(--border); border-radius: 6px; height: 6px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--red), #ff4444); border-radius: 6px; transition: width 0.4s ease; }
 
-        .progress-bar-track {
-            background: var(--border);
-            border-radius: 6px;
-            height: 6px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--red), #ff4444);
-            border-radius: 6px;
-            transition: width 0.4s ease;
-        }
-
-        .save-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #636366;
-            transition: color 0.3s;
-        }
+        .save-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #636366; transition: color 0.3s; }
         .save-indicator.saving { color: #ffaa00; }
-        .save-indicator.saved  { color: var(--green); }
+        .save-indicator.saved { color: var(--green); }
         .save-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
         .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
         .navod-section:last-child { border-bottom: none; }
         .navod-text { font-size: 14px; color: var(--subtext); line-height: 1.6; }
 
-        .install-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: var(--subtext);
-        }
+        .install-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: var(--subtext); }
+        .step-num { background: var(--red); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
 
-        .step-num {
-            background: var(--red);
-            color: white;
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .pdf-btn {
-            width: 100%;
-            padding: 16px;
-            background: #1c1c1e;
-            color: white;
-            border: 2px solid var(--red);
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .pdf-btn { width: 100%; padding: 16px; background: #1c1c1e; color: white; border: 2px solid var(--red); border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .pdf-btn:active { transform: scale(0.97); }
-
-        .share-btn {
-            width: 100%;
-            padding: 16px;
-            background: #1c1c1e;
-            color: white;
-            border: 2px solid #0a84ff;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
+        .share-btn { width: 100%; padding: 16px; background: #1c1c1e; color: white; border: 2px solid #0a84ff; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .share-btn:active { transform: scale(0.97); background: rgba(10,132,255,0.1); }
 
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 500;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .modal-overlay.show { opacity: 1; pointer-events: all; }
-
-        .modal {
-            background: var(--card);
-            border-radius: 20px 20px 0 0;
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            padding-bottom: 40px;
-        }
-
+        .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-width: 600px; transform: translateY(100%); transition: transform 0.3s ease; padding-bottom: 40px; }
         .modal-overlay.show .modal { transform: translateY(0); }
-
-        .modal-handle {
-            width: 40px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            margin: 0 auto 16px;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .modal-input {
-            width: 100%;
-            background: var(--input);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            font-size: 15px;
-            color: var(--text);
-            font-family: inherit;
-            outline: none;
-            margin-bottom: 10px;
-            transition: border-color 0.2s;
-        }
-
+        .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-align: center; }
+        .modal-input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 15px; color: var(--text); font-family: inherit; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
         .modal-input:focus { border-color: #0a84ff; }
         .modal-input::placeholder { color: #636366; }
         .modal-input.error { border-color: var(--red); }
-
-        .modal-label {
-            font-size: 12px;
-            color: #636366;
-            margin-bottom: 6px;
-            display: block;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-btn-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .modal-btn {
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
+        .modal-label { font-size: 12px; color: #636366; margin-bottom: 6px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .modal-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .modal-btn { padding: 14px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
         .modal-btn:active { transform: scale(0.97); }
         .modal-btn.cancel { background: var(--input); color: #636366; }
-        .modal-btn.send   { background: #0a84ff; color: white; }
+        .modal-btn.send { background: #0a84ff; color: white; }
 
         .share-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
-
-        .share-option {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            background: var(--input);
-            border-radius: 14px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-            font-family: inherit;
-            color: var(--text);
-            width: 100%;
-            text-align: left;
-        }
-
+        .share-option { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--input); border-radius: 14px; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; font-family: inherit; color: var(--text); width: 100%; text-align: left; }
         .share-option:active { transform: scale(0.98); background: #48484a; }
-
-        .share-option-icon {
-            width: 44px; height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
+        .share-option-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
         .share-option-title { font-size: 15px; font-weight: 600; }
         .share-option-sub { font-size: 12px; color: #636366; margin-top: 2px; }
+        .modal-info { background: rgba(10,132,255,0.1); border: 1px solid #0a84ff; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #0a84ff; line-height: 1.5; margin-top: 4px; }
 
-        .modal-info {
-            background: rgba(10,132,255,0.1);
-            border: 1px solid #0a84ff;
-            border-radius: 12px;
-            padding: 12px 14px;
-            font-size: 12px;
-            color: #0a84ff;
-            line-height: 1.5;
-            margin-top: 4px;
-        }
+        .share-hint { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-top: 12px; font-size: 13px; color: var(--subtext); line-height: 1.6; }
+        .share-hint strong { color: var(--red); }
 
-        /* ── DOKUMENT (náhled na obrazovce) ── */
-        #doc-wrapper {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
+        .install-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #0f3460; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
+        .install-card h3 { font-size: 18px; margin-bottom: 8px; color: #4fc3f7; }
 
-        .doc-page1 {
-            font-family: Arial, sans-serif;
-            font-size: 9px;
-            color: #000;
-            background: white;
-            padding: 8px;
-            height: 277mm;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { animation: fadeIn 0.3s ease; }
 
-        .doc-page2 {
-            font-family: Arial, sans-serif;
-            font-size: 9px;
-            color: #000;
-            background: white;
-            padding: 8px;
-            border-top: 3px solid #000;
-            margin-top: 4px;
-            display: flex;
-            flex-direction: column;
-        }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(50,50,50,0.95); color: white; padding: 12px 24px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; white-space: nowrap; max-width: 90vw; text-align: center; pointer-events: none; }
+        .toast.show { opacity: 1; }
 
-        .doc-page-footer {
-            text-align: center;
-            font-size: 8px;
-            font-weight: 600;
-            color: #000;
-            padding: 4px 0 2px;
-            border-top: 1px solid #ccc;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
+        /* ── DOKUMENT – obrazovka ── */
+        #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 
-        .doc-page2-title {
-            font-size: 9px;
-            color: #cc0000;
-            font-weight: 700;
-            padding: 6px 0 10px;
-            display: block;
-            flex-shrink: 0;
-        }
+        .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 277mm; display: flex; flex-direction: column; overflow: hidden; }
+        .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; }
+
+        .doc-page-footer { text-align: center; font-size: 8px; font-weight: 600; color: #000; padding: 4px 0 2px; border-top: 1px solid #ccc; margin-top: 4px; flex-shrink: 0; }
+        .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 10px; display: block; flex-shrink: 0; }
 
         .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; flex: 1; }
         .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
         .sig-table td { border: 1px solid #000; padding: 0; height: 28px; }
 
-        .doc-top {
-            display: grid;
-            grid-template-columns: 110px 1fr auto;
-            align-items: stretch;
-            margin-bottom: 6px;
-            gap: 0;
-            flex-shrink: 0;
-            border: 1px solid #ddd;
-            overflow: hidden;
-        }
-
-        .doc-logo-box {
-            background: white;
-            padding: 8px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-right: 1px solid #ddd;
-        }
-
-        .doc-title-center {
-            background: #cc0000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-        }
-
-        .doc-title-main {
-            font-size: 22px;
-            font-weight: 900;
-            color: white;
-            letter-spacing: 2px;
-            line-height: 1;
-            font-family: Arial, sans-serif;
-        }
-
-        .doc-num-box {
-            background: #000;
-            color: white;
-            padding: 6px 10px;
-            text-align: center;
-            min-width: 70px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
+        .doc-top { display: grid; grid-template-columns: 110px 1fr auto; align-items: stretch; margin-bottom: 6px; gap: 0; flex-shrink: 0; border: 1px solid #ddd; overflow: hidden; }
+        .doc-logo-box { background: white; padding: 8px 10px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #ddd; }
+        .doc-title-center { background: #cc0000; display: flex; align-items: center; justify-content: center; padding: 8px; }
+        .doc-title-main { font-size: 22px; font-weight: 900; color: white; letter-spacing: 2px; line-height: 1; font-family: Arial, sans-serif; }
+        .doc-num-box { background: #000; color: white; padding: 6px 10px; text-align: center; min-width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
         .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
 
@@ -709,9 +242,9 @@
         .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 5px; overflow: hidden; }
         .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 4px; overflow: hidden; }
         .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-        .qa-cell-ok  { border: 2.5px solid #009900; }
+        .qa-cell-ok { border: 2.5px solid #009900; }
         .qa-cell-nok { border: 2.5px solid #cc0000; }
-        .wi-cell     { border: 2.5px solid #ffaa00; }
+        .wi-cell { border: 2.5px solid #ffaa00; }
         .doc-img-header { padding: 3px 5px; font-size: 9px; font-weight: 900; letter-spacing: 0.5px; text-align: center; flex-shrink: 0; }
         .doc-img-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 3px; overflow: hidden; }
         .doc-img-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -723,60 +256,11 @@
         .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-footer-val { font-size: 10px; font-weight: 700; color: #000; padding: 5px 6px 6px; min-height: 28px; background: #fff; }
 
-        .share-hint {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-top: 12px;
-            font-size: 13px;
-            color: var(--subtext);
-            line-height: 1.6;
-        }
-
-        .share-hint strong { color: var(--red); }
-
-        .install-card {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border: 1px solid #0f3460;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .install-card h3 { font-size: 18px; margin-bottom: 8px; color: #4fc3f7; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .page.active { animation: fadeIn 0.3s ease; }
-
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(50,50,50,0.95);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-            max-width: 90vw;
-            text-align: center;
-            pointer-events: none;
-        }
-
-        .toast.show { opacity: 1; }
-
-        /* ═══════════════════════════════════════════
-           TISK — plná šířka A4, bez zoom
-        ═══════════════════════════════════════════ */
+        /* ═══════════════════════════════════════
+           TISK – Safari iOS fix
+           Klíč: position:absolute uvnitř
+           position:relative kontejneru
+        ═══════════════════════════════════════ */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -785,17 +269,20 @@
 
             @page {
                 size: A4 portrait;
-                margin: 0;
+                margin: 0mm;
             }
 
-            body {
-                background: white !important;
-                padding: 0 !important;
+            html, body {
+                width: 210mm !important;
+                height: 297mm !important;
                 margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
             }
 
-            .topbar, .tabbar, .action-buttons, .share-hint, .gen-btn,
-            #page-form, #page-install, #page-navod,
+            /* Skrýt UI */
+            .topbar, .tabbar, .action-buttons, .share-hint,
+            .gen-btn, #page-form, #page-install, #page-navod,
             .toast, .progress-bar-wrap, .modal-overlay {
                 display: none !important;
             }
@@ -804,97 +291,80 @@
                 display: block !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                width: 210mm !important;
             }
 
             #doc-wrapper {
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                transform: none !important;
-                zoom: normal !important;
-                width: 210mm !important;
-                margin: 0 !important;
-                padding: 0 !important;
+                background: white !important;
             }
 
+            /* ── STRÁNKA 1 ──
+               Pevná výška 297mm, overflow hidden,
+               žádný flex – jen block s pevnými výškami
+            */
             .doc-page1 {
+                display: block !important;
                 width: 210mm !important;
                 height: 297mm !important;
-                max-height: 297mm !important;
-                min-height: 297mm !important;
-                padding: 4mm !important;
                 overflow: hidden !important;
+                padding: 5mm !important;
+                box-sizing: border-box !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
-                display: flex !important;
-                flex-direction: column !important;
-                box-sizing: border-box !important;
+                position: relative !important;
+                background: white !important;
+                border: none !important;
                 margin: 0 !important;
             }
 
-            .doc-page2 {
-                width: 210mm !important;
-                height: 297mm !important;
-                max-height: 297mm !important;
-                min-height: 297mm !important;
-                padding: 4mm !important;
-                border-top: none !important;
-                margin-top: 0 !important;
-                page-break-before: always !important;
-                page-break-inside: avoid !important;
-                display: flex !important;
-                flex-direction: column !important;
-                box-sizing: border-box !important;
-            }
+            /* Pevné výšky sekcí stránky 1 */
+            .doc-top            { height: 18mm !important; overflow: hidden !important; margin-bottom: 2mm !important; display: grid !important; }
+            .doc-info-section   { height: 18mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
+            .doc-typqa-section  { height: 12mm !important; overflow: hidden !important; margin-bottom: 2mm !important; display: grid !important; }
+            .doc-defect-section { height: 12mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
+            .doc-control-section{ height: 22mm !important; overflow: hidden !important; margin-bottom: 2mm !important; }
+            .doc-footer         { height: 14mm !important; overflow: hidden !important; margin-bottom: 0 !important; display: grid !important; }
+            .doc-page-footer    { height: 5mm !important; overflow: hidden !important; margin-top: 1mm !important; }
 
-            .doc-top            { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
-            .doc-info-section   { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
-            .doc-typqa-section  { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
-            .doc-defect-section { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
-            .doc-control-section{ flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
-            .doc-footer         { flex-shrink: 0 !important; width: 100% !important; }
-            .doc-page-footer    { flex-shrink: 0 !important; }
-
+            /* Fotky zaberou zbytek:
+               297mm - 5mm*2 (padding) - 18 - 2 - 18 - 2 - 12 - 2 - 12 - 2 - 22 - 2 - 14 - 1 - 5 = 97mm */
             .doc-imgs-wrap {
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
-                max-height: none !important;
+                height: 97mm !important;
                 overflow: hidden !important;
-                margin-bottom: 3px !important;
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
+                margin-bottom: 2mm !important;
+                display: block !important;
             }
 
             .doc-imgs {
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
                 width: 100% !important;
-                overflow: hidden !important;
+                height: 100% !important;
                 display: grid !important;
-                gap: 3px !important;
+                gap: 2mm !important;
+                overflow: hidden !important;
             }
 
             .doc-img-cell {
                 overflow: hidden !important;
-                min-height: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
             }
 
             .doc-img-header {
                 flex-shrink: 0 !important;
-                padding: 3px 5px !important;
+                height: 6mm !important;
+                line-height: 6mm !important;
+                padding: 0 3px !important;
+                font-size: 8px !important;
             }
 
             .doc-img-body {
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
+                flex: 1 !important;
                 overflow: hidden !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                padding: 2px !important;
+                padding: 1mm !important;
             }
 
             .doc-img-body img {
@@ -906,8 +376,63 @@
                 display: block !important;
             }
 
-            .sig-table { flex: 1 !important; width: 100% !important; height: auto !important; }
-            .sig-table td { height: 24px !important; }
+            /* Skrýt border mezi stránkami */
+            .doc-page2 {
+                display: block !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                overflow: hidden !important;
+                padding: 5mm !important;
+                box-sizing: border-box !important;
+                page-break-before: always !important;
+                page-break-inside: avoid !important;
+                border-top: none !important;
+                margin-top: 0 !important;
+                background: white !important;
+            }
+
+            .doc-page2-title {
+                display: block !important;
+                height: 12mm !important;
+                overflow: hidden !important;
+                margin-bottom: 2mm !important;
+                font-size: 8px !important;
+                line-height: 1.4 !important;
+            }
+
+            /* Tabulka podpisů – zbytek stránky 2
+               297mm - 5mm*2 - 12mm - 2mm - 5mm(footer) - 1mm = 267mm */
+            .sig-table {
+                width: 100% !important;
+                height: 267mm !important;
+                border-collapse: collapse !important;
+                table-layout: fixed !important;
+                overflow: hidden !important;
+            }
+
+            .sig-table th {
+                height: 8mm !important;
+                font-size: 8px !important;
+                padding: 0 4px !important;
+            }
+
+            .sig-table td {
+                height: 8mm !important;
+                padding: 0 !important;
+                font-size: 8px !important;
+            }
+
+            .doc-page2 .doc-page-footer {
+                height: 5mm !important;
+                overflow: hidden !important;
+                margin-top: 1mm !important;
+            }
+
+            /* Skrýt info buňky co přetékají */
+            .doc-cell-val { overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
+            .doc-defect-text { overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
+            .doc-control-val { overflow: hidden !important; font-size: 11px !important; padding: 3mm 3mm !important; }
+            .doc-footer-val { overflow: hidden !important; white-space: nowrap !important; }
         }
     </style>
 </head>
@@ -921,36 +446,22 @@
         <div class="share-options">
             <button class="share-option" onclick="stahnoutHTML()">
                 <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📎</div>
-                <div>
-                    <div class="share-option-title">Stáhnout dokument</div>
-                    <div class="share-option-sub">Uloží .html soubor – lze přiložit do emailu</div>
-                </div>
+                <div><div class="share-option-title">Stáhnout dokument</div><div class="share-option-sub">Uloží .html soubor – lze přiložit do emailu</div></div>
             </button>
             <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
                 <div class="share-option-icon" style="background:rgba(10,132,255,0.15);">📱</div>
-                <div>
-                    <div class="share-option-title">Sdílet přes systém</div>
-                    <div class="share-option-sub">Mail, WhatsApp, Teams, AirDrop...</div>
-                </div>
+                <div><div class="share-option-title">Sdílet přes systém</div><div class="share-option-sub">Mail, WhatsApp, Teams, AirDrop...</div></div>
             </button>
             <button class="share-option" onclick="zobrazitEmailForm()">
                 <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
-                <div>
-                    <div class="share-option-title">Připravit email</div>
-                    <div class="share-option-sub">Otevře Outlook s předvyplněným textem</div>
-                </div>
+                <div><div class="share-option-title">Připravit email</div><div class="share-option-sub">Otevře Outlook s předvyplněným textem</div></div>
             </button>
             <button class="share-option" onclick="kopirovatShrnutí()">
                 <div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div>
-                <div>
-                    <div class="share-option-title">Kopírovat shrnutí</div>
-                    <div class="share-option-sub">Text do schránky</div>
-                </div>
+                <div><div class="share-option-title">Kopírovat shrnutí</div><div class="share-option-sub">Text do schránky</div></div>
             </button>
         </div>
-        <div class="modal-info">
-            💡 <strong>Tip:</strong> Stáhni dokument → otevři email → přilož soubor ručně.
-        </div>
+        <div class="modal-info">💡 <strong>Tip:</strong> Stáhni dokument → otevři email → přilož soubor ručně.</div>
     </div>
 </div>
 
@@ -968,8 +479,7 @@
         <label class="modal-label">Poznámka (volitelné)</label>
         <input class="modal-input" type="text" id="email-note" placeholder="Prosím o potvrzení přijetí...">
         <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-top:4px;">
-            ⚠️ Aplikace pouze <strong>připraví email</strong> v Outlooku.<br>
-            Email musíš <strong>odeslat ručně</strong>.
+            ⚠️ Aplikace pouze <strong>připraví email</strong> v Outlooku.<br>Email musíš <strong>odeslat ručně</strong>.
         </div>
         <div class="modal-btn-row">
             <button class="modal-btn cancel" onclick="zavritEmailModal(null)">Zrušit</button>
@@ -981,11 +491,8 @@
 <div class="topbar">
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
-        <div class="save-indicator" id="save-indicator">
-            <div class="save-dot"></div>
-            <span id="save-label">Uloženo</span>
-        </div>
-        <div class="version-badge">v4.0.4</div>
+        <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
+        <div class="version-badge">v4.1.0</div>
     </div>
 </div>
 
@@ -994,13 +501,8 @@
 <!-- FORMULÁŘ -->
 <div class="page active" id="page-form">
     <div class="progress-bar-wrap">
-        <div class="progress-bar-label">
-            <span>Vyplněnost formuláře</span>
-            <span id="progress-pct">0 %</span>
-        </div>
-        <div class="progress-bar-track">
-            <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-        </div>
+        <div class="progress-bar-label"><span>Vyplněnost formuláře</span><span id="progress-pct">0 %</span></div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
     </div>
     <div class="card">
         <div class="card-header">📄 Typ dokumentu</div>
@@ -1130,7 +632,7 @@
                 </div>
             </div>
             <div class="doc-control-section">
-                <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup / Description of checks</span>
+                <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup</span>
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
             <div class="doc-imgs-wrap">
@@ -1138,7 +640,7 @@
             </div>
             <div class="doc-footer">
                 <div class="doc-footer-cell"><span class="doc-footer-label">Autor / Author</span><div class="doc-footer-val" id="d-autor">—</div></div>
-                <div class="doc-footer-cell"><span class="doc-footer-label">Podpis QA (originál) / QA Approval</span><div class="doc-footer-val" id="d-podpisqa">—</div></div>
+                <div class="doc-footer-cell"><span class="doc-footer-label">Podpis QA / QA Approval</span><div class="doc-footer-val" id="d-podpisqa">—</div></div>
                 <div class="doc-footer-cell"><span class="doc-footer-label">Schválení výroby / Production Approval</span><div class="doc-footer-val" id="d-schvaleni">—</div></div>
             </div>
             <div class="doc-page-footer">MPM_20.22_F11</div>
@@ -1185,10 +687,10 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.4</span></div>
-        <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
-        <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
-        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">23. 6. 2026</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">4.1.0</span></div>
+        <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
+        <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
+        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 6. 2026</span></div>
     </div>
     <button class="gen-btn" style="background:#3a3a3c;margin-top:0;" onclick="vymazat()">🗑️ Vymazat formulář</button>
 </div>
@@ -1208,9 +710,9 @@
                 <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
                     <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:8px;">📄 Způsob 2 – PDF</div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Klikni <strong style="color:white;">📄 Uložit PDF</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Nechej <strong style="color:white;">100 %</strong> — velikost je automatická</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Nechej <strong style="color:white;">100 %</strong></div></div>
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Volby → vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong> → přilož do emailu</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong></div></div>
                 </div>
             </div>
         </div>
@@ -1218,11 +720,7 @@
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
         <div class="navod-section">
-            <div class="navod-text">Text formuláře se automaticky ukládá. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00;flex-shrink:0;"></div><div class="navod-text">Žlutá tečka — ukládám...</div></div>
-                <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#009900;flex-shrink:0;"></div><div class="navod-text">Zelená tečka — uloženo ✅</div></div>
-            </div>
+            <div class="navod-text">Text formuláře se automaticky ukládá. Fotky se <strong style="color:white;">neukládají</strong>.</div>
         </div>
     </div>
     <div class="card">
@@ -1231,7 +729,7 @@
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(0,153,0,0.1);border:1px solid #009900;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#009900;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">✅</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#009900;">Zelený</div><div style="font-size:12px;color:#636366;">Název obsahuje OK (ne NOK)</div></div>
+                    <div><div style="font-size:13px;font-weight:700;color:#009900;">Zelený</div><div style="font-size:12px;color:#636366;">Název obsahuje OK</div></div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;">
                     <div style="width:36px;height:36px;background:#cc0000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">❌</div>
@@ -1241,17 +739,6 @@
                     <div style="width:36px;height:36px;background:#ffaa00;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">📋</div>
                     <div><div style="font-size:13px;font-weight:700;color:#ffaa00;">Žlutý</div><div style="font-size:12px;color:#636366;">Cokoliv jiného</div></div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">🗺️ Přehled aplikace</div>
-        <div class="navod-section">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">📝</div><div style="font-size:13px;font-weight:700;color:white;">Formulář</div><div style="font-size:12px;color:#636366;margin-top:2px;">Vyplnění dat a fotek</div></div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">👁️</div><div style="font-size:13px;font-weight:700;color:white;">Náhled</div><div style="font-size:12px;color:#636366;margin-top:2px;">Náhled + PDF + Sdílení</div></div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">ℹ️</div><div style="font-size:13px;font-weight:700;color:white;">Info</div><div style="font-size:12px;color:#636366;margin-top:2px;">O aplikaci + reset</div></div>
-                <div style="background:var(--input);border-radius:10px;padding:10px;"><div style="font-size:18px;margin-bottom:4px;">📖</div><div style="font-size:13px;font-weight:700;color:white;">Návod</div><div style="font-size:12px;color:#636366;margin-top:2px;">Tato stránka</div></div>
             </div>
         </div>
     </div>
@@ -1278,40 +765,29 @@
 </div>
 
 <script>
-    let typ   = 'qa';
+    let typ = 'qa';
     let pocet = 2;
     let fotky = [];
-    let _timer    = null;
+    let _timer = null;
     let _timerInd = null;
     let _inicializovano = false;
-
     const KLIC = 'qa-form-v4';
 
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
         el.className = 'save-indicator ' + stav;
-        if (stav === 'saving') {
-            lb.textContent = 'Ukládám…';
-        } else {
-            lb.textContent = 'Uloženo';
-            clearTimeout(_timerInd);
-            _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000);
-        }
+        if (stav === 'saving') { lb.textContent = 'Ukládám…'; }
+        else { lb.textContent = 'Uloženo'; clearTimeout(_timerInd); _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000); }
     }
 
     function ulozit() {
-        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-                     'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-                     'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
         const d = { typ, pocet: parseInt(document.getElementById('photo-count').value) };
         ids.forEach(id => { const e = document.getElementById(id); if (e) d[id] = e.value; });
-        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const e = document.getElementById('qa-' + t); if (e) d['qa-' + t] = e.checked;
-        });
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const e = document.getElementById('qa-'+t); if (e) d['qa-'+t] = e.checked; });
         d.nazvy = fotky.map(f => f.name);
-        try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); }
-        catch(e) { console.warn('Chyba ukládání:', e); }
+        try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); } catch(e) { console.warn(e); }
     }
 
     function nacist() {
@@ -1319,30 +795,16 @@
             const raw = localStorage.getItem(KLIC);
             if (!raw) return false;
             const d = JSON.parse(raw);
-            if (d.typ) {
-                typ = d.typ;
-                document.getElementById('btn-qa').className = 'doc-type-btn' + (typ === 'qa' ? ' active-qa' : '');
-                document.getElementById('btn-wi').className = 'doc-type-btn' + (typ === 'wi' ? ' active-wi' : '');
-                document.getElementById('card-typqa').style.display = typ === 'qa' ? 'block' : 'none';
-            }
+            if (d.typ) { typ = d.typ; document.getElementById('btn-qa').className = 'doc-type-btn'+(typ==='qa'?' active-qa':''); document.getElementById('btn-wi').className = 'doc-type-btn'+(typ==='wi'?' active-wi':''); document.getElementById('card-typqa').style.display = typ==='qa'?'block':'none'; }
             if (d.pocet) document.getElementById('photo-count').value = d.pocet;
-            ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-             'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-             'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
-                const e = document.getElementById(id);
-                if (e && d[id] !== undefined) e.value = d[id];
-            });
-            ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-                const e = document.getElementById('qa-' + t);
-                if (e && d['qa-' + t] !== undefined) e.checked = d['qa-' + t];
-            });
+            ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => { const e = document.getElementById(id); if (e && d[id]!==undefined) e.value = d[id]; });
+            ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const e = document.getElementById('qa-'+t); if (e && d['qa-'+t]!==undefined) e.checked = d['qa-'+t]; });
             return true;
-        } catch(e) { console.warn('Chyba načítání:', e); return false; }
+        } catch(e) { return false; }
     }
 
     function planovatUlozeni() {
-        clearTimeout(_timer);
-        indikator('saving');
+        clearTimeout(_timer); indikator('saving');
         _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
 
@@ -1350,171 +812,105 @@
         if (_inicializovano) return;
         _inicializovano = true;
         document.getElementById('sig-tbody-1').innerHTML = podpisy();
-        const maNactenaData = nacist();
+        const ok = nacist();
         sestavitFotky(false);
         const dnes = new Date().toISOString().split('T')[0];
-        if (!document.getElementById('f-datum').value)   document.getElementById('f-datum').value   = dnes;
+        if (!document.getElementById('f-datum').value) document.getElementById('f-datum').value = dnes;
         if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
-        if (typ === 'wi') {
-            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
-        }
-        update();
-        indikator('saved');
-        if (maNactenaData) toast('📂 Formulář obnoven', 2000);
+        if (typ === 'wi') { document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent = '📋 Popis pracovního postupu'; }
+        update(); indikator('saved');
+        if (ok) toast('📂 Formulář obnoven', 2000);
     }
 
     document.addEventListener('DOMContentLoaded', inicializovat);
-    window.addEventListener('pageshow', (e) => {
-        if (e.persisted) { update(); indikator('saved'); }
-    });
+    window.addEventListener('pageshow', e => { if (e.persisted) { update(); indikator('saved'); } });
 
-    function esc(t) {
-        return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+    function esc(t) { return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    function toast(msg, ms = 2500) {
+    function toast(msg, ms=2500) {
         const el = document.getElementById('toast');
-        el.textContent = msg;
-        el.classList.add('show');
+        el.textContent = msg; el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), ms);
     }
 
     function fmtDatum(v) {
         if (!v || typeof v !== 'string') return '—';
-        const parts = v.split('-');
-        if (parts.length !== 3) return '—';
-        const [r, m, d] = parts.map(Number);
-        if (isNaN(r) || isNaN(m) || isNaN(d)) return '—';
-        if (m < 1 || m > 12 || d < 1 || d > 31 || r < 1900) return '—';
+        const p = v.split('-'); if (p.length !== 3) return '—';
+        const [r,m,d] = p.map(Number);
+        if (isNaN(r)||isNaN(m)||isNaN(d)||m<1||m>12||d<1||d>31||r<1900) return '—';
         return `${d}. ${m}. ${r}`;
     }
 
     function progress() {
-        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-                     'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-                     'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
         const n = ids.filter(id => { const e = document.getElementById(id); return e && e.value.trim(); }).length;
-        const p = Math.round(n / ids.length * 100);
-        document.getElementById('progress-fill').style.width = p + '%';
-        document.getElementById('progress-pct').textContent  = p + ' %';
+        const p = Math.round(n/ids.length*100);
+        document.getElementById('progress-fill').style.width = p+'%';
+        document.getElementById('progress-pct').textContent = p+' %';
     }
 
     function vychoziNazev(i, t, n) {
-        if (t === 'qa') {
-            if (n === 2) return i === 0 ? 'OK' : 'NOK';
-            if (i === 0) return 'OK';
-            if (i === n - 1) return 'NOK';
-            return `Detail ${i}`;
-        }
-        return `Krok ${i + 1}`;
+        if (t==='qa') { if (n===2) return i===0?'OK':'NOK'; if (i===0) return 'OK'; if (i===n-1) return 'NOK'; return `Detail ${i}`; }
+        return `Krok ${i+1}`;
     }
 
     function stylFotky(nm) {
-        const n = (nm || '').trim();
-        if (/\bNOK\b/i.test(n)) return { cls: 'qa-cell-nok', h: 'background:#cc0000;color:white;', b: 'background:#fff0f0;' };
-        if (/\bOK\b/i.test(n))  return { cls: 'qa-cell-ok',  h: 'background:#009900;color:white;', b: 'background:#f0fff0;' };
-        return                          { cls: 'wi-cell',     h: 'background:#ffaa00;color:#000;',  b: 'background:#fffde7;' };
+        const n = (nm||'').trim();
+        if (/\bNOK\b/i.test(n)) return { cls:'qa-cell-nok', h:'background:#cc0000;color:white;', b:'background:#fff0f0;' };
+        if (/\bOK\b/i.test(n))  return { cls:'qa-cell-ok',  h:'background:#009900;color:white;', b:'background:#f0fff0;' };
+        return                          { cls:'wi-cell',     h:'background:#ffaa00;color:#000;',  b:'background:#fffde7;' };
     }
 
     function gridLayout(n) {
-        if (n === 2) return { sl: 2, ra: 1 };
-        if (n === 3) return { sl: 3, ra: 1 };
-        if (n === 4) return { sl: 2, ra: 2 };
-        if (n === 5) return { sl: 3, ra: 2 };
-        return             { sl: 3, ra: 2 };
+        if (n===2) return {sl:2,ra:1}; if (n===3) return {sl:3,ra:1};
+        if (n===4) return {sl:2,ra:2}; if (n===5) return {sl:3,ra:2};
+        return {sl:3,ra:2};
     }
 
     function sestavitGrid() {
         const grid = document.getElementById('doc-imgs-grid');
         const n = fotky.length;
-        const { sl, ra } = gridLayout(n);
-        grid.style.gridTemplateColumns = `repeat(${sl}, 1fr)`;
-        grid.style.gridTemplateRows    = `repeat(${ra}, 1fr)`;
-        grid.style.height              = '100%';
-        grid.innerHTML = fotky.map((foto, idx) => {
-            const nm = foto.name || 'Foto';
-            const s  = stylFotky(nm);
-            const im = foto.src
-                ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
-                : `<div class="doc-img-placeholder-icon">📷</div>`;
-            return `<div class="doc-img-cell ${s.cls}">
-                        <div class="doc-img-header" style="${s.h}">${esc(nm)}</div>
-                        <div class="doc-img-body" style="${s.b}">${im}</div>
-                    </div>`;
+        const {sl,ra} = gridLayout(n);
+        grid.style.gridTemplateColumns = `repeat(${sl},1fr)`;
+        grid.style.gridTemplateRows    = `repeat(${ra},1fr)`;
+        grid.style.height = '100%';
+        grid.innerHTML = fotky.map((foto,idx) => {
+            const nm = foto.name||'Foto'; const s = stylFotky(nm);
+            const im = foto.src ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">` : `<div class="doc-img-placeholder-icon">📷</div>`;
+            return `<div class="doc-img-cell ${s.cls}"><div class="doc-img-header" style="${s.h}">${esc(nm)}</div><div class="doc-img-body" style="${s.b}">${im}</div></div>`;
         }).join('');
-        fotky.forEach((foto, idx) => {
-            if (foto.src) { const img = document.getElementById(`di-${idx}`); if (img) img.src = foto.src; }
-        });
+        fotky.forEach((foto,idx) => { if (foto.src) { const img = document.getElementById(`di-${idx}`); if (img) img.src = foto.src; } });
     }
 
     function update() {
-        const wi = typ === 'wi';
-        document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-        document.getElementById('d-typqa-section').style.display = wi ? 'none' : 'grid';
-        document.getElementById('d-defect-label').textContent    = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
-        document.getElementById('d-control-label').textContent   = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup / Description of checks';
-
-        const titleCenter = document.querySelector('.doc-title-center');
-        if (titleCenter) titleCenter.style.background = wi ? '#ffaa00' : '#cc0000';
-
-        [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
-         ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
-         ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
-         ['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']
-        ].forEach(([dId, fId]) => {
-            const el = document.getElementById(dId);
-            if (el) el.textContent = document.getElementById(fId).value || '—';
-        });
-
+        const wi = typ==='wi';
+        document.getElementById('d-doc-title').textContent = wi?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
+        document.getElementById('d-typqa-section').style.display = wi?'none':'grid';
+        document.getElementById('d-defect-label').textContent = wi?'📝 Název instrukce':'⚠ Popis defektu / Defect description';
+        document.getElementById('d-control-label').textContent = wi?'📋 Popis pracovního postupu':'📋 Popis kontroly / Pracovní postup';
+        const tc = document.querySelector('.doc-title-center');
+        if (tc) tc.style.background = wi?'#ffaa00':'#cc0000';
+        [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']].forEach(([dId,fId]) => { const el = document.getElementById(dId); if (el) el.textContent = document.getElementById(fId).value||'—'; });
         document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
         document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
         document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
-
-        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const el = document.getElementById('dqa-' + t);
-            if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-' + t).checked ? ' active' : '');
-        });
-
-        sestavitGrid();
-        progress();
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const el = document.getElementById('dqa-'+t); if (el) el.className = 'doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':''); });
+        sestavitGrid(); progress();
     }
 
     function nastavTyp(t) {
         typ = t;
-        document.getElementById('btn-qa').className = 'doc-type-btn' + (t === 'qa' ? ' active-qa' : '');
-        document.getElementById('btn-wi').className = 'doc-type-btn' + (t === 'wi' ? ' active-wi' : '');
-        document.getElementById('card-typqa').style.display = t === 'qa' ? 'block' : 'none';
-        if (t === 'wi') {
-            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
-            document.getElementById('f-defect').placeholder = 'Název pracovní instrukce';
-            document.getElementById('f-control').placeholder = 'Popis pracovního postupu...';
-        } else {
-            document.getElementById('defect-header').innerHTML = '⚠️ Popis defektu <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent = '📝 Popis kontroly / pracovní postup';
-            document.getElementById('f-defect').placeholder = 'Kontrola zajištění KST';
-            document.getElementById('f-control').placeholder = 'Proveď manuální kontrolu...';
-        }
-        sestavitFotky(true);
-        ulozit();
+        document.getElementById('btn-qa').className = 'doc-type-btn'+(t==='qa'?' active-qa':'');
+        document.getElementById('btn-wi').className = 'doc-type-btn'+(t==='wi'?' active-wi':'');
+        document.getElementById('card-typqa').style.display = t==='qa'?'block':'none';
+        if (t==='wi') { document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent='📋 Popis pracovního postupu'; document.getElementById('f-defect').placeholder='Název pracovní instrukce'; document.getElementById('f-control').placeholder='Popis pracovního postupu...'; }
+        else { document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>'; document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup'; document.getElementById('f-defect').placeholder='Kontrola zajištění KST'; document.getElementById('f-control').placeholder='Proveď manuální kontrolu...'; }
+        sestavitFotky(true); ulozit();
     }
 
     function htmlFotky(i, nm, src, def) {
-        return `
-            <div class="photo-name-row">
-                <span class="photo-name-label">Název:</span>
-                <input class="photo-name-input" type="text" id="pn-${i}"
-                       value="${esc(nm)}" placeholder="${esc(def)}"
-                       oninput="zmenNazev(${i})">
-            </div>
-            <div class="img-upload ${src ? 'has-image' : ''}" id="pu-${i}">
-                <input type="file" accept="image/*" onchange="nacistFotku(${i})">
-                ${src
-                    ? `<img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`
-                    : `<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`
-                }
-            </div>`;
+        return `<div class="photo-name-row"><span class="photo-name-label">Název:</span><input class="photo-name-input" type="text" id="pn-${i}" value="${esc(nm)}" placeholder="${esc(def)}" oninput="zmenNazev(${i})"></div>
+        <div class="img-upload ${src?'has-image':''}" id="pu-${i}"><input type="file" accept="image/*" onchange="nacistFotku(${i})">${src?`<img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`:`<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`}</div>`;
     }
 
     function sestavitFotky(zachovat) {
@@ -1523,317 +919,221 @@
         pocet = novyPocet; fotky = [];
         const kont = document.getElementById('photos-container');
         kont.innerHTML = '';
-        for (let i = 0; i < pocet; i++) {
-            const ex  = stare[i] || {};
-            const def = vychoziNazev(i, typ, pocet);
-            const nm  = (ex.name !== undefined && ex.name !== '') ? ex.name : def;
-            const src = ex.src || null;
-            fotky.push({ name: nm, src });
-            const el = document.createElement('div');
-            el.className = 'photo-item';
-            el.innerHTML = htmlFotky(i, nm, src, def);
-            kont.appendChild(el);
-            if (src) setSrc(i);
+        for (let i=0; i<pocet; i++) {
+            const ex = stare[i]||{}; const def = vychoziNazev(i,typ,pocet);
+            const nm = (ex.name!==undefined&&ex.name!=='')?ex.name:def; const src = ex.src||null;
+            fotky.push({name:nm,src});
+            const el = document.createElement('div'); el.className='photo-item'; el.innerHTML=htmlFotky(i,nm,src,def);
+            kont.appendChild(el); if (src) setSrc(i);
         }
         update();
     }
 
-    function setSrc(i) {
-        const src = fotky[i] && fotky[i].src;
-        const img = document.getElementById(`pp-${i}`);
-        if (src && img) img.src = src;
-    }
-
-    function zmenNazev(i) {
-        fotky[i].name = document.getElementById(`pn-${i}`).value;
-        planovatUlozeni();
-    }
+    function setSrc(i) { const src=fotky[i]&&fotky[i].src; const img=document.getElementById(`pp-${i}`); if (src&&img) img.src=src; }
+    function zmenNazev(i) { fotky[i].name=document.getElementById(`pn-${i}`).value; planovatUlozeni(); }
 
     function nacistFotku(i) {
-        const inp = document.querySelector(`#pu-${i} input[type=file]`);
-        const f = inp && inp.files[0];
-        if (!f) return;
-        const mb = (f.size / 1024 / 1024).toFixed(1);
-        const r = new FileReader();
+        const inp = document.querySelector(`#pu-${i} input[type=file]`); const f = inp&&inp.files[0]; if (!f) return;
+        const mb = (f.size/1024/1024).toFixed(1); const r = new FileReader();
         r.onload = e => {
             fotky[i].src = e.target.result;
-            const pu = document.getElementById(`pu-${i}`);
-            pu.classList.add('has-image');
+            const pu = document.getElementById(`pu-${i}`); pu.classList.add('has-image');
             pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})"><img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
-            document.getElementById(`pp-${i}`).src = e.target.result;
-            update();
-            toast(`✅ Fotka nahrána (${mb} MB)`);
+            document.getElementById(`pp-${i}`).src = e.target.result; update(); toast(`✅ Fotka nahrána (${mb} MB)`);
         };
-        r.onerror = () => toast('❌ Chyba při načítání fotky', 3000);
-        r.readAsDataURL(f);
+        r.onerror = () => toast('❌ Chyba při načítání fotky',3000); r.readAsDataURL(f);
     }
 
-    function smazatFotku(e, i) {
-        e.stopPropagation();
-        fotky[i].src = null;
-        const pu = document.getElementById(`pu-${i}`);
-        pu.classList.remove('has-image');
-        pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})"><div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`;
-        update();
-        toast('🗑️ Fotka odstraněna');
+    function smazatFotku(e,i) {
+        e.stopPropagation(); fotky[i].src=null;
+        const pu=document.getElementById(`pu-${i}`); pu.classList.remove('has-image');
+        pu.innerHTML=`<input type="file" accept="image/*" onchange="nacistFotku(${i})"><div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`;
+        update(); toast('🗑️ Fotka odstraněna');
     }
 
-    function zobrazit(nazev, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('page-' + nazev).classList.add('active');
-        btn.classList.add('active');
-        window.scrollTo(0, 0);
-        if (nazev === 'preview') update();
+    function zobrazit(nazev,btn) {
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('page-'+nazev).classList.add('active'); btn.classList.add('active');
+        window.scrollTo(0,0); if (nazev==='preview') update();
     }
 
     function validovat() {
-        const pov = {
-            'f-number': 'Číslo dokumentu',
-            'f-defect': typ === 'wi' ? 'Název instrukce' : 'Popis defektu',
-            'f-vydal':  'Vydal'
-        };
-        Object.keys(pov).forEach(id => {
-            const e = document.getElementById(id);
-            if (e) e.classList.toggle('error', !e.value.trim());
-        });
-        return Object.entries(pov)
-            .filter(([id]) => !document.getElementById(id).value.trim())
-            .map(([, l]) => l);
+        const pov = {'f-number':'Číslo dokumentu','f-defect':typ==='wi'?'Název instrukce':'Popis defektu','f-vydal':'Vydal'};
+        Object.keys(pov).forEach(id => { const e=document.getElementById(id); if (e) e.classList.toggle('error',!e.value.trim()); });
+        return Object.entries(pov).filter(([id])=>!document.getElementById(id).value.trim()).map(([,l])=>l);
     }
 
     function prejitNaNahled() {
-        const ch = validovat();
-        if (ch.length) { toast(`⚠️ Chybí: ${ch.join(', ')}`, 3500); return; }
+        const ch=validovat(); if (ch.length) { toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
         update();
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('page-preview').classList.add('active');
-        document.getElementById('tab-preview').classList.add('active');
-        window.scrollTo(0, 0);
-        toast('✅ Dokument aktualizován!');
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('page-preview').classList.add('active'); document.getElementById('tab-preview').classList.add('active');
+        window.scrollTo(0,0); toast('✅ Dokument aktualizován!');
     }
 
     function ulozitPDF() {
-        const ch = validovat();
-        if (ch.length) {
-            zobrazit('form', document.getElementById('tab-form'));
-            toast(`⚠️ Chybí: ${ch.join(', ')}`, 3500);
-            return;
-        }
-        update();
-        toast('🖨️ Otevírám tiskový dialog...');
-        setTimeout(() => window.print(), 600);
+        const ch=validovat(); if (ch.length) { zobrazit('form',document.getElementById('tab-form')); toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
+        update(); toast('🖨️ Otevírám tiskový dialog...');
+        setTimeout(()=>window.print(),600);
     }
 
     function podpisy() {
-        return Array.from({ length: 30 }, () =>
-            `<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`
-        ).join('');
+        return Array.from({length:30},()=>`<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`).join('');
     }
 
     function vymazat() {
         if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
-        try { localStorage.removeItem(KLIC); } catch(_) {}
-        location.reload();
+        try { localStorage.removeItem(KLIC); } catch(_) {} location.reload();
     }
 
     function sestavitShrnutí() {
-        const g = id => (document.getElementById(id) || {}).value || '';
-        const label = typ === 'wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-        return `${label} – ${g('f-number')}
-${'─'.repeat(40)}
-🔧 Proces:      ${g('f-customer')}
-🔧 Projekt:     ${g('f-project')}
-🏭 Pracoviště:  ${g('f-pracoviste')}
-🔩 Díl:         ${g('f-dil')}
-📅 Datum:       ${fmtDatum(g('f-datum'))}
-⏱️ Platnost:    ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}
-👤 Vydal:       ${g('f-vydal')}
-✍️ Autor:       ${g('f-autor')}
-📌 Důvod:       ${g('f-duvod')}
-${'─'.repeat(40)}
-⚠️ ${typ === 'wi' ? 'Instrukce' : 'Defekt'}:
-${g('f-defect')}
-${'─'.repeat(40)}
-📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
-${g('f-control')}
-${'─'.repeat(40)}
-Vygenerováno: Quality Alert v4.0.4`;
+        const g = id => (document.getElementById(id)||{}).value||'';
+        const label = typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
+        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v4.1.0`;
     }
 
     function sestavitPredmet() {
-        const cislo  = (document.getElementById('f-number') || {}).value || '';
-        const defekt = (document.getElementById('f-defect') || {}).value || '';
-        return `[${typ === 'wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – ' + defekt : ''}`;
+        const cislo=(document.getElementById('f-number')||{}).value||''; const defekt=(document.getElementById('f-defect')||{}).value||'';
+        return `[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;
     }
 
     function otevritSdileni() {
-        const btn = document.getElementById('btn-system-share');
-        if (btn) btn.style.display = navigator.share ? 'flex' : 'none';
+        const btn=document.getElementById('btn-system-share'); if (btn) btn.style.display=navigator.share?'flex':'none';
         document.getElementById('modal-share').classList.add('show');
     }
 
-    function zavritModal(e) {
-        if (e && e.target !== document.getElementById('modal-share')) return;
-        document.getElementById('modal-share').classList.remove('show');
-    }
+    function zavritModal(e) { if (e&&e.target!==document.getElementById('modal-share')) return; document.getElementById('modal-share').classList.remove('show'); }
 
     function stahnoutHTML() {
-        document.getElementById('modal-share').classList.remove('show');
-        update();
-        setTimeout(() => {
-            const docHTML = document.getElementById('doc-wrapper').outerHTML;
-            const cislo   = (document.getElementById('f-number') || {}).value || 'dokument';
-            const datum   = new Date().toISOString().split('T')[0];
-            const html = `<!DOCTYPE html>
-<html lang="cs"><head><meta charset="UTF-8"><title>Quality Alert ${esc(cislo)}</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:Arial,sans-serif; background:white; }
-.doc-page1 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; height:277mm; display:flex; flex-direction:column; overflow:hidden; page-break-after:always; }
-.doc-page2 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; border-top:3px solid #000; display:flex; flex-direction:column; }
-.doc-page-footer { text-align:center; font-size:8px; font-weight:600; color:#000; padding:4px 0 2px; border-top:1px solid #ccc; margin-top:4px; flex-shrink:0; }
-.doc-page2-title { font-size:9px; color:#cc0000; font-weight:700; padding:6px 0 10px; display:block; flex-shrink:0; }
-.sig-table { width:100%; border-collapse:collapse; font-size:9px; flex:1; }
-.sig-table th { background:#2c2c2c; color:white; padding:6px 8px; text-align:center; border:1px solid #000; font-size:9px; font-weight:700; }
-.sig-table td { border:1px solid #000; padding:0; height:28px; }
-.doc-top { display:grid; grid-template-columns:110px 1fr auto; align-items:stretch; margin-bottom:6px; gap:0; flex-shrink:0; border:1px solid #ddd; overflow:hidden; }
-.doc-logo-box { background:white; padding:8px 10px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
-.doc-title-center { background:#cc0000; display:flex; align-items:center; justify-content:center; padding:8px; }
-.doc-title-main { font-size:22px; font-weight:900; color:white; letter-spacing:2px; line-height:1; font-family:Arial,sans-serif; }
-.doc-num-box { background:#000; color:white; padding:6px 10px; text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.doc-num-label { font-size:7px; letter-spacing:1px; color:#aaa; font-weight:600; }
-.doc-num-val { font-size:12px; font-weight:900; color:white; white-space:nowrap; }
-.doc-info-section { border:1px solid #bbb; margin-bottom:5px; flex-shrink:0; }
-.doc-info-row { display:grid; border-bottom:1px solid #bbb; }
-.doc-info-row:last-child { border-bottom:none; }
-.doc-info-row-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
-.doc-info-row-5 { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
-.doc-info-cell { border-right:1px solid #bbb; overflow:hidden; }
-.doc-info-cell:last-child { border-right:none; }
-.doc-cell-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
-.doc-cell-val { font-size:10px; font-weight:700; color:#000; padding:4px 6px 5px; min-height:16px; background:#fff; }
-.doc-typqa-section { display:grid; grid-template-columns:1fr auto; border:1px solid #bbb; margin-bottom:5px; flex-shrink:0; }
-.doc-typqa-left { border-right:1px solid #bbb; }
-.doc-typqa-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
-.doc-typqa-items { display:flex; gap:4px; flex-wrap:wrap; padding:5px 6px; }
-.doc-typqa-item { border:1.5px solid #999; padding:2px 7px; font-size:7px; font-weight:700; color:#666; text-transform:uppercase; border-radius:2px; }
-.doc-typqa-item.active { background:#cc0000; color:white; border-color:#cc0000; }
-.doc-defect-section { border:1px solid #bbb; margin-bottom:5px; overflow:hidden; flex-shrink:0; }
-.doc-defect-label { background:#cc0000; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
-.doc-defect-val { display:flex; align-items:center; gap:6px; padding:5px 8px 6px; background:#fdf0ed; }
-.doc-defect-icon { font-size:14px; color:#cc0000; }
-.doc-defect-text { font-size:15px; font-weight:900; color:#000; }
-.doc-control-section { border:1px solid #bbb; margin-bottom:5px; overflow:hidden; flex-shrink:0; }
-.doc-control-label { background:#1a4a8a; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
-.doc-control-val { font-size:13px; font-weight:900; color:#000; padding:8px 8px 10px; line-height:1.6; background:#ffff00; white-space:pre-wrap; }
-.doc-imgs-wrap { flex:1; min-height:0; display:flex; flex-direction:column; margin-bottom:5px; overflow:hidden; }
-.doc-imgs { flex:1; min-height:0; display:grid; gap:4px; height:100%; overflow:hidden; }
-.doc-img-cell { display:flex; flex-direction:column; overflow:hidden; min-height:0; }
-.qa-cell-ok { border:2.5px solid #009900; }
-.qa-cell-nok { border:2.5px solid #cc0000; }
-.wi-cell { border:2.5px solid #ffaa00; }
-.doc-img-header { padding:3px 5px; font-size:9px; font-weight:900; letter-spacing:0.5px; text-align:center; flex-shrink:0; }
-.doc-img-body { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:3px; overflow:hidden; }
-.doc-img-body img { width:100%; height:100%; object-fit:contain; display:block; }
-.doc-img-placeholder-icon { font-size:20px; color:#ccc; }
-.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; }
-.doc-footer-cell { border-right:1px solid #bbb; }
-.doc-footer-cell:last-child { border-right:none; }
-.doc-footer-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
-.doc-footer-val { font-size:10px; font-weight:700; color:#000; padding:5px 6px 6px; min-height:28px; background:#fff; }
-@media print {
-  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
-  @page { size:A4 portrait; margin:0; }
-  #doc-wrapper { width:210mm !important; margin:0 !important; }
-  .doc-page1 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:4mm !important; overflow:hidden !important; page-break-after:always !important; page-break-inside:avoid !important; box-sizing:border-box !important; }
-  .doc-imgs-wrap { flex:1 1 0 !important; overflow:hidden !important; }
-  .doc-imgs { flex:1 1 0 !important; height:100% !important; overflow:hidden !important; }
-  .doc-img-body img { max-width:100% !important; max-height:100% !important; width:auto !important; height:auto !important; object-fit:contain !important; }
-  .doc-page2 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:4mm !important; border-top:none !important; margin-top:0 !important; page-break-before:always !important; page-break-inside:avoid !important; box-sizing:border-box !important; }
+        document.getElementById('modal-share').classList.remove('show'); update();
+        setTimeout(()=>{
+            const docHTML=document.getElementById('doc-wrapper').outerHTML;
+            const cislo=(document.getElementById('f-number')||{}).value||'dokument';
+            const datum=new Date().toISOString().split('T')[0];
+            const html=`<!DOCTYPE html><html lang="cs"><head><meta charset="UTF-8"><title>QA ${esc(cislo)}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;background:white;}
+.doc-page1{font-family:Arial,sans-serif;font-size:9px;color:#000;background:white;padding:8px;height:277mm;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;}
+.doc-page2{font-family:Arial,sans-serif;font-size:9px;color:#000;background:white;padding:8px;display:flex;flex-direction:column;}
+.doc-page-footer{text-align:center;font-size:8px;font-weight:600;padding:4px 0 2px;border-top:1px solid #ccc;margin-top:4px;flex-shrink:0;}
+.doc-page2-title{font-size:9px;color:#cc0000;font-weight:700;padding:6px 0 10px;display:block;flex-shrink:0;}
+.sig-table{width:100%;border-collapse:collapse;font-size:9px;flex:1;}
+.sig-table th{background:#2c2c2c;color:white;padding:6px 8px;text-align:center;border:1px solid #000;font-size:9px;font-weight:700;}
+.sig-table td{border:1px solid #000;padding:0;height:28px;}
+.doc-top{display:grid;grid-template-columns:110px 1fr auto;align-items:stretch;margin-bottom:6px;flex-shrink:0;border:1px solid #ddd;overflow:hidden;}
+.doc-logo-box{background:white;padding:8px 10px;display:flex;align-items:center;justify-content:center;border-right:1px solid #ddd;}
+.doc-title-center{background:#cc0000;display:flex;align-items:center;justify-content:center;padding:8px;}
+.doc-title-main{font-size:22px;font-weight:900;color:white;letter-spacing:2px;line-height:1;font-family:Arial,sans-serif;}
+.doc-num-box{background:#000;color:white;padding:6px 10px;text-align:center;min-width:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.doc-num-label{font-size:7px;letter-spacing:1px;color:#aaa;font-weight:600;}
+.doc-num-val{font-size:12px;font-weight:900;color:white;white-space:nowrap;}
+.doc-info-section{border:1px solid #bbb;margin-bottom:5px;flex-shrink:0;}
+.doc-info-row{display:grid;border-bottom:1px solid #bbb;}
+.doc-info-row:last-child{border-bottom:none;}
+.doc-info-row-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.doc-info-row-5{grid-template-columns:1fr 1fr 1fr 1fr 1fr;}
+.doc-info-cell{border-right:1px solid #bbb;overflow:hidden;}
+.doc-info-cell:last-child{border-right:none;}
+.doc-cell-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
+.doc-cell-val{font-size:10px;font-weight:700;color:#000;padding:4px 6px 5px;background:#fff;}
+.doc-typqa-section{display:grid;grid-template-columns:1fr auto;border:1px solid #bbb;margin-bottom:5px;flex-shrink:0;}
+.doc-typqa-left{border-right:1px solid #bbb;}
+.doc-typqa-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
+.doc-typqa-items{display:flex;gap:4px;flex-wrap:wrap;padding:5px 6px;}
+.doc-typqa-item{border:1.5px solid #999;padding:2px 7px;font-size:7px;font-weight:700;color:#666;text-transform:uppercase;border-radius:2px;}
+.doc-typqa-item.active{background:#cc0000;color:white;border-color:#cc0000;}
+.doc-defect-section{border:1px solid #bbb;margin-bottom:5px;overflow:hidden;flex-shrink:0;}
+.doc-defect-label{background:#cc0000;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
+.doc-defect-val{display:flex;align-items:center;gap:6px;padding:5px 8px 6px;background:#fdf0ed;}
+.doc-defect-icon{font-size:14px;color:#cc0000;}
+.doc-defect-text{font-size:15px;font-weight:900;color:#000;}
+.doc-control-section{border:1px solid #bbb;margin-bottom:5px;overflow:hidden;flex-shrink:0;}
+.doc-control-label{background:#1a4a8a;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
+.doc-control-val{font-size:13px;font-weight:900;color:#000;padding:8px;line-height:1.6;background:#ffff00;white-space:pre-wrap;}
+.doc-imgs-wrap{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:5px;overflow:hidden;}
+.doc-imgs{flex:1;min-height:0;display:grid;gap:4px;height:100%;overflow:hidden;}
+.doc-img-cell{display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.qa-cell-ok{border:2.5px solid #009900;}.qa-cell-nok{border:2.5px solid #cc0000;}.wi-cell{border:2.5px solid #ffaa00;}
+.doc-img-header{padding:3px 5px;font-size:9px;font-weight:900;text-align:center;flex-shrink:0;}
+.doc-img-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:3px;overflow:hidden;}
+.doc-img-body img{width:100%;height:100%;object-fit:contain;display:block;}
+.doc-img-placeholder-icon{font-size:20px;color:#ccc;}
+.doc-footer{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #bbb;overflow:hidden;flex-shrink:0;}
+.doc-footer-cell{border-right:1px solid #bbb;}
+.doc-footer-cell:last-child{border-right:none;}
+.doc-footer-label{background:#2c2c2c;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;padding:2px 6px;display:block;}
+.doc-footer-val{font-size:10px;font-weight:700;color:#000;padding:5px 6px 6px;min-height:28px;background:#fff;}
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  @page{size:A4 portrait;margin:0;}
+  html,body{width:210mm !important;height:297mm !important;margin:0 !important;padding:0 !important;}
+  .doc-page1{display:block !important;width:210mm !important;height:297mm !important;overflow:hidden !important;padding:5mm !important;box-sizing:border-box !important;page-break-after:always !important;page-break-inside:avoid !important;}
+  .doc-top{height:18mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
+  .doc-info-section{height:18mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
+  .doc-typqa-section{height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
+  .doc-defect-section{height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
+  .doc-control-section{height:22mm !important;overflow:hidden !important;margin-bottom:2mm !important;}
+  .doc-imgs-wrap{height:97mm !important;overflow:hidden !important;margin-bottom:2mm !important;display:block !important;}
+  .doc-imgs{width:100% !important;height:100% !important;display:grid !important;gap:2mm !important;overflow:hidden !important;}
+  .doc-img-cell{overflow:hidden !important;display:flex !important;flex-direction:column !important;}
+  .doc-img-header{flex-shrink:0 !important;height:6mm !important;line-height:6mm !important;padding:0 3px !important;font-size:8px !important;}
+  .doc-img-body{flex:1 !important;overflow:hidden !important;display:flex !important;align-items:center !important;justify-content:center !important;}
+  .doc-img-body img{max-width:100% !important;max-height:100% !important;width:auto !important;height:auto !important;object-fit:contain !important;}
+  .doc-footer{height:14mm !important;overflow:hidden !important;}
+  .doc-page-footer{height:5mm !important;overflow:hidden !important;margin-top:1mm !important;}
+  .doc-page2{display:block !important;width:210mm !important;height:297mm !important;overflow:hidden !important;padding:5mm !important;box-sizing:border-box !important;page-break-before:always !important;page-break-inside:avoid !important;border-top:none !important;margin-top:0 !important;}
+  .doc-page2-title{display:block !important;height:12mm !important;overflow:hidden !important;margin-bottom:2mm !important;font-size:8px !important;}
+  .sig-table{width:100% !important;height:267mm !important;border-collapse:collapse !important;}
+  .sig-table th{height:8mm !important;font-size:8px !important;}
+  .sig-table td{height:8mm !important;}
 }
-</style></head>
-<body>${docHTML}</body></html>`;
-            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-            const url  = URL.createObjectURL(blob);
-            const a    = document.createElement('a');
-            a.href = url;
-            a.download = `QA_${cislo}_${datum}.html`;
+</style></head><body>${docHTML}</body></html>`;
+            const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement('a'); a.href=url; a.download=`QA_${cislo}_${datum}.html`;
             document.body.appendChild(a);
-            try {
-                a.click();
-                toast('✅ Dokument stažen!', 3000);
-            } finally {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-        }, 150);
+            try { a.click(); toast('✅ Dokument stažen!',3000); } finally { document.body.removeChild(a); URL.revokeObjectURL(url); }
+        },150);
     }
 
     async function sdiletSystemem() {
         document.getElementById('modal-share').classList.remove('show');
-        if (!navigator.share) { toast('⚠️ Sdílení není podporováno', 3000); return; }
-        try {
-            await navigator.share({ title: sestavitPredmet(), text: sestavitShrnutí() });
-            toast('✅ Sdíleno!');
-        } catch (e) { if (e.name !== 'AbortError') toast('❌ Sdílení se nezdařilo', 3000); }
+        if (!navigator.share) { toast('⚠️ Sdílení není podporováno',3000); return; }
+        try { await navigator.share({title:sestavitPredmet(),text:sestavitShrnutí()}); toast('✅ Sdíleno!'); }
+        catch(e) { if (e.name!=='AbortError') toast('❌ Sdílení se nezdařilo',3000); }
     }
 
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
         document.getElementById('email-subject').value = sestavitPredmet();
-        setTimeout(() => {
-            document.getElementById('modal-email').classList.add('show');
-            setTimeout(() => document.getElementById('email-to').focus(), 300);
-        }, 200);
+        setTimeout(()=>{ document.getElementById('modal-email').classList.add('show'); setTimeout(()=>document.getElementById('email-to').focus(),300); },200);
     }
 
     function zavritEmailModal(e) {
-        if (e && e.target !== document.getElementById('modal-email')) return;
-        document.getElementById('modal-email').classList.remove('show');
-        document.getElementById('email-to').classList.remove('error');
+        if (e&&e.target!==document.getElementById('modal-email')) return;
+        document.getElementById('modal-email').classList.remove('show'); document.getElementById('email-to').classList.remove('error');
     }
 
     function odeslat() {
-        const to      = document.getElementById('email-to').value.trim();
-        const cc      = document.getElementById('email-cc').value.trim();
-        const subject = document.getElementById('email-subject').value.trim();
-        const note    = document.getElementById('email-note').value.trim();
-        if (!to) {
-            document.getElementById('email-to').classList.add('error');
-            document.getElementById('email-to').focus();
-            toast('⚠️ Zadej emailovou adresu příjemce', 3000);
-            return;
-        }
+        const to=document.getElementById('email-to').value.trim(); const cc=document.getElementById('email-cc').value.trim();
+        const subject=document.getElementById('email-subject').value.trim(); const note=document.getElementById('email-note').value.trim();
+        if (!to) { document.getElementById('email-to').classList.add('error'); document.getElementById('email-to').focus(); toast('⚠️ Zadej emailovou adresu příjemce',3000); return; }
         document.getElementById('email-to').classList.remove('error');
-        const poznamka = note ? `\n\nPoznámka: ${note}\n\n` : '\n\n';
-        const body = poznamka + sestavitShrnutí();
-        let mailto = `mailto:${encodeURIComponent(to)}`;
-        const params = [];
-        if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
+        const body=(note?`\n\nPoznámka: ${note}\n\n`:'\n\n')+sestavitShrnutí();
+        let mailto=`mailto:${encodeURIComponent(to)}`; const params=[];
+        if (cc) params.push(`cc=${encodeURIComponent(cc)}`);
         if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
         params.push(`body=${encodeURIComponent(body)}`);
-        if (params.length) mailto += '?' + params.join('&');
-        window.location.href = mailto;
-        document.getElementById('modal-email').classList.remove('show');
-        toast('✉️ Otevírám Outlook...', 3000);
+        if (params.length) mailto+='?'+params.join('&');
+        window.location.href=mailto; document.getElementById('modal-email').classList.remove('show'); toast('✉️ Otevírám Outlook...',3000);
     }
 
     async function kopirovatShrnutí() {
         document.getElementById('modal-share').classList.remove('show');
-        const text = sestavitShrnutí();
-        try {
-            await navigator.clipboard.writeText(text);
-            toast('✅ Shrnutí zkopírováno!');
-        } catch (e) {
-            const ta = document.createElement('textarea');
-            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;';
-            document.body.appendChild(ta); ta.select();
-            try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); }
-            catch (_) { toast('❌ Kopírování se nezdařilo', 3000); }
-            document.body.removeChild(ta);
-        }
+        const text=sestavitShrnutí();
+        try { await navigator.clipboard.writeText(text); toast('✅ Shrnutí zkopírováno!'); }
+        catch(e) { const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0;'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); } catch(_) { toast('❌ Kopírování se nezdařilo',3000); } document.body.removeChild(ta); }
     }
 </script>
 </body>
