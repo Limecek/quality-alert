@@ -196,13 +196,20 @@
 
         /* ── DOKUMENT náhled ── */
         #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+
+        /* Stránka 1 – BEZ footeru, fotky zaberou vše */
         .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 260mm; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Stránka 2 – footer nahoře, pak podpisy */
         .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; min-height: 200px; }
+
         .doc-page-footer { text-align: center; font-size: 8px; font-weight: 600; color: #000; padding: 3px 0 2px; border-top: 1px solid #ccc; margin-top: 3px; flex-shrink: 0; }
-        .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 10px; display: block; flex-shrink: 0; }
-        .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+        .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 8px; display: block; flex-shrink: 0; }
+
+        .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; flex: 1; }
         .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
         .sig-table td { border: 1px solid #000; padding: 0; height: 22px; }
+
         .doc-top { display: grid; grid-template-columns: 110px 1fr auto; align-items: stretch; margin-bottom: 3px; gap: 0; flex-shrink: 0; border: 1px solid #ddd; overflow: hidden; }
         .doc-logo-box { background: white; padding: 8px 10px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #ddd; }
         .doc-title-center { background: #cc0000; display: flex; align-items: center; justify-content: center; padding: 8px; }
@@ -210,6 +217,7 @@
         .doc-num-box { background: #000; color: white; padding: 6px 10px; text-align: center; min-width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
         .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
+
         .doc-info-section { border: 1px solid #bbb; margin-bottom: 3px; flex-shrink: 0; }
         .doc-info-row { display: grid; border-bottom: 1px solid #bbb; }
         .doc-info-row:last-child { border-bottom: none; }
@@ -219,21 +227,26 @@
         .doc-info-cell:last-child { border-right: none; }
         .doc-cell-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-cell-val { font-size: 10px; font-weight: 700; color: #000; padding: 3px 6px 3px; background: #fff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
         .doc-typqa-section { display: grid; grid-template-columns: 1fr auto; border: 1px solid #bbb; margin-bottom: 3px; flex-shrink: 0; }
         .doc-typqa-left { border-right: 1px solid #bbb; }
         .doc-typqa-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-typqa-items { display: flex; gap: 4px; flex-wrap: wrap; padding: 3px 6px; }
         .doc-typqa-item { border: 1.5px solid #999; padding: 2px 7px; font-size: 7px; font-weight: 700; color: #666; text-transform: uppercase; border-radius: 2px; }
         .doc-typqa-item.active { background: #cc0000; color: white; border-color: #cc0000; }
+
         .doc-defect-section { border: 1px solid #bbb; margin-bottom: 3px; overflow: hidden; flex-shrink: 0; }
         .doc-defect-label { background: #cc0000; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-defect-val { display: flex; align-items: center; gap: 6px; padding: 3px 8px 4px; background: #fdf0ed; }
         .doc-defect-icon { font-size: 12px; color: #cc0000; flex-shrink: 0; }
         .doc-defect-text { font-size: 13px; font-weight: 900; color: #000; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
         .doc-control-section { border: 1px solid #bbb; margin-bottom: 3px; overflow: hidden; flex-shrink: 0; }
         .doc-control-label { background: #1a4a8a; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-control-val { font-size: 11px; font-weight: 700; color: #000; padding: 4px 8px 5px; line-height: 1.5; background: #ffff00; white-space: pre-wrap; max-height: 26mm; overflow: hidden; }
-        .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin-bottom: 3px; overflow: hidden; }
+
+        /* Fotky zaberou VEŠKERÝ zbývající prostor na stránce 1 */
+        .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
         .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 3px; overflow: hidden; }
         .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
         .qa-cell-ok { border: 2.5px solid #009900; }
@@ -244,8 +257,8 @@
         .doc-img-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .doc-img-placeholder-icon { font-size: 20px; color: #ccc; }
 
-        /* ── FOOTER – zmenšený ── */
-        .doc-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #bbb; overflow: hidden; flex-shrink: 0; }
+        /* Footer – nyní na stránce 2 */
+        .doc-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #bbb; overflow: hidden; flex-shrink: 0; margin-bottom: 6px; }
         .doc-footer-cell { border-right: 1px solid #bbb; }
         .doc-footer-cell:last-child { border-right: none; }
         .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
@@ -306,7 +319,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.3.0</div>
+        <div class="version-badge">v5.4.0</div>
     </div>
 </div>
 
@@ -384,6 +397,8 @@
 <!-- NÁHLED -->
 <div class="page" id="page-preview">
     <div id="doc-wrapper">
+
+        <!-- STRÁNKA 1 – bez footeru -->
         <div class="doc-page1">
             <div class="doc-top">
                 <div class="doc-logo-box">
@@ -449,17 +464,21 @@
                 <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup</span>
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
+            <!-- Fotky zaberou zbytek stránky 1 -->
             <div class="doc-imgs-wrap">
                 <div class="doc-imgs" id="doc-imgs-grid"></div>
             </div>
+            <div class="doc-page-footer">MPM_20.22_F11</div>
+        </div>
+
+        <!-- STRÁNKA 2 – footer nahoře, pak podpisy -->
+        <div class="doc-page2">
+            <!-- Footer přesunut sem -->
             <div class="doc-footer">
                 <div class="doc-footer-cell"><span class="doc-footer-label">Autor / Author</span><div class="doc-footer-val" id="d-autor">—</div></div>
                 <div class="doc-footer-cell"><span class="doc-footer-label">Podpis QA / QA Approval</span><div class="doc-footer-val" id="d-podpisqa">—</div></div>
                 <div class="doc-footer-cell"><span class="doc-footer-label">Schválení výroby / Production Approval</span><div class="doc-footer-val" id="d-schvaleni">—</div></div>
             </div>
-            <div class="doc-page-footer">MPM_20.22_F11</div>
-        </div>
-        <div class="doc-page2">
             <span class="doc-page2-title">Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem. Pokud nerozumím, zeptám se svého nadřízeného.</span>
             <table class="sig-table">
                 <thead>
@@ -474,6 +493,7 @@
             </table>
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
+
     </div>
     <div class="action-buttons">
         <button class="download-btn" onclick="stahnoutHTML()">📥 Stáhnout dokument (.html)</button>
@@ -503,7 +523,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.3.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.4.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 6. 2026</span></div>
@@ -525,7 +545,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">✉️ Krok 2 – Poslat emailem na PC</div>
         <div class="navod-section">
@@ -547,32 +566,24 @@
                     <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">5</div><div class="navod-text">Zadej příjemce a klikni <strong style="color:white;">Odeslat</strong></div></div>
                 </div>
                 <div style="background:rgba(255,170,0,0.15);border-radius:8px;padding:10px;">
-                    <div style="font-size:12px;color:#ffaa00;line-height:1.6;">
-                        ⚠️ <strong>Důležité:</strong> Soubor musíš přiložit jako <strong>přílohu</strong> – ne kopírovat text!<br>
-                        Příjemce musí dostat soubor <strong>.html</strong>
-                    </div>
+                    <div style="font-size:12px;color:#ffaa00;line-height:1.6;">⚠️ <strong>Důležité:</strong> Soubor musíš přiložit jako <strong>přílohu</strong> – ne kopírovat text! Příjemce musí dostat soubor <strong>.html</strong></div>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">💻 Krok 3 – Otevřít na PC</div>
         <div class="navod-section">
             <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
                 <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:10px;">🖥️ Na PC</div>
                 <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div class="navod-text">Otevři email a <strong style="color:white;">stáhni přílohu</strong> QA_xxx.html</div></div>
-                <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Klikni pravým tlačítkem na soubor → <strong style="color:white;">Otevřít v → Chrome</strong> nebo <strong style="color:white;">Edge</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div class="navod-text">Klikni pravým tlačítkem → <strong style="color:white;">Otevřít v → Chrome</strong> nebo <strong style="color:white;">Edge</strong></div></div>
                 <div style="background:rgba(255,59,48,0.1);border-radius:8px;padding:10px;margin-top:4px;">
-                    <div style="font-size:12px;color:#ff6b6b;line-height:1.6;">
-                        ❌ <strong>Nepoužívej Internet Explorer ani Word!</strong><br>
-                        ✅ Pouze <strong>Chrome</strong> nebo <strong>Edge</strong>
-                    </div>
+                    <div style="font-size:12px;color:#ff6b6b;line-height:1.6;">❌ <strong>Nepoužívej Internet Explorer ani Word!</strong><br>✅ Pouze <strong>Chrome</strong> nebo <strong>Edge</strong></div>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">🖨️ Krok 4 – Uložit jako PDF</div>
         <div class="navod-section">
@@ -589,42 +600,27 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">⚠️ Časté chyby</div>
         <div class="navod-section">
             <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;">
-                    <div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Přetéká na 3–4 stránky</div>
-                    <div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Zkontroluj že Okraje = <strong>Žádné</strong> a Měřítko = <strong>100 %</strong></div>
-                </div>
-                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;">
-                    <div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Chybí barvy (vše šedé)</div>
-                    <div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Zapni <strong>Grafika na pozadí</strong> v Dalších nastaveních</div>
-                </div>
-                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;">
-                    <div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Nahoře/dole je datum a číslo stránky</div>
-                    <div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Vypni <strong>Záhlaví a zápatí</strong></div>
-                </div>
-                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;">
-                    <div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Dokument se neotevře správně</div>
-                    <div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Otevři soubor v <strong>Chrome nebo Edge</strong>, ne v jiném programu</div>
-                </div>
+                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Přetéká na 3–4 stránky</div><div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Okraje = <strong>Žádné</strong> a Měřítko = <strong>100 %</strong></div></div>
+                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Chybí barvy</div><div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Zapni <strong>Grafika na pozadí</strong></div></div>
+                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Datum a číslo stránky navíc</div><div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Vypni <strong>Záhlaví a zápatí</strong></div></div>
+                <div style="padding:10px;background:rgba(255,59,48,0.1);border:1px solid #ff3b30;border-radius:10px;"><div style="font-size:12px;font-weight:700;color:#ff3b30;margin-bottom:4px;">❌ Dokument se neotevře správně</div><div style="font-size:12px;color:#ffffff;line-height:1.5;">→ Otevři v <strong>Chrome nebo Edge</strong></div></div>
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
         <div class="navod-section">
-            <div class="navod-text">Text formuláře se automaticky ukládá do paměti telefonu. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div>
+            <div class="navod-text">Text formuláře se automaticky ukládá. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
                 <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00;flex-shrink:0;"></div><div class="navod-text">Žlutá tečka — ukládám...</div></div>
                 <div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:#009900;flex-shrink:0;"></div><div class="navod-text">Zelená tečka — uloženo ✅</div></div>
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">📷 Barvy rámečků fotek</div>
         <div class="navod-section">
@@ -917,7 +913,7 @@
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id)||{}).value||'';
         const label = typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.3.0`;
+        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.4.0`;
     }
 
     function sestavitPredmet() {
@@ -980,7 +976,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
 .doc-control-section { border:1px solid #bbb; margin-bottom:2px; overflow:hidden; flex-shrink:0; }
 .doc-control-label { background:#1a4a8a; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
 .doc-control-val { font-size:11pt; font-weight:700; color:#000; padding:5px 7px 6px; line-height:1.5; background:#ffff00; white-space:pre-wrap; }
-.doc-imgs-wrap { flex:1; display:flex; flex-direction:column; margin-bottom:2px; min-height:80mm; }
+.doc-imgs-wrap { flex:1; display:flex; flex-direction:column; min-height:80mm; }
 .doc-imgs { flex:1; display:grid; gap:3px; }
 .doc-img-cell { display:flex; flex-direction:column; overflow:hidden; }
 .qa-cell-ok { border:2px solid #009900; }
@@ -990,7 +986,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
 .doc-img-body { flex:1; display:flex; align-items:center; justify-content:center; padding:2px; min-height:40mm; }
 .doc-img-body img { max-width:100%; max-height:100%; object-fit:contain; display:block; width:100%; height:100%; }
 .doc-img-placeholder-icon { font-size:24pt; color:#ccc; }
-.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; }
+.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; margin-bottom:6px; }
 .doc-footer-cell { border-right:1px solid #bbb; }
 .doc-footer-cell:last-child { border-right:none; }
 .doc-footer-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
@@ -1006,9 +1002,9 @@ html, body { background:white; font-family:Arial,sans-serif; }
   .doc-typqa-section { flex-shrink:0 !important; margin-bottom:2mm !important; }
   .doc-defect-section { flex-shrink:0 !important; margin-bottom:2mm !important; }
   .doc-control-section { flex-shrink:0 !important; margin-bottom:2mm !important; }
-  .doc-footer { flex-shrink:0 !important; }
+  .doc-footer { flex-shrink:0 !important; margin-bottom:4mm !important; }
   .doc-page-footer { flex-shrink:0 !important; }
-  .doc-imgs-wrap { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; margin-bottom:2mm !important; display:flex !important; flex-direction:column !important; }
+  .doc-imgs-wrap { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; display:flex !important; flex-direction:column !important; }
   .doc-imgs { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; display:grid !important; }
   .doc-img-cell { overflow:hidden !important; min-height:0 !important; display:flex !important; flex-direction:column !important; }
   .doc-img-body { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; display:flex !important; align-items:center !important; justify-content:center !important; padding:1mm !important; }
