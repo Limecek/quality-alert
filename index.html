@@ -197,33 +197,8 @@
         /* ── DOKUMENT náhled ── */
         #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 
-        /* Stránka 1 – fotky zaberou vše, overflow hidden */
-        .doc-page1 {
-            font-family: Arial, sans-serif;
-            font-size: 9px;
-            color: #000;
-            background: white;
-            padding: 8px;
-            height: 297mm;
-            max-height: 297mm;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* Stránka 2 – flex column, footer dole */
-        .doc-page2 {
-            font-family: Arial, sans-serif;
-            font-size: 9px;
-            color: #000;
-            background: white;
-            padding: 8px;
-            border-top: 3px solid #000;
-            margin-top: 4px;
-            display: flex;
-            flex-direction: column;
-            min-height: 200px;
-        }
+        .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 297mm; max-height: 297mm; display: flex; flex-direction: column; overflow: hidden; }
+        .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; min-height: 200px; }
 
         .doc-page-footer { text-align: center; font-size: 8px; font-weight: 600; color: #000; padding: 3px 0 2px; border-top: 1px solid #ccc; margin-top: 3px; flex-shrink: 0; }
         .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 8px; display: block; flex-shrink: 0; }
@@ -267,7 +242,6 @@
         .doc-control-label { background: #1a4a8a; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
         .doc-control-val { font-size: 11px; font-weight: 700; color: #000; padding: 4px 8px 5px; line-height: 1.5; background: #ffff00; white-space: pre-wrap; max-height: 26mm; overflow: hidden; }
 
-        /* Fotky zaberou VEŠKERÝ zbývající prostor */
         .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
         .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 3px; overflow: hidden; }
         .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
@@ -279,16 +253,7 @@
         .doc-img-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .doc-img-placeholder-icon { font-size: 20px; color: #ccc; }
 
-        /* Footer – na stránce 2 dole pomocí margin-top auto */
-        .doc-footer {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            border: 1px solid #bbb;
-            overflow: hidden;
-            flex-shrink: 0;
-            margin-top: auto;
-            margin-bottom: 3px;
-        }
+        .doc-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #bbb; overflow: hidden; flex-shrink: 0; margin-top: auto; margin-bottom: 3px; }
         .doc-footer-cell { border-right: 1px solid #bbb; }
         .doc-footer-cell:last-child { border-right: none; }
         .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
@@ -349,7 +314,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.5.0</div>
+        <div class="version-badge">v5.6.0</div>
     </div>
 </div>
 
@@ -427,8 +392,6 @@
 <!-- NÁHLED -->
 <div class="page" id="page-preview">
     <div id="doc-wrapper">
-
-        <!-- STRÁNKA 1 – fotky zaberou vše -->
         <div class="doc-page1">
             <div class="doc-top">
                 <div class="doc-logo-box">
@@ -499,8 +462,6 @@
             </div>
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
-
-        <!-- STRÁNKA 2 – podpisy + footer dole -->
         <div class="doc-page2">
             <span class="doc-page2-title">Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem. Pokud nerozumím, zeptám se svého nadřízeného.</span>
             <table class="sig-table">
@@ -514,7 +475,6 @@
                 </thead>
                 <tbody id="sig-tbody-1"></tbody>
             </table>
-            <!-- Footer dole pomocí margin-top: auto -->
             <div class="doc-footer">
                 <div class="doc-footer-cell"><span class="doc-footer-label">Autor / Author</span><div class="doc-footer-val" id="d-autor">—</div></div>
                 <div class="doc-footer-cell"><span class="doc-footer-label">Podpis QA / QA Approval</span><div class="doc-footer-val" id="d-podpisqa">—</div></div>
@@ -522,7 +482,6 @@
             </div>
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
-
     </div>
     <div class="action-buttons">
         <button class="download-btn" onclick="stahnoutHTML()">📥 Stáhnout dokument (.html)</button>
@@ -535,29 +494,65 @@
         <div class="pc-hint-step"><div class="pc-step-num">3</div><div>Na PC otevři soubor v <strong>Chrome</strong> nebo <strong>Edge</strong></div></div>
         <div class="pc-hint-step"><div class="pc-step-num">4</div><div>Stiskni <strong>Ctrl+P</strong> → Okraje: Žádné → <strong>Uložit jako PDF</strong></div></div>
         <div style="background:rgba(255,170,0,0.15);border-radius:8px;padding:10px;margin-top:10px;">
-            <div style="font-size:12px;color:#ffaa00;line-height:1.6;">
-                ⚠️ <strong>Tisk na tiskárnu:</strong> Pokud obsah přetéká, nastav Měřítko na <strong>90 %</strong> nebo <strong>Přizpůsobit stránce</strong>
-            </div>
+            <div style="font-size:12px;color:#ffaa00;line-height:1.6;">⚠️ <strong>Tisk na tiskárnu:</strong> Pokud obsah přetéká, nastav Měřítko na <strong>90 %</strong> nebo <strong>Přizpůsobit stránce</strong></div>
         </div>
     </div>
 </div>
 
 <!-- INFO -->
 <div class="page" id="page-install">
-    <div class="install-card">
-        <h3>📱 Přidat na plochu</h3>
-        <p style="font-size:13px;color:#90caf9;">Používej jako normální appku!</p>
-        <div style="text-align:left;margin-top:12px;">
-            <div class="install-step"><div class="step-num">1</div><div>Otevři v <strong>Safari</strong></div></div>
-            <div class="install-step"><div class="step-num">2</div><div>Klikni na ikonu <strong>Sdílet</strong></div></div>
-            <div class="install-step"><div class="step-num">3</div><div>Vyber <strong>"Přidat na plochu"</strong></div></div>
-            <div class="install-step"><div class="step-num">4</div><div>Klikni <strong>"Přidat"</strong></div></div>
-            <div class="install-step"><div class="step-num">5</div><div>Hotovo! 🎉</div></div>
+
+    <div class="card">
+        <div class="card-header">📱 Přidat na plochu – iPhone / iPad</div>
+        <div class="navod-section">
+            <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
+                <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:10px;">🍎 iOS – Safari</div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">1</div><div>Otevři v <strong style="color:white;">Safari</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">2</div><div>Klikni na ikonu <strong style="color:white;">Sdílet</strong> (čtverec se šipkou)</div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">3</div><div>Vyber <strong style="color:white;">"Přidat na plochu"</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">4</div><div>Klikni <strong style="color:white;">"Přidat"</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">5</div><div>Hotovo! 🎉</div></div>
+            </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">🤖 Přidat na plochu – Android</div>
+        <div class="navod-section">
+            <div style="padding:12px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
+                <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:10px;">🤖 Android – Chrome</div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">1</div><div>Otevři v <strong style="color:white;">Chrome</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">2</div><div>Klikni na <strong style="color:white;">⋮</strong> (tři tečky vpravo nahoře)</div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">3</div><div>Vyber <strong style="color:white;">"Přidat na plochu"</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">4</div><div>Klikni <strong style="color:white;">"Přidat"</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#30d158;">5</div><div>Hotovo! 🎉</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">📋 Kompatibilita</div>
+        <div class="navod-section">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
+                    <div style="font-size:14px;font-weight:700;color:#0a84ff;">🍎 iPhone / iPad</div>
+                    <div style="font-size:13px;color:#30d158;font-weight:600;">✅ Safari</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
+                    <div style="font-size:14px;font-weight:700;color:#30d158;">🤖 Android</div>
+                    <div style="font-size:13px;color:#30d158;font-weight:600;">✅ Chrome</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
+                    <div style="font-size:14px;font-weight:700;color:#ffaa00;">💻 PC / Mac</div>
+                    <div style="font-size:13px;color:#30d158;font-weight:600;">✅ Chrome / Edge</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.5.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.6.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 6. 2026</span></div>
@@ -579,7 +574,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">✉️ Krok 2 – Poslat emailem na PC</div>
         <div class="navod-section">
@@ -606,7 +600,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">💻 Krok 3 – Otevřít na PC</div>
         <div class="navod-section">
@@ -620,7 +613,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">🖨️ Krok 4 – Uložit jako PDF</div>
         <div class="navod-section">
@@ -636,24 +628,19 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">🖨️ Tisk na fyzickou tiskárnu</div>
         <div class="navod-section">
             <div style="padding:12px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
                 <div style="font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:10px;">⚠️ Pozor při tisku na tiskárnu</div>
-                <div class="navod-text" style="margin-bottom:10px;">Tiskárny mají fyzické okraje které mohou způsobit přetékání obsahu. Pokud se obsah nevejde na stránku:</div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">1</div><div class="navod-text">Stiskni <strong style="color:white;">Ctrl + P</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">2</div><div class="navod-text">Okraje: <strong style="color:white;">Žádné</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">3</div><div class="navod-text">Měřítko: změň na <strong style="color:white;">90 %</strong> nebo <strong style="color:white;">Přizpůsobit stránce</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">4</div><div class="navod-text">Zkontroluj náhled – obsah musí být na <strong style="color:white;">2 stránkách</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">1</div><div class="navod-text">Okraje: <strong style="color:white;">Žádné</strong></div></div>
+                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">2</div><div class="navod-text">Měřítko: <strong style="color:white;">90 %</strong> nebo <strong style="color:white;">Přizpůsobit stránce</strong></div></div>
                 <div style="background:rgba(48,209,88,0.1);border-radius:8px;padding:10px;margin-top:8px;">
-                    <div style="font-size:12px;color:#30d158;line-height:1.6;">💡 <strong>Doporučení:</strong> Raději ukládej jako <strong>PDF</strong> a pak tiskni PDF – výsledek je vždy správný!</div>
+                    <div style="font-size:12px;color:#30d158;line-height:1.6;">💡 Raději ukládej jako <strong>PDF</strong> a pak tiskni PDF!</div>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">⚠️ Časté chyby</div>
         <div class="navod-section">
@@ -665,7 +652,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
         <div class="navod-section">
@@ -676,7 +662,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">📷 Barvy rámečků fotek</div>
         <div class="navod-section">
@@ -969,7 +954,7 @@
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id)||{}).value||'';
         const label = typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.5.0`;
+        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.6.0`;
     }
 
     function sestavitPredmet() {
