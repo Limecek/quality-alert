@@ -571,7 +571,7 @@
             margin-top: 4px;
         }
 
-        /* DOKUMENT */
+        /* ── DOKUMENT (náhled na obrazovce) ── */
         #doc-wrapper {
             background: white;
             border-radius: 12px;
@@ -663,8 +663,6 @@
             line-height: 1;
             font-family: Arial, sans-serif;
         }
-
-        .doc-title-sub { display: none; }
 
         .doc-num-box {
             background: #000;
@@ -777,7 +775,7 @@
         .toast.show { opacity: 1; }
 
         /* ═══════════════════════════════════════════
-           TISK — zoom 0.78
+           TISK — plná šířka A4, bez zoom
         ═══════════════════════════════════════════ */
         @media print {
             * {
@@ -806,25 +804,25 @@
                 display: block !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                width: 210mm !important;
             }
 
             #doc-wrapper {
                 box-shadow: none !important;
                 border-radius: 0 !important;
                 transform: none !important;
-                width: 100% !important;
-                zoom: 0.78;
+                zoom: normal !important;
+                width: 210mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             .doc-page1 {
-                font-family: Arial, sans-serif !important;
-                font-size: 9px !important;
-                color: #000 !important;
-                background: white !important;
                 width: 210mm !important;
                 height: 297mm !important;
                 max-height: 297mm !important;
-                padding: 6mm !important;
+                min-height: 297mm !important;
+                padding: 4mm !important;
                 overflow: hidden !important;
                 page-break-after: always !important;
                 page-break-inside: avoid !important;
@@ -835,14 +833,11 @@
             }
 
             .doc-page2 {
-                font-family: Arial, sans-serif !important;
-                font-size: 9px !important;
-                color: #000 !important;
-                background: white !important;
                 width: 210mm !important;
                 height: 297mm !important;
                 max-height: 297mm !important;
-                padding: 6mm !important;
+                min-height: 297mm !important;
+                padding: 4mm !important;
                 border-top: none !important;
                 margin-top: 0 !important;
                 page-break-before: always !important;
@@ -852,29 +847,32 @@
                 box-sizing: border-box !important;
             }
 
-            .doc-top            { flex-shrink: 0 !important; margin-bottom: 4px !important; }
-            .doc-info-section   { flex-shrink: 0 !important; margin-bottom: 4px !important; }
-            .doc-typqa-section  { flex-shrink: 0 !important; margin-bottom: 4px !important; }
-            .doc-defect-section { flex-shrink: 0 !important; margin-bottom: 4px !important; }
-            .doc-control-section{ flex-shrink: 0 !important; margin-bottom: 4px !important; }
-            .doc-footer         { flex-shrink: 0 !important; }
+            .doc-top            { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
+            .doc-info-section   { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
+            .doc-typqa-section  { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
+            .doc-defect-section { flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
+            .doc-control-section{ flex-shrink: 0 !important; margin-bottom: 3px !important; width: 100% !important; }
+            .doc-footer         { flex-shrink: 0 !important; width: 100% !important; }
             .doc-page-footer    { flex-shrink: 0 !important; }
 
             .doc-imgs-wrap {
                 flex: 1 1 0 !important;
                 min-height: 0 !important;
-                max-height: 100% !important;
+                max-height: none !important;
                 overflow: hidden !important;
-                margin-bottom: 4px !important;
+                margin-bottom: 3px !important;
                 display: flex !important;
                 flex-direction: column !important;
+                width: 100% !important;
             }
 
             .doc-imgs {
                 flex: 1 1 0 !important;
                 min-height: 0 !important;
+                width: 100% !important;
                 overflow: hidden !important;
                 display: grid !important;
+                gap: 3px !important;
             }
 
             .doc-img-cell {
@@ -884,6 +882,11 @@
                 flex-direction: column !important;
             }
 
+            .doc-img-header {
+                flex-shrink: 0 !important;
+                padding: 3px 5px !important;
+            }
+
             .doc-img-body {
                 flex: 1 1 0 !important;
                 min-height: 0 !important;
@@ -891,6 +894,7 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
+                padding: 2px !important;
             }
 
             .doc-img-body img {
@@ -902,8 +906,8 @@
                 display: block !important;
             }
 
-            .sig-table { flex: 1 !important; height: auto !important; }
-            .sig-table td { height: 26px !important; }
+            .sig-table { flex: 1 !important; width: 100% !important; height: auto !important; }
+            .sig-table td { height: 24px !important; }
         }
     </style>
 </head>
@@ -981,7 +985,7 @@
             <div class="save-dot"></div>
             <span id="save-label">Uloženo</span>
         </div>
-        <div class="version-badge">v4.0.3</div>
+        <div class="version-badge">v4.0.4</div>
     </div>
 </div>
 
@@ -1181,7 +1185,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.3</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaaaaa;">4.0.4</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaaaaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaaaaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaaaaa;">23. 6. 2026</span></div>
@@ -1283,7 +1287,6 @@
 
     const KLIC = 'qa-form-v4';
 
-    /* ── Indikátor ukládání ── */
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
@@ -1297,7 +1300,6 @@
         }
     }
 
-    /* ── localStorage ── */
     function ulozit() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -1344,7 +1346,6 @@
         _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
 
-    /* ── Inicializace ── */
     function inicializovat() {
         if (_inicializovano) return;
         _inicializovano = true;
@@ -1363,13 +1364,11 @@
         if (maNactenaData) toast('📂 Formulář obnoven', 2000);
     }
 
-    /* Spustit při DOMContentLoaded i pageshow */
     document.addEventListener('DOMContentLoaded', inicializovat);
     window.addEventListener('pageshow', (e) => {
         if (e.persisted) { update(); indikator('saved'); }
     });
 
-    /* ── Pomocné funkce ── */
     function esc(t) {
         return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
@@ -1449,7 +1448,6 @@
         });
     }
 
-    /* ── Hlavní update ── */
     function update() {
         const wi = typ === 'wi';
         document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -1482,7 +1480,6 @@
         progress();
     }
 
-    /* ── Typ dokumentu ── */
     function nastavTyp(t) {
         typ = t;
         document.getElementById('btn-qa').className = 'doc-type-btn' + (t === 'qa' ? ' active-qa' : '');
@@ -1503,7 +1500,6 @@
         ulozit();
     }
 
-    /* ── Fotky ── */
     function htmlFotky(i, nm, src, def) {
         return `
             <div class="photo-name-row">
@@ -1582,7 +1578,6 @@
         toast('🗑️ Fotka odstraněna');
     }
 
-    /* ── Navigace ── */
     function zobrazit(nazev, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1592,7 +1587,6 @@
         if (nazev === 'preview') update();
     }
 
-    /* ── Validace ── */
     function validovat() {
         const pov = {
             'f-number': 'Číslo dokumentu',
@@ -1620,7 +1614,6 @@
         toast('✅ Dokument aktualizován!');
     }
 
-    /* ── PDF tisk ── */
     function ulozitPDF() {
         const ch = validovat();
         if (ch.length) {
@@ -1633,21 +1626,18 @@
         setTimeout(() => window.print(), 600);
     }
 
-    /* ── Podpisy ── */
     function podpisy() {
         return Array.from({ length: 30 }, () =>
             `<tr><td style="border:1px solid #000;height:28px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`
         ).join('');
     }
 
-    /* ── Reset ── */
     function vymazat() {
         if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
         try { localStorage.removeItem(KLIC); } catch(_) {}
         location.reload();
     }
 
-    /* ── Sdílení ── */
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id) || {}).value || '';
         const label = typ === 'wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -1669,7 +1659,7 @@ ${'─'.repeat(40)}
 📝 ${typ === 'wi' ? 'Postup' : 'Kontrola'}:
 ${g('f-control')}
 ${'─'.repeat(40)}
-Vygenerováno: Quality Alert v4.0.3`;
+Vygenerováno: Quality Alert v4.0.4`;
     }
 
     function sestavitPredmet() {
@@ -1756,11 +1746,12 @@ body { font-family:Arial,sans-serif; background:white; }
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   @page { size:A4 portrait; margin:0; }
-  #doc-wrapper { zoom:0.78; width:100% !important; }
-  .doc-page1 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:6mm !important; overflow:hidden !important; page-break-after:always !important; page-break-inside:avoid !important; }
+  #doc-wrapper { width:210mm !important; margin:0 !important; }
+  .doc-page1 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:4mm !important; overflow:hidden !important; page-break-after:always !important; page-break-inside:avoid !important; box-sizing:border-box !important; }
   .doc-imgs-wrap { flex:1 1 0 !important; overflow:hidden !important; }
   .doc-imgs { flex:1 1 0 !important; height:100% !important; overflow:hidden !important; }
-  .doc-page2 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:6mm !important; border-top:none !important; margin-top:0 !important; page-break-before:always !important; page-break-inside:avoid !important; }
+  .doc-img-body img { max-width:100% !important; max-height:100% !important; width:auto !important; height:auto !important; object-fit:contain !important; }
+  .doc-page2 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:4mm !important; border-top:none !important; margin-top:0 !important; page-break-before:always !important; page-break-inside:avoid !important; box-sizing:border-box !important; }
 }
 </style></head>
 <body>${docHTML}</body></html>`;
