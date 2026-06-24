@@ -314,7 +314,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.6.0</div>
+        <div class="version-badge">v5.6.1</div>
     </div>
 </div>
 
@@ -501,7 +501,6 @@
 
 <!-- INFO -->
 <div class="page" id="page-install">
-
     <div class="card">
         <div class="card-header">📱 Přidat na plochu – iPhone / iPad</div>
         <div class="navod-section">
@@ -552,10 +551,10 @@
 
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.6.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.6.1</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
-        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 6. 2026</span></div>
+        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">24. 6. 2026</span></div>
     </div>
     <button class="gen-btn" style="background:#3a3a3c;margin-top:0;" onclick="vymazat()">🗑️ Vymazat formulář</button>
 </div>
@@ -716,17 +715,28 @@
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
         el.className = 'save-indicator ' + stav;
-        if (stav === 'saving') { lb.textContent = 'Ukládám…'; }
-        else { lb.textContent = 'Uloženo'; clearTimeout(_timerInd); _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000); }
+        if (stav === 'saving') {
+            lb.textContent = 'Ukládám…';
+        } else {
+            lb.textContent = 'Uloženo';
+            clearTimeout(_timerInd);
+            _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000);
+        }
     }
 
     function ulozit() {
-        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                     'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                     'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
         const d = { typ, pocet: parseInt(document.getElementById('photo-count').value) };
         ids.forEach(id => { const e = document.getElementById(id); if (e) d[id] = e.value; });
-        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => { const e = document.getElementById('qa-'+t); if (e) d['qa-'+t] = e.checked; });
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
+            const e = document.getElementById('qa-'+t); if (e) d['qa-'+t] = e.checked;
+        });
+        // Ukládáme pouze názvy fotek, ne samotné obrázky
         d.nazvy = fotky.map(f => f.name);
-        try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); } catch(e) { console.warn(e); }
+        try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); }
+        catch(e) { console.warn(e); }
     }
 
     function nacist() {
@@ -736,23 +746,28 @@
             const d = JSON.parse(raw);
             if (d.typ) {
                 typ = d.typ;
-                document.getElementById('btn-qa').className = 'doc-type-btn'+(typ==='qa'?' active-qa':'');
-                document.getElementById('btn-wi').className = 'doc-type-btn'+(typ==='wi'?' active-wi':'');
-                document.getElementById('card-typqa').style.display = typ==='qa'?'block':'none';
+                document.getElementById('btn-qa').className = 'doc-type-btn' + (typ==='qa' ? ' active-qa' : '');
+                document.getElementById('btn-wi').className = 'doc-type-btn' + (typ==='wi' ? ' active-wi' : '');
+                document.getElementById('card-typqa').style.display = typ==='qa' ? 'block' : 'none';
             }
             if (d.pocet) document.getElementById('photo-count').value = d.pocet;
-            ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
-                const e = document.getElementById(id); if (e && d[id]!==undefined) e.value = d[id];
+            ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+             'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+             'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
+                const e = document.getElementById(id);
+                if (e && d[id] !== undefined) e.value = d[id];
             });
             ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-                const e = document.getElementById('qa-'+t); if (e && d['qa-'+t]!==undefined) e.checked = d['qa-'+t];
+                const e = document.getElementById('qa-'+t);
+                if (e && d['qa-'+t] !== undefined) e.checked = d['qa-'+t];
             });
             return true;
         } catch(e) { return false; }
     }
 
     function planovatUlozeni() {
-        clearTimeout(_timer); indikator('saving');
+        clearTimeout(_timer);
+        indikator('saving');
         _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
 
@@ -769,39 +784,61 @@
             document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
             document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
         }
-        update(); indikator('saved');
+        update();
+        indikator('saved');
         if (ok) toast('📂 Formulář obnoven', 2000);
     }
 
     document.addEventListener('DOMContentLoaded', inicializovat);
     window.addEventListener('pageshow', e => { if (e.persisted) { update(); indikator('saved'); } });
 
-    function esc(t) { return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function esc(t) {
+        return (t||'')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27;');
+    }
 
     function toast(msg, ms=2500) {
         const el = document.getElementById('toast');
-        el.textContent = msg; el.classList.add('show');
+        el.textContent = msg;
+        el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), ms);
     }
 
     function fmtDatum(v) {
         if (!v || typeof v !== 'string') return '—';
-        const p = v.split('-'); if (p.length !== 3) return '—';
-        const [r,m,d] = p.map(Number);
-        if (isNaN(r)||isNaN(m)||isNaN(d)||m<1||m>12||d<1||d>31||r<1900) return '—';
+        const datum = new Date(v + 'T00:00:00');
+        if (isNaN(datum.getTime())) return '—';
+        const [r, m, d] = v.split('-').map(Number);
+        if (datum.getFullYear() !== r ||
+            datum.getMonth() + 1 !== m ||
+            datum.getDate()     !== d) return '—';
         return `${d}. ${m}. ${r}`;
     }
 
     function progress() {
-        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
-        const n = ids.filter(id => { const e = document.getElementById(id); return e && e.value.trim(); }).length;
-        const p = Math.round(n/ids.length*100);
-        document.getElementById('progress-fill').style.width = p+'%';
-        document.getElementById('progress-pct').textContent = p+' %';
+        const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
+                     'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
+                     'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+        const n = ids.filter(id => {
+            const e = document.getElementById(id);
+            return e && e.value.trim();
+        }).length;
+        const p = Math.round(n / ids.length * 100);
+        document.getElementById('progress-fill').style.width = p + '%';
+        document.getElementById('progress-pct').textContent = p + ' %';
     }
 
     function vychoziNazev(i, t, n) {
-        if (t==='qa') { if (n===2) return i===0?'OK':'NOK'; if (i===0) return 'OK'; if (i===n-1) return 'NOK'; return `Detail ${i}`; }
+        if (t === 'qa') {
+            if (n === 2) return i === 0 ? 'OK' : 'NOK';
+            if (i === 0) return 'OK';
+            if (i === n-1) return 'NOK';
+            return `Detail ${i}`;
+        }
         return `Krok ${i+1}`;
     }
 
@@ -813,163 +850,285 @@
     }
 
     function gridLayout(n) {
-        if (n===2) return {sl:2,ra:1}; if (n===3) return {sl:3,ra:1};
-        if (n===4) return {sl:2,ra:2}; if (n===5) return {sl:3,ra:2};
-        return {sl:3,ra:2};
+        if (n === 2) return {sl:2, ra:1};
+        if (n === 3) return {sl:3, ra:1};
+        if (n === 4) return {sl:2, ra:2};
+        if (n === 5) return {sl:3, ra:2};
+        return {sl:3, ra:2};
     }
 
     function sestavitGrid() {
         const grid = document.getElementById('doc-imgs-grid');
         const n = fotky.length;
-        const {sl,ra} = gridLayout(n);
+        const {sl, ra} = gridLayout(n);
         grid.style.gridTemplateColumns = `repeat(${sl},1fr)`;
         grid.style.gridTemplateRows    = `repeat(${ra},1fr)`;
         grid.style.height = '100%';
-        grid.innerHTML = fotky.map((foto,idx) => {
-            const nm = foto.name||'Foto'; const s = stylFotky(nm);
+        grid.innerHTML = fotky.map((foto, idx) => {
+            const nm = foto.name || 'Foto';
+            const s  = stylFotky(nm);
             const im = foto.src
                 ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
                 : `<div class="doc-img-placeholder-icon">📷</div>`;
-            return `<div class="doc-img-cell ${s.cls}"><div class="doc-img-header" style="${s.h}">${esc(nm)}</div><div class="doc-img-body" style="${s.b}">${im}</div></div>`;
+            return `<div class="doc-img-cell ${s.cls}">
+                        <div class="doc-img-header" style="${s.h}">${esc(nm)}</div>
+                        <div class="doc-img-body" style="${s.b}">${im}</div>
+                    </div>`;
         }).join('');
-        fotky.forEach((foto,idx) => { if (foto.src) { const img = document.getElementById(`di-${idx}`); if (img) img.src = foto.src; } });
+        fotky.forEach((foto, idx) => {
+            if (foto.src) {
+                const img = document.getElementById(`di-${idx}`);
+                if (img) img.src = foto.src;
+            }
+        });
     }
 
     function update() {
-        const wi = typ==='wi';
-        document.getElementById('d-doc-title').textContent = wi?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-        document.getElementById('d-typqa-section').style.display = wi?'none':'grid';
-        document.getElementById('d-defect-label').textContent = wi?'📝 Název instrukce':'⚠ Popis defektu / Defect description';
-        document.getElementById('d-control-label').textContent = wi?'📋 Popis pracovního postupu':'📋 Popis kontroly / Pracovní postup';
+        const wi = typ === 'wi';
+        document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
+        document.getElementById('d-typqa-section').style.display = wi ? 'none' : 'grid';
+        document.getElementById('d-defect-label').textContent = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
+        document.getElementById('d-control-label').textContent = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup';
         const tc = document.querySelector('.doc-title-center');
-        if (tc) tc.style.background = wi?'#ffaa00':'#cc0000';
+        if (tc) tc.style.background = wi ? '#ffaa00' : '#cc0000';
         [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
          ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
          ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
          ['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']
-        ].forEach(([dId,fId]) => { const el = document.getElementById(dId); if (el) el.textContent = document.getElementById(fId).value||'—'; });
+        ].forEach(([dId, fId]) => {
+            const el = document.getElementById(dId);
+            if (el) el.textContent = document.getElementById(fId).value || '—';
+        });
         document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
         document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
         document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const el = document.getElementById('dqa-'+t);
-            if (el) el.className = 'doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':'');
+            if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-'+t).checked ? ' active' : '');
         });
-        sestavitGrid(); progress();
+        sestavitGrid();
+        progress();
     }
 
     function nastavTyp(t) {
         typ = t;
-        document.getElementById('btn-qa').className = 'doc-type-btn'+(t==='qa'?' active-qa':'');
-        document.getElementById('btn-wi').className = 'doc-type-btn'+(t==='wi'?' active-wi':'');
-        document.getElementById('card-typqa').style.display = t==='qa'?'block':'none';
-        if (t==='wi') {
-            document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent='📋 Popis pracovního postupu';
-            document.getElementById('f-defect').placeholder='Název pracovní instrukce';
-            document.getElementById('f-control').placeholder='Popis pracovního postupu...';
+        document.getElementById('btn-qa').className = 'doc-type-btn' + (t==='qa' ? ' active-qa' : '');
+        document.getElementById('btn-wi').className = 'doc-type-btn' + (t==='wi' ? ' active-wi' : '');
+        document.getElementById('card-typqa').style.display = t==='qa' ? 'block' : 'none';
+        if (t === 'wi') {
+            document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
+            document.getElementById('f-defect').placeholder = 'Název pracovní instrukce';
+            document.getElementById('f-control').placeholder = 'Popis pracovního postupu...';
         } else {
-            document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>';
-            document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup';
-            document.getElementById('f-defect').placeholder='Kontrola zajištění KST';
-            document.getElementById('f-control').placeholder='Proveď manuální kontrolu...';
+            document.getElementById('defect-header').innerHTML = '⚠️ Popis defektu <span style="color:var(--red)">*</span>';
+            document.getElementById('control-header').textContent = '📝 Popis kontroly / pracovní postup';
+            document.getElementById('f-defect').placeholder = 'Kontrola zajištění KST';
+            document.getElementById('f-control').placeholder = 'Proveď manuální kontrolu...';
         }
-        sestavitFotky(true); ulozit();
+        sestavitFotky(true);
+        ulozit();
     }
 
     function htmlFotky(i, nm, src, def) {
-        return `<div class="photo-name-row"><span class="photo-name-label">Název:</span><input class="photo-name-input" type="text" id="pn-${i}" value="${esc(nm)}" placeholder="${esc(def)}" oninput="zmenNazev(${i})"></div>
-        <div class="img-upload ${src?'has-image':''}" id="pu-${i}"><input type="file" accept="image/*" onchange="nacistFotku(${i})">${src?`<img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`:`<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`}</div>`;
+        return `<div class="photo-name-row">
+            <span class="photo-name-label">Název:</span>
+            <input class="photo-name-input" type="text" id="pn-${i}" value="${esc(nm)}" placeholder="${esc(def)}" oninput="zmenNazev(${i})">
+        </div>
+        <div class="img-upload ${src ? 'has-image' : ''}" id="pu-${i}">
+            <input type="file" accept="image/*" onchange="nacistFotku(${i})">
+            ${src
+                ? `<img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`
+                : `<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`
+            }
+        </div>`;
     }
 
     function sestavitFotky(zachovat) {
         const novyPocet = parseInt(document.getElementById('photo-count').value);
+
+        // Načti uložené názvy z localStorage jako zálohu
+        let ulozeneNazvy = [];
+        try {
+            const raw = localStorage.getItem(KLIC);
+            if (raw) {
+                const d = JSON.parse(raw);
+                ulozeneNazvy = d.nazvy || [];
+            }
+        } catch(_) {}
+
         const stare = zachovat ? fotky.slice() : [];
-        pocet = novyPocet; fotky = [];
+        pocet = novyPocet;
+        fotky = [];
         const kont = document.getElementById('photos-container');
         kont.innerHTML = '';
-        for (let i=0; i<pocet; i++) {
-            const ex = stare[i]||{}; const def = vychoziNazev(i,typ,pocet);
-            const nm = (ex.name!==undefined&&ex.name!=='')?ex.name:def; const src = ex.src||null;
-            fotky.push({name:nm,src});
-            const el = document.createElement('div'); el.className='photo-item'; el.innerHTML=htmlFotky(i,nm,src,def);
-            kont.appendChild(el); if (src) setSrc(i);
+
+        for (let i = 0; i < pocet; i++) {
+            const ex  = stare[i] || {};
+            const def = vychoziNazev(i, typ, pocet);
+
+            // Priorita: aktuální pole → localStorage → výchozí název
+            const nm = ex.name || ulozeneNazvy[i] || def;
+
+            fotky.push({ name: nm, src: null });
+            const el = document.createElement('div');
+            el.className = 'photo-item';
+            el.innerHTML = htmlFotky(i, nm, null, def);
+            kont.appendChild(el);
         }
         update();
     }
 
-    function setSrc(i) { const src=fotky[i]&&fotky[i].src; const img=document.getElementById(`pp-${i}`); if (src&&img) img.src=src; }
-    function zmenNazev(i) { fotky[i].name=document.getElementById(`pn-${i}`).value; planovatUlozeni(); }
+    function setSrc(i) {
+        const src = fotky[i] && fotky[i].src;
+        const img = document.getElementById(`pp-${i}`);
+        if (src && img) img.src = src;
+    }
+
+    function zmenNazev(i) {
+        fotky[i].name = document.getElementById(`pn-${i}`).value;
+        planovatUlozeni();
+    }
 
     function nacistFotku(i) {
-        const inp = document.querySelector(`#pu-${i} input[type=file]`); const f = inp&&inp.files[0]; if (!f) return;
-        const mb = (f.size/1024/1024).toFixed(1); const r = new FileReader();
+        const inp = document.querySelector(`#pu-${i} input[type=file]`);
+        const f   = inp && inp.files[0];
+        if (!f) return;
+        const mb = (f.size / 1024 / 1024).toFixed(1);
+        const r  = new FileReader();
         r.onload = e => {
             fotky[i].src = e.target.result;
-            const pu = document.getElementById(`pu-${i}`); pu.classList.add('has-image');
-            pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})"><img id="pp-${i}" alt="foto"><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
-            document.getElementById(`pp-${i}`).src = e.target.result; update(); toast(`✅ Fotka nahrána (${mb} MB)`);
+            const pu = document.getElementById(`pu-${i}`);
+            pu.classList.add('has-image');
+            pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})">
+                <img id="pp-${i}" alt="foto">
+                <button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
+            document.getElementById(`pp-${i}`).src = e.target.result;
+            update();
+            toast(`✅ Fotka nahrána (${mb} MB)`);
         };
-        r.onerror = () => toast('❌ Chyba při načítání fotky',3000); r.readAsDataURL(f);
+        r.onerror = () => toast('❌ Chyba při načítání fotky', 3000);
+        r.readAsDataURL(f);
     }
 
-    function smazatFotku(e,i) {
-        e.stopPropagation(); fotky[i].src=null;
-        const pu=document.getElementById(`pu-${i}`); pu.classList.remove('has-image');
-        pu.innerHTML=`<input type="file" accept="image/*" onchange="nacistFotku(${i})"><div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`;
-        update(); toast('🗑️ Fotka odstraněna');
+    function smazatFotku(e, i) {
+        e.stopPropagation();
+        fotky[i].src = null;
+        const pu = document.getElementById(`pu-${i}`);
+        pu.classList.remove('has-image');
+        pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})">
+            <div class="img-upload-placeholder">
+                <div class="img-upload-icon">📷</div>
+                <div class="img-upload-text">Klikni pro nahrání fotky</div>
+            </div>
+            <img id="pp-${i}" style="display:none" alt="">`;
+        update();
+        toast('🗑️ Fotka odstraněna');
     }
 
-    function zobrazit(nazev,btn) {
-        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.getElementById('page-'+nazev).classList.add('active'); btn.classList.add('active');
-        window.scrollTo(0,0); if (nazev==='preview') update();
+    function zobrazit(nazev, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-'+nazev).classList.add('active');
+        btn.classList.add('active');
+        window.scrollTo(0, 0);
+        if (nazev === 'preview') update();
     }
 
-    function validovat() {
-        const pov = {'f-number':'Číslo dokumentu','f-defect':typ==='wi'?'Název instrukce':'Popis defektu','f-vydal':'Vydal'};
-        Object.keys(pov).forEach(id => { const e=document.getElementById(id); if (e) e.classList.toggle('error',!e.value.trim()); });
-        return Object.entries(pov).filter(([id])=>!document.getElementById(id).value.trim()).map(([,l])=>l);
+    function ziskatChyby() {
+        const pole = {
+            'f-number': 'Číslo dokumentu',
+            'f-defect': typ==='wi' ? 'Název instrukce' : 'Popis defektu',
+            'f-vydal':  'Vydal'
+        };
+        return Object.entries(pole)
+            .filter(([id]) => {
+                const e = document.getElementById(id);
+                return !e || !e.value.trim();
+            })
+            .map(([, label]) => label);
+    }
+
+    function oznacitChyby() {
+        ['f-number', 'f-defect', 'f-vydal'].forEach(id => {
+            const e = document.getElementById(id);
+            if (e) e.classList.toggle('error', !e.value.trim());
+        });
     }
 
     function prejitNaNahled() {
-        const ch=validovat(); if (ch.length) { toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
+        oznacitChyby();
+        const chyby = ziskatChyby();
+        if (chyby.length) {
+            toast(`⚠️ Chybí: ${chyby.join(', ')}`, 3500);
+            return;
+        }
         update();
-        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.getElementById('page-preview').classList.add('active'); document.getElementById('tab-preview').classList.add('active');
-        window.scrollTo(0,0); toast('✅ Dokument aktualizován!');
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-preview').classList.add('active');
+        document.getElementById('tab-preview').classList.add('active');
+        window.scrollTo(0, 0);
+        toast('✅ Dokument aktualizován!');
     }
 
     function podpisy() {
-        return Array.from({length:30},()=>`<tr><td style="border:1px solid #000;height:22px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`).join('');
+        return Array.from({length: 30}, () =>
+            `<tr>
+                <td style="border:1px solid #000;height:22px;"></td>
+                <td style="border:1px solid #000;"></td>
+                <td style="border:1px solid #000;"></td>
+                <td style="border:1px solid #000;"></td>
+            </tr>`
+        ).join('');
     }
 
     function vymazat() {
         if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
-        try { localStorage.removeItem(KLIC); } catch(_) {} location.reload();
+        try { localStorage.removeItem(KLIC); } catch(_) {}
+        location.reload();
     }
 
     function sestavitShrnutí() {
-        const g = id => (document.getElementById(id)||{}).value||'';
-        const label = typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n🔧 Proces: ${g('f-customer')}\n🔧 Projekt: ${g('f-project')}\n🏭 Pracoviště: ${g('f-pracoviste')}\n🔩 Díl: ${g('f-dil')}\n📅 Datum: ${fmtDatum(g('f-datum'))}\n⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n👤 Vydal: ${g('f-vydal')}\n✍️ Autor: ${g('f-autor')}\n📌 Důvod: ${g('f-duvod')}\n${'─'.repeat(40)}\n⚠️ ${typ==='wi'?'Instrukce':'Defekt'}:\n${g('f-defect')}\n${'─'.repeat(40)}\n📝 ${typ==='wi'?'Postup':'Kontrola'}:\n${g('f-control')}\n${'─'.repeat(40)}\nQuality Alert v5.6.0`;
+        const g = id => (document.getElementById(id)||{}).value || '';
+        const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
+        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n` +
+            `🔧 Proces: ${g('f-customer')}\n` +
+            `🔧 Projekt: ${g('f-project')}\n` +
+            `🏭 Pracoviště: ${g('f-pracoviste')}\n` +
+            `🔩 Díl: ${g('f-dil')}\n` +
+            `📅 Datum: ${fmtDatum(g('f-datum'))}\n` +
+            `⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n` +
+            `👤 Vydal: ${g('f-vydal')}\n` +
+            `✍️ Autor: ${g('f-autor')}\n` +
+            `📌 Důvod: ${g('f-duvod')}\n` +
+            `${'─'.repeat(40)}\n` +
+            `⚠️ ${typ==='wi' ? 'Instrukce' : 'Defekt'}:\n${g('f-defect')}\n` +
+            `${'─'.repeat(40)}\n` +
+            `📝 ${typ==='wi' ? 'Postup' : 'Kontrola'}:\n${g('f-control')}\n` +
+            `${'─'.repeat(40)}\nQuality Alert v5.6.1`;
     }
 
     function sestavitPredmet() {
-        const cislo=(document.getElementById('f-number')||{}).value||'';
-        const defekt=(document.getElementById('f-defect')||{}).value||'';
-        return `[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;
+        const cislo  = (document.getElementById('f-number')||{}).value || '';
+        const defekt = (document.getElementById('f-defect')||{}).value || '';
+        return `[${typ==='wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – '+defekt : ''}`;
     }
 
     function stahnoutHTML() {
-        const ch=validovat();
-        if (ch.length) { toast(`⚠️ Chybí: ${ch.join(', ')}`,3500); return; }
+        oznacitChyby();
+        const chyby = ziskatChyby();
+        if (chyby.length) {
+            toast(`⚠️ Chybí: ${chyby.join(', ')} — přejdi na Formulář`, 4000);
+            setTimeout(() => {
+                zobrazit('form', document.getElementById('tab-form'));
+            }, 500);
+            return;
+        }
         update();
-        setTimeout(()=>{
+        setTimeout(() => {
             const docHTML = document.getElementById('doc-wrapper').outerHTML;
-            const cislo   = (document.getElementById('f-number')||{}).value||'dokument';
+            const cislo   = (document.getElementById('f-number')||{}).value || 'dokument';
             const datum   = new Date().toISOString().split('T')[0];
             const html = `<!DOCTYPE html>
 <html lang="cs">
@@ -1060,16 +1219,22 @@ html, body { background:white; font-family:Arial,sans-serif; }
             const blob = new Blob([html], {type:'text/html;charset=utf-8'});
             const url  = URL.createObjectURL(blob);
             const a    = document.createElement('a');
-            a.href = url; a.download = `QA_${cislo}_${datum}.html`;
+            a.href = url;
+            a.download = `QA_${cislo}_${datum}.html`;
             document.body.appendChild(a);
-            try { a.click(); toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P',3500); }
-            finally { document.body.removeChild(a); URL.revokeObjectURL(url); }
+            try {
+                a.click();
+                toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P', 3500);
+            } finally {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
         }, 150);
     }
 
     function otevritSdileni() {
         const btn = document.getElementById('btn-system-share');
-        if (btn) btn.style.display = navigator.share?'flex':'none';
+        if (btn) btn.style.display = navigator.share ? 'flex' : 'none';
         document.getElementById('modal-share').classList.add('show');
     }
 
@@ -1080,18 +1245,22 @@ html, body { background:white; font-family:Arial,sans-serif; }
 
     async function sdiletSystemem() {
         document.getElementById('modal-share').classList.remove('show');
-        if (!navigator.share) { toast('⚠️ Sdílení není podporováno',3000); return; }
-        try { await navigator.share({title:sestavitPredmet(), text:sestavitShrnutí()}); toast('✅ Sdíleno!'); }
-        catch(e) { if (e.name!=='AbortError') toast('❌ Sdílení se nezdařilo',3000); }
+        if (!navigator.share) { toast('⚠️ Sdílení není podporováno', 3000); return; }
+        try {
+            await navigator.share({ title: sestavitPredmet(), text: sestavitShrnutí() });
+            toast('✅ Sdíleno!');
+        } catch(e) {
+            if (e.name !== 'AbortError') toast('❌ Sdílení se nezdařilo', 3000);
+        }
     }
 
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
         document.getElementById('email-subject').value = sestavitPredmet();
-        setTimeout(()=>{
+        setTimeout(() => {
             document.getElementById('modal-email').classList.add('show');
-            setTimeout(()=>document.getElementById('email-to').focus(),300);
-        },200);
+            setTimeout(() => document.getElementById('email-to').focus(), 300);
+        }, 200);
     }
 
     function zavritEmailModal(e) {
@@ -1101,33 +1270,43 @@ html, body { background:white; font-family:Arial,sans-serif; }
     }
 
     function odeslat() {
-        const to=document.getElementById('email-to').value.trim();
-        const cc=document.getElementById('email-cc').value.trim();
-        const subject=document.getElementById('email-subject').value.trim();
-        const note=document.getElementById('email-note').value.trim();
-        if (!to) { document.getElementById('email-to').classList.add('error'); document.getElementById('email-to').focus(); toast('⚠️ Zadej emailovou adresu příjemce',3000); return; }
+        const to      = document.getElementById('email-to').value.trim();
+        const cc      = document.getElementById('email-cc').value.trim();
+        const subject = document.getElementById('email-subject').value.trim();
+        const note    = document.getElementById('email-note').value.trim();
+        if (!to) {
+            document.getElementById('email-to').classList.add('error');
+            document.getElementById('email-to').focus();
+            toast('⚠️ Zadej emailovou adresu příjemce', 3000);
+            return;
+        }
         document.getElementById('email-to').classList.remove('error');
-        const body=(note?`\n\nPoznámka: ${note}\n\n`:'\n\n')+sestavitShrnutí();
-        let mailto=`mailto:${encodeURIComponent(to)}`;
-        const params=[];
-        if (cc) params.push(`cc=${encodeURIComponent(cc)}`);
+        const body = (note ? `\n\nPoznámka: ${note}\n\n` : '\n\n') + sestavitShrnutí();
+        let mailto = `mailto:${encodeURIComponent(to)}`;
+        const params = [];
+        if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
         if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
         params.push(`body=${encodeURIComponent(body)}`);
-        if (params.length) mailto+='?'+params.join('&');
-        window.location.href=mailto;
+        if (params.length) mailto += '?' + params.join('&');
+        window.location.href = mailto;
         document.getElementById('modal-email').classList.remove('show');
-        toast('✉️ Otevírám Outlook...',3000);
+        toast('✉️ Otevírám Outlook...', 3000);
     }
 
     async function kopirovatShrnutí() {
         document.getElementById('modal-share').classList.remove('show');
-        const text=sestavitShrnutí();
-        try { await navigator.clipboard.writeText(text); toast('✅ Shrnutí zkopírováno!'); }
-        catch(e) {
-            const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0;';
-            document.body.appendChild(ta); ta.select();
+        const text = sestavitShrnutí();
+        try {
+            await navigator.clipboard.writeText(text);
+            toast('✅ Shrnutí zkopírováno!');
+        } catch(e) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;opacity:0;';
+            document.body.appendChild(ta);
+            ta.select();
             try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); }
-            catch(_) { toast('❌ Kopírování se nezdařilo',3000); }
+            catch(_) { toast('❌ Kopírování se nezdařilo', 3000); }
             document.body.removeChild(ta);
         }
     }
