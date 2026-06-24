@@ -185,9 +185,6 @@
         .share-option-sub { font-size: 12px; color: #aaaaaa; margin-top: 2px; }
         .modal-info { background: rgba(10,132,255,0.1); border: 1px solid #0a84ff; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #0a84ff; line-height: 1.5; margin-top: 4px; }
 
-        .install-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #0f3460; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
-        .install-card h3 { font-size: 18px; margin-bottom: 8px; color: #4fc3f7; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .page.active { animation: fadeIn 0.3s ease; }
 
@@ -514,7 +511,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">🤖 Přidat na plochu – Android</div>
         <div class="navod-section">
@@ -528,7 +524,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">📋 Kompatibilita</div>
         <div class="navod-section">
@@ -548,7 +543,6 @@
             </div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
         <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.6.1</span></div>
@@ -733,7 +727,6 @@
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const e = document.getElementById('qa-'+t); if (e) d['qa-'+t] = e.checked;
         });
-        // Ukládáme pouze názvy fotek, ne samotné obrázky
         d.nazvy = fotky.map(f => f.name);
         try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); }
         catch(e) { console.warn(e); }
@@ -1092,21 +1085,74 @@
     function sestavitShrnutí() {
         const g = id => (document.getElementById(id)||{}).value || '';
         const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-        return `${label} – ${g('f-number')}\n${'─'.repeat(40)}\n` +
-            `🔧 Proces: ${g('f-customer')}\n` +
-            `🔧 Projekt: ${g('f-project')}\n` +
-            `🏭 Pracoviště: ${g('f-pracoviste')}\n` +
-            `🔩 Díl: ${g('f-dil')}\n` +
-            `📅 Datum: ${fmtDatum(g('f-datum'))}\n` +
-            `⏱️ Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n` +
-            `👤 Vydal: ${g('f-vydal')}\n` +
-            `✍️ Autor: ${g('f-autor')}\n` +
-            `📌 Důvod: ${g('f-duvod')}\n` +
-            `${'─'.repeat(40)}\n` +
-            `⚠️ ${typ==='wi' ? 'Instrukce' : 'Defekt'}:\n${g('f-defect')}\n` +
-            `${'─'.repeat(40)}\n` +
-            `📝 ${typ==='wi' ? 'Postup' : 'Kontrola'}:\n${g('f-control')}\n` +
-            `${'─'.repeat(40)}\nQuality Alert v5.6.1`;
+        const cislo = g('f-number');
+        const dnes  = new Date().toLocaleDateString('cs-CZ');
+
+        const radek = '━'.repeat(42);
+        const tenky = '─'.repeat(42);
+
+        let text = '';
+
+        // HLAVIČKA
+        text += `${radek}\n`;
+        text += `  🔴 ${label}${cislo ? `  |  Nº ${cislo}` : ''}\n`;
+        text += `${radek}\n\n`;
+
+        // ZÁKLADNÍ INFO
+        text += `📋 INFORMACE O DOKUMENTU\n`;
+        text += `${tenky}\n`;
+        if (g('f-customer'))   text += `  Proces:        ${g('f-customer')}\n`;
+        if (g('f-project'))    text += `  Projekt:       ${g('f-project')}\n`;
+        if (g('f-pracoviste')) text += `  Pracoviště:    ${g('f-pracoviste')}\n`;
+        if (g('f-dil'))        text += `  Díl:           ${g('f-dil')}\n`;
+        text += '\n';
+
+        // PLATNOST
+        text += `📅 PLATNOST\n`;
+        text += `${tenky}\n`;
+        text += `  Datum vystavení: ${fmtDatum(g('f-datum')) || dnes}\n`;
+        if (g('f-pocatek') || g('f-konec')) {
+            text += `  Platnost:        ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n`;
+        }
+        if (g('f-vydal'))  text += `  Vydal:          ${g('f-vydal')}\n`;
+        if (g('f-autor'))  text += `  Autor:          ${g('f-autor')}\n`;
+        if (g('f-duvod'))  text += `  Důvod:          ${g('f-duvod')}\n`;
+        text += '\n';
+
+        // DEFEKT / INSTRUKCE
+        const defektLabel = typ==='wi' ? '📝 NÁZEV INSTRUKCE' : '⚠️  POPIS DEFEKTU';
+        text += `${defektLabel}\n`;
+        text += `${tenky}\n`;
+        if (g('f-defect')) {
+            text += `  ${g('f-defect')}\n`;
+        } else {
+            text += `  (nevyplněno)\n`;
+        }
+        text += '\n';
+
+        // KONTROLA / POSTUP
+        const kontrolaLabel = typ==='wi' ? '🔧 PRACOVNÍ POSTUP' : '🔍 POPIS KONTROLY';
+        text += `${kontrolaLabel}\n`;
+        text += `${tenky}\n`;
+        if (g('f-control')) {
+            g('f-control').split('\n').forEach(r => {
+                text += `  ${r}\n`;
+            });
+        } else {
+            text += `  (nevyplněno)\n`;
+        }
+        text += '\n';
+
+        // PATIČKA
+        text += `${radek}\n`;
+        text += `  ✍️  Podpis QA:          ${g('f-podpisqa') || '—'}\n`;
+        text += `  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}\n`;
+        text += `${radek}\n\n`;
+
+        text += `Vygenerováno aplikací Quality Alert v5.6.1\n`;
+        text += `${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}\n`;
+
+        return text;
     }
 
     function sestavitPredmet() {
