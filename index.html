@@ -7,6 +7,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Quality Alert">
     <title>Quality Alert</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/quality-alert/manifest.json">
+    <link rel="apple-touch-icon" href="/quality-alert/icon.png">
+    <meta name="theme-color" content="#cc0000">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/quality-alert/sw.js')
+            .then(() => console.log('SW OK'))
+            .catch(e => console.warn('SW chyba:', e));
+        });
+      }
+    </script>
+
     <style>
         :root {
             --red: #cc0000;
@@ -191,7 +208,6 @@
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(50,50,50,0.95); color: white; padding: 12px 24px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; white-space: nowrap; max-width: 90vw; text-align: center; pointer-events: none; }
         .toast.show { opacity: 1; }
 
-        /* ── DOKUMENT náhled ── */
         #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
 
         .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 297mm; max-height: 297mm; display: flex; flex-direction: column; overflow: hidden; }
@@ -939,8 +955,6 @@
 
     function sestavitFotky(zachovat) {
         const novyPocet = parseInt(document.getElementById('photo-count').value);
-
-        // Načti uložené názvy z localStorage jako zálohu
         let ulozeneNazvy = [];
         try {
             const raw = localStorage.getItem(KLIC);
@@ -949,20 +963,15 @@
                 ulozeneNazvy = d.nazvy || [];
             }
         } catch(_) {}
-
         const stare = zachovat ? fotky.slice() : [];
         pocet = novyPocet;
         fotky = [];
         const kont = document.getElementById('photos-container');
         kont.innerHTML = '';
-
         for (let i = 0; i < pocet; i++) {
             const ex  = stare[i] || {};
             const def = vychoziNazev(i, typ, pocet);
-
-            // Priorita: aktuální pole → localStorage → výchozí název
             const nm = ex.name || ulozeneNazvy[i] || def;
-
             fotky.push({ name: nm, src: null });
             const el = document.createElement('div');
             el.className = 'photo-item';
@@ -970,12 +979,6 @@
             kont.appendChild(el);
         }
         update();
-    }
-
-    function setSrc(i) {
-        const src = fotky[i] && fotky[i].src;
-        const img = document.getElementById(`pp-${i}`);
-        if (src && img) img.src = src;
     }
 
     function zmenNazev(i) {
@@ -1087,18 +1090,12 @@
         const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
         const cislo = g('f-number');
         const dnes  = new Date().toLocaleDateString('cs-CZ');
-
         const radek = '━'.repeat(42);
         const tenky = '─'.repeat(42);
-
         let text = '';
-
-        // HLAVIČKA
         text += `${radek}\n`;
         text += `  🔴 ${label}${cislo ? `  |  Nº ${cislo}` : ''}\n`;
         text += `${radek}\n\n`;
-
-        // ZÁKLADNÍ INFO
         text += `📋 INFORMACE O DOKUMENTU\n`;
         text += `${tenky}\n`;
         if (g('f-customer'))   text += `  Proces:        ${g('f-customer')}\n`;
@@ -1106,8 +1103,6 @@
         if (g('f-pracoviste')) text += `  Pracoviště:    ${g('f-pracoviste')}\n`;
         if (g('f-dil'))        text += `  Díl:           ${g('f-dil')}\n`;
         text += '\n';
-
-        // PLATNOST
         text += `📅 PLATNOST\n`;
         text += `${tenky}\n`;
         text += `  Datum vystavení: ${fmtDatum(g('f-datum')) || dnes}\n`;
@@ -1118,40 +1113,26 @@
         if (g('f-autor'))  text += `  Autor:          ${g('f-autor')}\n`;
         if (g('f-duvod'))  text += `  Důvod:          ${g('f-duvod')}\n`;
         text += '\n';
-
-        // DEFEKT / INSTRUKCE
         const defektLabel = typ==='wi' ? '📝 NÁZEV INSTRUKCE' : '⚠️  POPIS DEFEKTU';
         text += `${defektLabel}\n`;
         text += `${tenky}\n`;
-        if (g('f-defect')) {
-            text += `  ${g('f-defect')}\n`;
-        } else {
-            text += `  (nevyplněno)\n`;
-        }
+        text += g('f-defect') ? `  ${g('f-defect')}\n` : `  (nevyplněno)\n`;
         text += '\n';
-
-        // KONTROLA / POSTUP
         const kontrolaLabel = typ==='wi' ? '🔧 PRACOVNÍ POSTUP' : '🔍 POPIS KONTROLY';
         text += `${kontrolaLabel}\n`;
         text += `${tenky}\n`;
         if (g('f-control')) {
-            g('f-control').split('\n').forEach(r => {
-                text += `  ${r}\n`;
-            });
+            g('f-control').split('\n').forEach(r => { text += `  ${r}\n`; });
         } else {
             text += `  (nevyplněno)\n`;
         }
         text += '\n';
-
-        // PATIČKA
         text += `${radek}\n`;
         text += `  ✍️  Podpis QA:          ${g('f-podpisqa') || '—'}\n`;
         text += `  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}\n`;
         text += `${radek}\n\n`;
-
         text += `Vygenerováno aplikací Quality Alert v5.6.1\n`;
         text += `${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}\n`;
-
         return text;
     }
 
