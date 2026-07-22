@@ -374,7 +374,8 @@
             </div>
             <div class="modal-btn-row">
                 <button class="modal-btn cancel" onclick="zpetNaVyberAplikace()">← Zpět</button>
-                <button class="modal-btn send" id="btn-odeslat-email">Otevřít →</button>
+                <!-- OPRAVA #1: přidán onclick="odeslat()" -->
+                <button class="modal-btn send" id="btn-odeslat-email" onclick="odeslat()">Otevřít →</button>
             </div>
         </div>
     </div>
@@ -384,7 +385,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.7.0</div>
+        <div class="version-badge">v5.7.1</div>
     </div>
 </div>
 
@@ -618,7 +619,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.0</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.1</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">22. 7. 2026</span></div>
@@ -865,15 +866,19 @@
         return `${d}. ${m}. ${r}`;
     }
 
+    // OPRAVA #9: fmtDatum logika pro progress
     function progress() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
                      'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
-        const n = ids.filter(id => {
+        const vyplneno = ids.filter(id => {
             const e = document.getElementById(id);
             return e && e.value.trim();
         }).length;
-        const p = Math.round(n / ids.length * 100);
+        // OPRAVA #6: bonus za nahrané fotky (max 10 %)
+        const fotkyNahrane = fotky.filter(f => f.src).length;
+        const fotkyBonus = fotky.length > 0 ? Math.round((fotkyNahrane / fotky.length) * 10) : 0;
+        const p = Math.min(100, Math.round(vyplneno / ids.length * 90) + fotkyBonus);
         document.getElementById('progress-fill').style.width = p + '%';
         document.getElementById('progress-pct').textContent = p + ' %';
     }
@@ -932,6 +937,7 @@
         document.getElementById('d-defect-label').textContent = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
         document.getElementById('d-control-label').textContent = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup';
         const tc = document.querySelector('.doc-title-center');
+        // OPRAVA #5: barva hlavičky správně pro WI i QA
         if (tc) tc.style.background = wi ? '#ffaa00' : '#cc0000';
         [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
          ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
@@ -941,9 +947,13 @@
             const el = document.getElementById(dId);
             if (el) el.textContent = document.getElementById(fId).value || '—';
         });
-        document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
-        document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
-        document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
+        // OPRAVA #9: správná logika pro datum
+        const pocatekVal = document.getElementById('f-pocatek').value;
+        const konecVal   = document.getElementById('f-konec').value;
+        const datumVal   = document.getElementById('f-datum').value;
+        document.getElementById('d-pocatek').textContent = pocatekVal ? fmtDatum(pocatekVal) : '—';
+        document.getElementById('d-konec').textContent   = konecVal   ? fmtDatum(konecVal)   : '—';
+        document.getElementById('d-datum').textContent   = datumVal   ? fmtDatum(datumVal)   : '—';
         ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
             const el = document.getElementById('dqa-'+t);
             if (el) el.className = 'doc-typqa-item' + (document.getElementById('qa-'+t).checked ? ' active' : '');
@@ -1069,7 +1079,14 @@
         document.getElementById('page-'+nazev).classList.add('active');
         btn.classList.add('active');
         window.scrollTo(0, 0);
-        if (nazev === 'preview') update();
+        if (nazev === 'preview') {
+            update();
+            // OPRAVA #8: upozornění na chybějící fotky
+            const bezFotek = fotky.filter(f => !f.src).length;
+            if (bezFotek > 0) {
+                setTimeout(() => toast(`ℹ️ ${bezFotek} fotka/fotek není nahrána`, 3000), 400);
+            }
+        }
     }
 
     function ziskatChyby() {
@@ -1106,7 +1123,13 @@
         document.getElementById('page-preview').classList.add('active');
         document.getElementById('tab-preview').classList.add('active');
         window.scrollTo(0, 0);
-        toast('✅ Dokument aktualizován!');
+        // Upozornění na chybějící fotky
+        const bezFotek = fotky.filter(f => !f.src).length;
+        if (bezFotek > 0) {
+            setTimeout(() => toast(`ℹ️ ${bezFotek} fotka/fotek není nahrána`, 3000), 600);
+        } else {
+            toast('✅ Dokument aktualizován!');
+        }
     }
 
     function podpisy() {
@@ -1126,8 +1149,19 @@
         location.reload();
     }
 
+    // OPRAVA #7: varování před opuštěním stránky s vyplněným formulářem
+    window.addEventListener('beforeunload', (e) => {
+        const cislo = document.getElementById('f-number')?.value;
+        if (cislo && cislo.trim()) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
     // ── Sestavení HTML obsahu dokumentu ────────────────────────────
     function sestavitHTMLObsah(docHTML, cislo) {
+        // OPRAVA #5: dynamická barva hlavičky pro WI vs QA
+        const barvaTitulku = typ === 'wi' ? '#ffaa00' : '#cc0000';
         return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -1146,7 +1180,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
 .sig-table td { border:1px solid #000; padding:0; height:8.5mm; }
 .doc-top { display:grid; grid-template-columns:100px 1fr auto; align-items:stretch; margin-bottom:2px; border:1px solid #ddd; overflow:hidden; flex-shrink:0; }
 .doc-logo-box { background:white; padding:6px 8px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
-.doc-title-center { background:#cc0000; display:flex; align-items:center; justify-content:center; padding:6px; }
+.doc-title-center { background:${barvaTitulku}; display:flex; align-items:center; justify-content:center; padding:6px; }
 .doc-title-main { font-size:20pt; font-weight:900; color:white; letter-spacing:2px; line-height:1; font-family:Arial,sans-serif; }
 .doc-num-box { background:#000; color:white; padding:5px 8px; text-align:center; min-width:65px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .doc-num-label { font-size:6pt; letter-spacing:1px; color:#aaa; font-weight:600; }
@@ -1278,37 +1312,26 @@ html, body { background:white; font-family:Arial,sans-serif; }
         document.getElementById('modal-share').classList.remove('show');
     }
 
-    // Sdílet soubor přes Web Share API (AirDrop, Uložit do souborů, Teams...)
     async function sdiletSystemem() {
         document.getElementById('modal-share').classList.remove('show');
-
         const { blob, file, nazev } = sestavitSouborProSdileni();
-
-        // Zkusit sdílet jako soubor (iOS 15+, Android Chrome)
         if (navigator.share && navigator.canShare) {
             if (navigator.canShare({ files: [file] })) {
                 try {
-                    await navigator.share({
-                        title: sestavitPredmet(),
-                        files: [file]
-                    });
+                    await navigator.share({ title: sestavitPredmet(), files: [file] });
                     toast('✅ Sdíleno!');
                     return;
                 } catch (e) {
                     if (e.name === 'AbortError') return;
-                    // Jiná chyba → fallback na stažení
                 }
             }
         }
-
-        // Fallback – stáhnout
         stahnoutJakoSoubor(blob, nazev);
     }
 
     // ── Modal – Email výběr aplikace ────────────────────────────────
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
-        // Reset do výchozího stavu
         document.getElementById('email-app-vyber').style.display = 'block';
         document.getElementById('email-fields').style.display = 'none';
         document.getElementById('email-subject').value = sestavitPredmet();
@@ -1361,34 +1384,37 @@ html, body { background:white; font-family:Arial,sans-serif; }
         setTimeout(() => document.getElementById('email-to').focus(), 300);
     }
 
+    // OPRAVA #4: validace emailu + OPRAVA #1: tato funkce je nyní volána přes onclick
+    function jeValidniEmail(email) {
+        return /^[\^\s@]+@[\^\s@]+\.[\^\s@]+$/.test(email);
+    }
+
     function odeslat() {
         const to      = document.getElementById('email-to').value.trim();
         const cc      = document.getElementById('email-cc').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
 
-        if (!to) {
+        // OPRAVA #4: validace formátu emailu
+        if (!to || !jeValidniEmail(to)) {
             document.getElementById('email-to').classList.add('error');
             document.getElementById('email-to').focus();
-            toast('⚠️ Zadej emailovou adresu příjemce', 3000);
+            toast('⚠️ Zadej platnou emailovou adresu', 3000);
             return;
         }
         document.getElementById('email-to').classList.remove('error');
 
-        const body = sestavitShrnutí();
+        const body = sestavitShrnuti();
         let url;
 
         if (_emailApp === 'gmail') {
-            // Gmail URL schéma
             url = `googlegmail://co?to=${encodeURIComponent(to)}`
                 + `&subject=${encodeURIComponent(subject)}`
                 + `&body=${encodeURIComponent(body)}`;
         } else if (_emailApp === 'outlook') {
-            // Outlook URL schéma
             url = `ms-outlook://compose?to=${encodeURIComponent(to)}`
                 + `&subject=${encodeURIComponent(subject)}`
                 + `&body=${encodeURIComponent(body)}`;
         } else {
-            // Standardní mailto – výchozí aplikace
             let mailto = `mailto:${encodeURIComponent(to)}`;
             const params = [];
             if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
@@ -1398,11 +1424,9 @@ html, body { background:white; font-family:Arial,sans-serif; }
             url = mailto;
         }
 
-        // Otevřít aplikaci
         const start = Date.now();
         window.location.href = url;
 
-        // Detekce jestli se aplikace otevřela – pokud ne, nabídnout alternativu
         if (_emailApp !== 'mailto') {
             setTimeout(() => {
                 if (document.visibilityState === 'visible' && Date.now() - start < 2500) {
@@ -1417,37 +1441,30 @@ html, body { background:white; font-family:Arial,sans-serif; }
         toast(`📧 Otevírám ${appNazev}...`, 2500);
     }
 
-    // Sdílet soubor z emailového modalu
     async function sdiletSouborZEmailu() {
         document.getElementById('modal-email').classList.remove('show');
-
         const { blob, file, nazev } = sestavitSouborProSdileni();
-
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
-                await navigator.share({
-                    title: sestavitPredmet(),
-                    files: [file]
-                });
+                await navigator.share({ title: sestavitPredmet(), files: [file] });
                 toast('✅ Sdíleno!');
                 return;
             } catch (e) {
                 if (e.name === 'AbortError') return;
             }
         }
-
         stahnoutJakoSoubor(blob, nazev);
         toast('📥 Soubor stažen – přilož ho ručně do emailu', 4000);
     }
 
-    // Kopírovat shrnutí z hlavního modalu
     function kopirovatShrnutiZModalu() {
         document.getElementById('modal-share').classList.remove('show');
-        kopirovatShrnutí();
+        kopirovatShrnuti();
     }
 
     // ── Sestavení shrnutí (text) ────────────────────────────────────
-    function sestavitShrnutí() {
+    // OPRAVA #2: přejmenováno bez diakritiky
+    function sestavitShrnuti() {
         const g = id => (document.getElementById(id)||{}).value || '';
         const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
         const cislo = g('f-number');
@@ -1468,9 +1485,13 @@ html, body { background:white; font-family:Arial,sans-serif; }
         radky.push('');
         radky.push('📅 PLATNOST');
         radky.push(tenky);
-        radky.push(`  Datum vystavení: ${fmtDatum(g('f-datum')) || dnes}`);
-        if (g('f-pocatek') || g('f-konec')) {
-            radky.push(`  Platnost:        ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);
+        // OPRAVA #9: správná logika pro datum
+        const datumVal = g('f-datum');
+        radky.push(`  Datum vystavení: ${datumVal ? fmtDatum(datumVal) : dnes}`);
+        const pocatekVal = g('f-pocatek');
+        const konecVal   = g('f-konec');
+        if (pocatekVal || konecVal) {
+            radky.push(`  Platnost:        ${pocatekVal ? fmtDatum(pocatekVal) : '—'} – ${konecVal ? fmtDatum(konecVal) : '—'}`);
         }
         if (g('f-vydal'))  radky.push(`  Vydal:          ${g('f-vydal')}`);
         if (g('f-autor'))  radky.push(`  Autor:          ${g('f-autor')}`);
@@ -1495,7 +1516,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
         radky.push(`  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}`);
         radky.push(radek);
         radky.push('');
-        radky.push(`Vygenerováno aplikací Quality Alert v5.7.0`);
+        radky.push(`Vygenerováno aplikací Quality Alert v5.7.1`);
         radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}`);
         return radky.join('\n');
     }
@@ -1506,9 +1527,9 @@ html, body { background:white; font-family:Arial,sans-serif; }
         return `[${typ==='wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – '+defekt : ''}`;
     }
 
-    // ── Kopírovat shrnutí ───────────────────────────────────────────
-    async function kopirovatShrnutí() {
-        const text = sestavitShrnutí();
+    // OPRAVA #2: přejmenováno bez diakritiky
+    async function kopirovatShrnuti() {
+        const text = sestavitShrnuti();
         try {
             await navigator.clipboard.writeText(text);
             toast('✅ Shrnutí zkopírováno!');
