@@ -179,7 +179,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .modal-overlay.show { opacity: 1; pointer-events: all; }
-        .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-width: 600px; transform: translateY(100%); transition: transform 0.3s ease; padding-bottom: 40px; }
+        .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-width: 600px; transform: translateY(100%); transition: transform 0.3s ease; padding-bottom: 40px; max-height: 90vh; overflow-y: auto; }
         .modal-overlay.show .modal { transform: translateY(0); }
         .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
         .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-align: center; }
@@ -282,20 +282,29 @@
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
             <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
-                <div class="share-option-icon" style="background:rgba(10,132,255,0.15);">📱</div>
-                <div><div class="share-option-title">Sdílet přes systém</div><div class="share-option-sub">AirDrop, Teams, WhatsApp, Mail...</div></div>
+                <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div>
+                <div>
+                    <div class="share-option-title">Sdílet soubor (.html)</div>
+                    <div class="share-option-sub">AirDrop, Uložit do souborů, Teams, WhatsApp...</div>
+                </div>
             </button>
             <button class="share-option" onclick="zobrazitEmailForm()">
                 <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
-                <div><div class="share-option-title">Připravit email</div><div class="share-option-sub">Otevře Outlook s předvyplněným textem</div></div>
+                <div>
+                    <div class="share-option-title">Odeslat emailem</div>
+                    <div class="share-option-sub">Outlook, Gmail nebo jiná aplikace</div>
+                </div>
             </button>
-            <button class="share-option" onclick="kopirovatShrnutí()">
+            <button class="share-option" onclick="kopirovatShrnutiZModalu()">
                 <div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div>
-                <div><div class="share-option-title">Kopírovat shrnutí</div><div class="share-option-sub">Text do schránky</div></div>
+                <div>
+                    <div class="share-option-title">Kopírovat shrnutí</div>
+                    <div class="share-option-sub">Text do schránky</div>
+                </div>
             </button>
         </div>
         <div class="modal-info">
-            💡 Soubor .html stáhni tlačítkem níže → pošli emailem jako přílohu → na PC otevři v Chrome/Edge a tiskni.
+            💡 Nejlepší způsob na iPhone: <strong>Sdílet soubor → AirDrop</strong> na Mac, nebo <strong>Uložit do souborů</strong> a pak přiložit do emailu.
         </div>
     </div>
 </div>
@@ -304,21 +313,69 @@
 <div class="modal-overlay" id="modal-email" onclick="zavritEmailModal(event)">
     <div class="modal">
         <div class="modal-handle"></div>
-        <div class="modal-title">✉️ Připravit email</div>
-        <label class="modal-label">Příjemce</label>
-        <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email">
-        <label class="modal-label">Kopie (CC) – volitelné</label>
-        <input class="modal-input" type="email" id="email-cc" placeholder="vedouci@lear.com" autocomplete="email">
-        <label class="modal-label">Předmět</label>
-        <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
-        <label class="modal-label">Poznámka (volitelné)</label>
-        <input class="modal-input" type="text" id="email-note" placeholder="Prosím o potvrzení přijetí...">
-        <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-top:4px;">
-            ⚠️ Aplikace pouze <strong>připraví email</strong>. Odeslat musíš ručně.
+        <div class="modal-title">✉️ Odeslat přes</div>
+
+        <div id="email-app-vyber">
+            <div class="share-options">
+                <button class="share-option" onclick="otevritOutlook()">
+                    <div class="share-option-icon" style="background:rgba(0,114,198,0.15);">
+                        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+                            <rect width="32" height="32" rx="6" fill="#0072C6"/>
+                            <path d="M6 10l10 7 10-7" stroke="white" stroke-width="2" fill="none"/>
+                            <rect x="6" y="10" width="20" height="14" rx="1" stroke="white" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="share-option-title">Outlook</div>
+                        <div class="share-option-sub">Otevře Microsoft Outlook aplikaci</div>
+                    </div>
+                </button>
+                <button class="share-option" onclick="otevritGmail()">
+                    <div class="share-option-icon" style="background:rgba(234,67,53,0.15);">
+                        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+                            <rect width="32" height="32" rx="6" fill="#fff"/>
+                            <path d="M6 10l10 7 10-7M6 10v14h20V10" stroke="#EA4335" stroke-width="2" fill="none"/>
+                            <path d="M6 10l10 7 10-7" stroke="#4285F4" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="share-option-title">Gmail</div>
+                        <div class="share-option-sub">Otevře Gmail aplikaci</div>
+                    </div>
+                </button>
+                <button class="share-option" onclick="otevritMailto()">
+                    <div class="share-option-icon" style="background:rgba(255,255,255,0.1);">📨</div>
+                    <div>
+                        <div class="share-option-title">Výchozí email</div>
+                        <div class="share-option-sub">Mail.app nebo jiná výchozí aplikace</div>
+                    </div>
+                </button>
+                <button class="share-option" onclick="sdiletSouborZEmailu()">
+                    <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div>
+                    <div>
+                        <div class="share-option-title">Sdílet soubor (.html)</div>
+                        <div class="share-option-sub">AirDrop, Uložit do souborů, Teams...</div>
+                    </div>
+                </button>
+            </div>
+            <button class="modal-btn cancel" style="width:100%;margin-top:12px;" onclick="zavritEmailModal(null)">Zavřít</button>
         </div>
-        <div class="modal-btn-row">
-            <button class="modal-btn cancel" onclick="zavritEmailModal(null)">Zrušit</button>
-            <button class="modal-btn send" onclick="odeslat()">✉️ Připravit →</button>
+
+        <div id="email-fields" style="display:none;">
+            <div id="email-fields-nadpis" style="font-size:13px;color:#aaa;margin-bottom:12px;text-align:center;"></div>
+            <label class="modal-label">Příjemce</label>
+            <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email">
+            <label class="modal-label">Kopie (CC) – volitelné</label>
+            <input class="modal-input" type="email" id="email-cc" placeholder="vedouci@lear.com" autocomplete="email">
+            <label class="modal-label">Předmět</label>
+            <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
+            <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-bottom:10px;">
+                ⚠️ Aplikace pouze <strong>připraví email</strong>. Soubor .html musíš přiložit ručně.
+            </div>
+            <div class="modal-btn-row">
+                <button class="modal-btn cancel" onclick="zpetNaVyberAplikace()">← Zpět</button>
+                <button class="modal-btn send" id="btn-odeslat-email">Otevřít →</button>
+            </div>
         </div>
     </div>
 </div>
@@ -327,7 +384,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.6.1</div>
+        <div class="version-badge">v5.7.0</div>
     </div>
 </div>
 
@@ -502,7 +559,7 @@
     </div>
     <div class="pc-hint">
         <div class="pc-hint-title">💻 Jak vytisknout PDF na PC</div>
-        <div class="pc-hint-step"><div class="pc-step-num">1</div><div>Stáhni dokument tlačítkem výše</div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">1</div><div>Stáhni nebo sdílej dokument tlačítkem výše</div></div>
         <div class="pc-hint-step"><div class="pc-step-num">2</div><div>Pošli soubor <strong>emailem jako přílohu</strong> na PC</div></div>
         <div class="pc-hint-step"><div class="pc-step-num">3</div><div>Na PC otevři soubor v <strong>Chrome</strong> nebo <strong>Edge</strong></div></div>
         <div class="pc-hint-step"><div class="pc-step-num">4</div><div>Stiskni <strong>Ctrl+P</strong> → Okraje: Žádné → <strong>Uložit jako PDF</strong></div></div>
@@ -561,10 +618,10 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.6.1</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
-        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">24. 6. 2026</span></div>
+        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">22. 7. 2026</span></div>
     </div>
     <button class="gen-btn" style="background:#3a3a3c;margin-top:0;" onclick="vymazat()">🗑️ Vymazat formulář</button>
 </div>
@@ -572,39 +629,31 @@
 <!-- NÁVOD -->
 <div class="page" id="page-navod">
     <div class="card">
-        <div class="card-header">📥 Krok 1 – Stáhnout dokument</div>
+        <div class="card-header">📥 Krok 1 – Stáhnout / Sdílet dokument</div>
         <div class="navod-section">
             <div style="padding:12px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;">
                 <div style="font-size:13px;font-weight:700;color:#cc0000;margin-bottom:10px;">📱 Na telefonu</div>
                 <div class="install-step"><div class="step-num">1</div><div class="navod-text">Přejdi na záložku <strong style="color:white;">👁️ Náhled</strong></div></div>
-                <div class="install-step"><div class="step-num">2</div><div class="navod-text">Klikni na <strong style="color:white;">📥 Stáhnout dokument (.html)</strong></div></div>
-                <div class="install-step"><div class="step-num">3</div><div class="navod-text">Soubor se uloží do <strong style="color:white;">Stažené soubory</strong> v telefonu</div></div>
-                <div class="install-step"><div class="step-num">4</div><div class="navod-text">Název souboru bude např. <strong style="color:white;">QA_QABMW001_2026-06-23.html</strong></div></div>
+                <div class="install-step"><div class="step-num">2</div><div class="navod-text">Klikni na <strong style="color:white;">📤 Sdílet → Sdílet soubor (.html)</strong></div></div>
+                <div class="install-step"><div class="step-num">3</div><div class="navod-text">Vyber <strong style="color:white;">AirDrop</strong> (na Mac) nebo <strong style="color:white;">Uložit do souborů</strong></div></div>
+                <div class="install-step"><div class="step-num">4</div><div class="navod-text">Nebo klikni <strong style="color:white;">📥 Stáhnout</strong> – soubor se uloží do Stažených souborů</div></div>
             </div>
         </div>
     </div>
     <div class="card">
-        <div class="card-header">✉️ Krok 2 – Poslat emailem na PC</div>
+        <div class="card-header">✉️ Krok 2 – Poslat emailem</div>
         <div class="navod-section">
             <div style="display:flex;flex-direction:column;gap:10px;">
-                <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:10px;">✅ Způsob 1 – přes tlačítko Sdílet v aplikaci</div>
-                    <div class="install-step"><div class="step-num" style="background:#0a84ff;">1</div><div class="navod-text">Na záložce <strong style="color:white;">👁️ Náhled</strong> klikni na <strong style="color:white;">📤 Sdílet</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#0a84ff;">2</div><div class="navod-text">Vyber <strong style="color:white;">✉️ Připravit email</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#0a84ff;">3</div><div class="navod-text">Zadej příjemce a klikni <strong style="color:white;">Připravit →</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#0a84ff;">4</div><div class="navod-text">Otevře se Outlook – <strong style="color:white;">ručně přilož soubor .html</strong> ze Stažených souborů</div></div>
-                    <div class="install-step"><div class="step-num" style="background:#0a84ff;">5</div><div class="navod-text">Klikni <strong style="color:white;">Odeslat</strong></div></div>
-                </div>
-                <div style="padding:12px;background:rgba(255,159,10,0.1);border:1px solid #ff9f0a;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#ff9f0a;margin-bottom:10px;">📧 Způsob 2 – ručně přes Outlook nebo Gmail</div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">1</div><div class="navod-text">Otevři <strong style="color:white;">Outlook</strong> nebo <strong style="color:white;">Gmail</strong> na telefonu</div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">2</div><div class="navod-text">Vytvoř <strong style="color:white;">nový email</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">3</div><div class="navod-text">Klikni na <strong style="color:white;">📎 Přiložit soubor</strong> (sponka)</div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">4</div><div class="navod-text">Vyber <strong style="color:white;">Stažené soubory</strong> → najdi <strong style="color:white;">QA_xxx.html</strong></div></div>
-                    <div class="install-step"><div class="step-num" style="background:#ff9f0a;color:#000;">5</div><div class="navod-text">Zadej příjemce a klikni <strong style="color:white;">Odeslat</strong></div></div>
+                <div style="padding:12px;background:rgba(0,114,198,0.1);border:1px solid #0072C6;border-radius:10px;">
+                    <div style="font-size:13px;font-weight:700;color:#0072C6;margin-bottom:10px;">📧 Přes Outlook nebo Gmail aplikaci</div>
+                    <div class="install-step"><div class="step-num" style="background:#0072C6;">1</div><div class="navod-text">Klikni <strong style="color:white;">📤 Sdílet → Odeslat emailem</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#0072C6;">2</div><div class="navod-text">Vyber <strong style="color:white;">Outlook</strong> nebo <strong style="color:white;">Gmail</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#0072C6;">3</div><div class="navod-text">Zadej příjemce a klikni <strong style="color:white;">Otevřít →</strong></div></div>
+                    <div class="install-step"><div class="step-num" style="background:#0072C6;">4</div><div class="navod-text">V aplikaci <strong style="color:white;">ručně přilož soubor .html</strong> ze Stažených souborů</div></div>
+                    <div class="install-step"><div class="step-num" style="background:#0072C6;">5</div><div class="navod-text">Klikni <strong style="color:white;">Odeslat</strong></div></div>
                 </div>
                 <div style="background:rgba(255,170,0,0.15);border-radius:8px;padding:10px;">
-                    <div style="font-size:12px;color:#ffaa00;line-height:1.6;">⚠️ <strong>Důležité:</strong> Soubor musíš přiložit jako <strong>přílohu</strong> – ne kopírovat text! Příjemce musí dostat soubor <strong>.html</strong></div>
+                    <div style="font-size:12px;color:#ffaa00;line-height:1.6;">⚠️ <strong>Důležité:</strong> Soubor musíš přiložit jako <strong>přílohu</strong> – ne kopírovat text!</div>
                 </div>
             </div>
         </div>
@@ -634,19 +683,6 @@
                 <div class="install-step"><div class="step-num" style="background:#0a84ff;">5</div><div class="navod-text">Vypni <strong style="color:white;">Záhlaví a zápatí</strong></div></div>
                 <div class="install-step"><div class="step-num" style="background:#0a84ff;">6</div><div class="navod-text">Zapni <strong style="color:white;">Grafika na pozadí</strong></div></div>
                 <div class="install-step"><div class="step-num" style="background:#0a84ff;">7</div><div class="navod-text">Klikni <strong style="color:white;">Uložit</strong></div></div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">🖨️ Tisk na fyzickou tiskárnu</div>
-        <div class="navod-section">
-            <div style="padding:12px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
-                <div style="font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:10px;">⚠️ Pozor při tisku na tiskárnu</div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">1</div><div class="navod-text">Okraje: <strong style="color:white;">Žádné</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#ffaa00;color:#000;">2</div><div class="navod-text">Měřítko: <strong style="color:white;">90 %</strong> nebo <strong style="color:white;">Přizpůsobit stránce</strong></div></div>
-                <div style="background:rgba(48,209,88,0.1);border-radius:8px;padding:10px;margin-top:8px;">
-                    <div style="font-size:12px;color:#30d158;line-height:1.6;">💡 Raději ukládej jako <strong>PDF</strong> a pak tiskni PDF!</div>
-                </div>
             </div>
         </div>
     </div>
@@ -718,9 +754,10 @@
     let fotky = [];
     let _timer = null;
     let _timerInd = null;
-    let _inicializovano = false;
+    let _emailApp = null;
     const KLIC = 'qa-form-v5';
 
+    // ── Indikátor ukládání ──────────────────────────────────────────
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
@@ -734,6 +771,7 @@
         }
     }
 
+    // ── Uložení do localStorage ─────────────────────────────────────
     function ulozit() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -748,6 +786,7 @@
         catch(e) { console.warn(e); }
     }
 
+    // ── Načtení z localStorage ──────────────────────────────────────
     function nacist() {
         try {
             const raw = localStorage.getItem(KLIC);
@@ -780,9 +819,8 @@
         _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
 
+    // ── Inicializace ────────────────────────────────────────────────
     function inicializovat() {
-        if (_inicializovano) return;
-        _inicializovano = true;
         document.getElementById('sig-tbody-1').innerHTML = podpisy();
         const ok = nacist();
         sestavitFotky(false);
@@ -801,6 +839,7 @@
     document.addEventListener('DOMContentLoaded', inicializovat);
     window.addEventListener('pageshow', e => { if (e.persisted) { update(); indikator('saved'); } });
 
+    // ── Pomocné funkce ──────────────────────────────────────────────
     function esc(t) {
         return (t||'')
             .replace(/&/g, '&amp;')
@@ -819,12 +858,10 @@
 
     function fmtDatum(v) {
         if (!v || typeof v !== 'string') return '—';
-        const datum = new Date(v + 'T00:00:00');
-        if (isNaN(datum.getTime())) return '—';
-        const [r, m, d] = v.split('-').map(Number);
-        if (datum.getFullYear() !== r ||
-            datum.getMonth() + 1 !== m ||
-            datum.getDate()     !== d) return '—';
+        const parts = v.split('-').map(Number);
+        if (parts.length !== 3) return '—';
+        const [r, m, d] = parts;
+        if (!r || !m || !d) return '—';
         return `${d}. ${m}. ${r}`;
     }
 
@@ -866,6 +903,7 @@
         return {sl:3, ra:2};
     }
 
+    // ── Sestavení gridu fotek v náhledu ─────────────────────────────
     function sestavitGrid() {
         const grid = document.getElementById('doc-imgs-grid');
         const n = fotky.length;
@@ -877,21 +915,16 @@
             const nm = foto.name || 'Foto';
             const s  = stylFotky(nm);
             const im = foto.src
-                ? `<img id="di-${idx}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
+                ? `<img src="${foto.src}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
                 : `<div class="doc-img-placeholder-icon">📷</div>`;
             return `<div class="doc-img-cell ${s.cls}">
                         <div class="doc-img-header" style="${s.h}">${esc(nm)}</div>
                         <div class="doc-img-body" style="${s.b}">${im}</div>
                     </div>`;
         }).join('');
-        fotky.forEach((foto, idx) => {
-            if (foto.src) {
-                const img = document.getElementById(`di-${idx}`);
-                if (img) img.src = foto.src;
-            }
-        });
     }
 
+    // ── Aktualizace náhledu ─────────────────────────────────────────
     function update() {
         const wi = typ === 'wi';
         document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -919,6 +952,7 @@
         progress();
     }
 
+    // ── Typ dokumentu ───────────────────────────────────────────────
     function nastavTyp(t) {
         typ = t;
         document.getElementById('btn-qa').className = 'doc-type-btn' + (t==='qa' ? ' active-qa' : '');
@@ -939,6 +973,7 @@
         ulozit();
     }
 
+    // ── Fotky – formulář ────────────────────────────────────────────
     function htmlFotky(i, nm, src, def) {
         return `<div class="photo-name-row">
             <span class="photo-name-label">Název:</span>
@@ -971,12 +1006,17 @@
         for (let i = 0; i < pocet; i++) {
             const ex  = stare[i] || {};
             const def = vychoziNazev(i, typ, pocet);
-            const nm = ex.name || ulozeneNazvy[i] || def;
-            fotky.push({ name: nm, src: null });
+            const nm  = ex.name || ulozeneNazvy[i] || def;
+            const src = ex.src  || null;
+            fotky.push({ name: nm, src: src });
             const el = document.createElement('div');
             el.className = 'photo-item';
-            el.innerHTML = htmlFotky(i, nm, null, def);
+            el.innerHTML = htmlFotky(i, nm, src, def);
             kont.appendChild(el);
+            if (src) {
+                const img = document.getElementById(`pp-${i}`);
+                if (img) img.src = src;
+            }
         }
         update();
     }
@@ -1022,6 +1062,7 @@
         toast('🗑️ Fotka odstraněna');
     }
 
+    // ── Navigace ────────────────────────────────────────────────────
     function zobrazit(nazev, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1085,79 +1126,9 @@
         location.reload();
     }
 
-    function sestavitShrnutí() {
-        const g = id => (document.getElementById(id)||{}).value || '';
-        const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-        const cislo = g('f-number');
-        const dnes  = new Date().toLocaleDateString('cs-CZ');
-        const radek = '━'.repeat(42);
-        const tenky = '─'.repeat(42);
-        let text = '';
-        text += `${radek}\n`;
-        text += `  🔴 ${label}${cislo ? `  |  Nº ${cislo}` : ''}\n`;
-        text += `${radek}\n\n`;
-        text += `📋 INFORMACE O DOKUMENTU\n`;
-        text += `${tenky}\n`;
-        if (g('f-customer'))   text += `  Proces:        ${g('f-customer')}\n`;
-        if (g('f-project'))    text += `  Projekt:       ${g('f-project')}\n`;
-        if (g('f-pracoviste')) text += `  Pracoviště:    ${g('f-pracoviste')}\n`;
-        if (g('f-dil'))        text += `  Díl:           ${g('f-dil')}\n`;
-        text += '\n';
-        text += `📅 PLATNOST\n`;
-        text += `${tenky}\n`;
-        text += `  Datum vystavení: ${fmtDatum(g('f-datum')) || dnes}\n`;
-        if (g('f-pocatek') || g('f-konec')) {
-            text += `  Platnost:        ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}\n`;
-        }
-        if (g('f-vydal'))  text += `  Vydal:          ${g('f-vydal')}\n`;
-        if (g('f-autor'))  text += `  Autor:          ${g('f-autor')}\n`;
-        if (g('f-duvod'))  text += `  Důvod:          ${g('f-duvod')}\n`;
-        text += '\n';
-        const defektLabel = typ==='wi' ? '📝 NÁZEV INSTRUKCE' : '⚠️  POPIS DEFEKTU';
-        text += `${defektLabel}\n`;
-        text += `${tenky}\n`;
-        text += g('f-defect') ? `  ${g('f-defect')}\n` : `  (nevyplněno)\n`;
-        text += '\n';
-        const kontrolaLabel = typ==='wi' ? '🔧 PRACOVNÍ POSTUP' : '🔍 POPIS KONTROLY';
-        text += `${kontrolaLabel}\n`;
-        text += `${tenky}\n`;
-        if (g('f-control')) {
-            g('f-control').split('\n').forEach(r => { text += `  ${r}\n`; });
-        } else {
-            text += `  (nevyplněno)\n`;
-        }
-        text += '\n';
-        text += `${radek}\n`;
-        text += `  ✍️  Podpis QA:          ${g('f-podpisqa') || '—'}\n`;
-        text += `  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}\n`;
-        text += `${radek}\n\n`;
-        text += `Vygenerováno aplikací Quality Alert v5.6.1\n`;
-        text += `${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}\n`;
-        return text;
-    }
-
-    function sestavitPredmet() {
-        const cislo  = (document.getElementById('f-number')||{}).value || '';
-        const defekt = (document.getElementById('f-defect')||{}).value || '';
-        return `[${typ==='wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – '+defekt : ''}`;
-    }
-
-    function stahnoutHTML() {
-        oznacitChyby();
-        const chyby = ziskatChyby();
-        if (chyby.length) {
-            toast(`⚠️ Chybí: ${chyby.join(', ')} — přejdi na Formulář`, 4000);
-            setTimeout(() => {
-                zobrazit('form', document.getElementById('tab-form'));
-            }, 500);
-            return;
-        }
-        update();
-        setTimeout(() => {
-            const docHTML = document.getElementById('doc-wrapper').outerHTML;
-            const cislo   = (document.getElementById('f-number')||{}).value || 'dokument';
-            const datum   = new Date().toISOString().split('T')[0];
-            const html = `<!DOCTYPE html>
+    // ── Sestavení HTML obsahu dokumentu ────────────────────────────
+    function sestavitHTMLObsah(docHTML, cislo) {
+        return `<!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
@@ -1243,25 +1214,62 @@ html, body { background:white; font-family:Arial,sans-serif; }
 </head>
 <body>${docHTML}</body>
 </html>`;
-            const blob = new Blob([html], {type:'text/html;charset=utf-8'});
-            const url  = URL.createObjectURL(blob);
-            const a    = document.createElement('a');
-            a.href = url;
-            a.download = `QA_${cislo}_${datum}.html`;
-            document.body.appendChild(a);
-            try {
-                a.click();
-                toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P', 3500);
-            } finally {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
+    }
+
+    // ── Stažení souboru ─────────────────────────────────────────────
+    function stahnoutJakoSoubor(blob, nazev) {
+        const url = URL.createObjectURL(blob);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nazev;
+        document.body.appendChild(a);
+        try {
+            a.click();
+            toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P', 3500);
+        } finally {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    }
+
+    function stahnoutHTML() {
+        oznacitChyby();
+        const chyby = ziskatChyby();
+        if (chyby.length) {
+            toast(`⚠️ Chybí: ${chyby.join(', ')} — přejdi na Formulář`, 4000);
+            setTimeout(() => zobrazit('form', document.getElementById('tab-form')), 500);
+            return;
+        }
+        update();
+        setTimeout(() => {
+            const cislo = (document.getElementById('f-number')||{}).value || 'dokument';
+            const datum = new Date().toISOString().split('T')[0];
+            const html  = sestavitHTMLObsah(
+                document.getElementById('doc-wrapper').outerHTML,
+                cislo
+            );
+            const blob  = new Blob([html], { type: 'text/html;charset=utf-8' });
+            stahnoutJakoSoubor(blob, `QA_${cislo}_${datum}.html`);
         }, 150);
     }
 
+    // ── Sestavení blob/file pro sdílení ────────────────────────────
+    function sestavitSouborProSdileni() {
+        update();
+        const cislo = (document.getElementById('f-number')||{}).value || 'dokument';
+        const datum = new Date().toISOString().split('T')[0];
+        const nazev = `QA_${cislo}_${datum}.html`;
+        const html  = sestavitHTMLObsah(
+            document.getElementById('doc-wrapper').outerHTML,
+            cislo
+        );
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const file = new File([blob], nazev, { type: 'text/html' });
+        return { blob, file, nazev };
+    }
+
+    // ── Modal – Sdílení ─────────────────────────────────────────────
     function otevritSdileni() {
-        const btn = document.getElementById('btn-system-share');
-        if (btn) btn.style.display = navigator.share ? 'flex' : 'none';
         document.getElementById('modal-share').classList.add('show');
     }
 
@@ -1270,23 +1278,46 @@ html, body { background:white; font-family:Arial,sans-serif; }
         document.getElementById('modal-share').classList.remove('show');
     }
 
+    // Sdílet soubor přes Web Share API (AirDrop, Uložit do souborů, Teams...)
     async function sdiletSystemem() {
         document.getElementById('modal-share').classList.remove('show');
-        if (!navigator.share) { toast('⚠️ Sdílení není podporováno', 3000); return; }
-        try {
-            await navigator.share({ title: sestavitPredmet(), text: sestavitShrnutí() });
-            toast('✅ Sdíleno!');
-        } catch(e) {
-            if (e.name !== 'AbortError') toast('❌ Sdílení se nezdařilo', 3000);
+
+        const { blob, file, nazev } = sestavitSouborProSdileni();
+
+        // Zkusit sdílet jako soubor (iOS 15+, Android Chrome)
+        if (navigator.share && navigator.canShare) {
+            if (navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: sestavitPredmet(),
+                        files: [file]
+                    });
+                    toast('✅ Sdíleno!');
+                    return;
+                } catch (e) {
+                    if (e.name === 'AbortError') return;
+                    // Jiná chyba → fallback na stažení
+                }
+            }
         }
+
+        // Fallback – stáhnout
+        stahnoutJakoSoubor(blob, nazev);
     }
 
+    // ── Modal – Email výběr aplikace ────────────────────────────────
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
+        // Reset do výchozího stavu
+        document.getElementById('email-app-vyber').style.display = 'block';
+        document.getElementById('email-fields').style.display = 'none';
         document.getElementById('email-subject').value = sestavitPredmet();
+        document.getElementById('email-to').value = '';
+        document.getElementById('email-cc').value = '';
+        document.getElementById('email-to').classList.remove('error');
+        _emailApp = null;
         setTimeout(() => {
             document.getElementById('modal-email').classList.add('show');
-            setTimeout(() => document.getElementById('email-to').focus(), 300);
         }, 200);
     }
 
@@ -1294,13 +1325,47 @@ html, body { background:white; font-family:Arial,sans-serif; }
         if (e && e.target !== document.getElementById('modal-email')) return;
         document.getElementById('modal-email').classList.remove('show');
         document.getElementById('email-to').classList.remove('error');
+        _emailApp = null;
+    }
+
+    function zpetNaVyberAplikace() {
+        document.getElementById('email-fields').style.display = 'none';
+        document.getElementById('email-app-vyber').style.display = 'block';
+        _emailApp = null;
+    }
+
+    function otevritOutlook() {
+        _emailApp = 'outlook';
+        document.getElementById('email-fields-nadpis').textContent = '📧 Otevře Microsoft Outlook';
+        document.getElementById('btn-odeslat-email').textContent = 'Otevřít Outlook →';
+        document.getElementById('email-app-vyber').style.display = 'none';
+        document.getElementById('email-fields').style.display = 'block';
+        setTimeout(() => document.getElementById('email-to').focus(), 300);
+    }
+
+    function otevritGmail() {
+        _emailApp = 'gmail';
+        document.getElementById('email-fields-nadpis').textContent = '📧 Otevře Gmail aplikaci';
+        document.getElementById('btn-odeslat-email').textContent = 'Otevřít Gmail →';
+        document.getElementById('email-app-vyber').style.display = 'none';
+        document.getElementById('email-fields').style.display = 'block';
+        setTimeout(() => document.getElementById('email-to').focus(), 300);
+    }
+
+    function otevritMailto() {
+        _emailApp = 'mailto';
+        document.getElementById('email-fields-nadpis').textContent = '📨 Otevře výchozí emailovou aplikaci';
+        document.getElementById('btn-odeslat-email').textContent = 'Otevřít email →';
+        document.getElementById('email-app-vyber').style.display = 'none';
+        document.getElementById('email-fields').style.display = 'block';
+        setTimeout(() => document.getElementById('email-to').focus(), 300);
     }
 
     function odeslat() {
         const to      = document.getElementById('email-to').value.trim();
         const cc      = document.getElementById('email-cc').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
-        const note    = document.getElementById('email-note').value.trim();
+
         if (!to) {
             document.getElementById('email-to').classList.add('error');
             document.getElementById('email-to').focus();
@@ -1308,20 +1373,141 @@ html, body { background:white; font-family:Arial,sans-serif; }
             return;
         }
         document.getElementById('email-to').classList.remove('error');
-        const body = (note ? `\n\nPoznámka: ${note}\n\n` : '\n\n') + sestavitShrnutí();
-        let mailto = `mailto:${encodeURIComponent(to)}`;
-        const params = [];
-        if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
-        if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
-        params.push(`body=${encodeURIComponent(body)}`);
-        if (params.length) mailto += '?' + params.join('&');
-        window.location.href = mailto;
+
+        const body = sestavitShrnutí();
+        let url;
+
+        if (_emailApp === 'gmail') {
+            // Gmail URL schéma
+            url = `googlegmail://co?to=${encodeURIComponent(to)}`
+                + `&subject=${encodeURIComponent(subject)}`
+                + `&body=${encodeURIComponent(body)}`;
+        } else if (_emailApp === 'outlook') {
+            // Outlook URL schéma
+            url = `ms-outlook://compose?to=${encodeURIComponent(to)}`
+                + `&subject=${encodeURIComponent(subject)}`
+                + `&body=${encodeURIComponent(body)}`;
+        } else {
+            // Standardní mailto – výchozí aplikace
+            let mailto = `mailto:${encodeURIComponent(to)}`;
+            const params = [];
+            if (cc)      params.push(`cc=${encodeURIComponent(cc)}`);
+            if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
+            params.push(`body=${encodeURIComponent(body)}`);
+            if (params.length) mailto += '?' + params.join('&');
+            url = mailto;
+        }
+
+        // Otevřít aplikaci
+        const start = Date.now();
+        window.location.href = url;
+
+        // Detekce jestli se aplikace otevřela – pokud ne, nabídnout alternativu
+        if (_emailApp !== 'mailto') {
+            setTimeout(() => {
+                if (document.visibilityState === 'visible' && Date.now() - start < 2500) {
+                    const nazev = _emailApp === 'gmail' ? 'Gmail' : 'Outlook';
+                    toast(`⚠️ ${nazev} není nainstalován – zkus jinou možnost`, 4000);
+                }
+            }, 2000);
+        }
+
         document.getElementById('modal-email').classList.remove('show');
-        toast('✉️ Otevírám Outlook...', 3000);
+        const appNazev = _emailApp === 'gmail' ? 'Gmail' : _emailApp === 'outlook' ? 'Outlook' : 'email';
+        toast(`📧 Otevírám ${appNazev}...`, 2500);
     }
 
-    async function kopirovatShrnutí() {
+    // Sdílet soubor z emailového modalu
+    async function sdiletSouborZEmailu() {
+        document.getElementById('modal-email').classList.remove('show');
+
+        const { blob, file, nazev } = sestavitSouborProSdileni();
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    title: sestavitPredmet(),
+                    files: [file]
+                });
+                toast('✅ Sdíleno!');
+                return;
+            } catch (e) {
+                if (e.name === 'AbortError') return;
+            }
+        }
+
+        stahnoutJakoSoubor(blob, nazev);
+        toast('📥 Soubor stažen – přilož ho ručně do emailu', 4000);
+    }
+
+    // Kopírovat shrnutí z hlavního modalu
+    function kopirovatShrnutiZModalu() {
         document.getElementById('modal-share').classList.remove('show');
+        kopirovatShrnutí();
+    }
+
+    // ── Sestavení shrnutí (text) ────────────────────────────────────
+    function sestavitShrnutí() {
+        const g = id => (document.getElementById(id)||{}).value || '';
+        const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
+        const cislo = g('f-number');
+        const dnes  = new Date().toLocaleDateString('cs-CZ');
+        const radek = '━'.repeat(42);
+        const tenky = '─'.repeat(42);
+        const radky = [];
+        radky.push(radek);
+        radky.push(`  🔴 ${label}${cislo ? `  |  Nº ${cislo}` : ''}`);
+        radky.push(radek);
+        radky.push('');
+        radky.push('📋 INFORMACE O DOKUMENTU');
+        radky.push(tenky);
+        if (g('f-customer'))   radky.push(`  Proces:        ${g('f-customer')}`);
+        if (g('f-project'))    radky.push(`  Projekt:       ${g('f-project')}`);
+        if (g('f-pracoviste')) radky.push(`  Pracoviště:    ${g('f-pracoviste')}`);
+        if (g('f-dil'))        radky.push(`  Díl:           ${g('f-dil')}`);
+        radky.push('');
+        radky.push('📅 PLATNOST');
+        radky.push(tenky);
+        radky.push(`  Datum vystavení: ${fmtDatum(g('f-datum')) || dnes}`);
+        if (g('f-pocatek') || g('f-konec')) {
+            radky.push(`  Platnost:        ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);
+        }
+        if (g('f-vydal'))  radky.push(`  Vydal:          ${g('f-vydal')}`);
+        if (g('f-autor'))  radky.push(`  Autor:          ${g('f-autor')}`);
+        if (g('f-duvod'))  radky.push(`  Důvod:          ${g('f-duvod')}`);
+        radky.push('');
+        const defektLabel = typ==='wi' ? '📝 NÁZEV INSTRUKCE' : '⚠️  POPIS DEFEKTU';
+        radky.push(defektLabel);
+        radky.push(tenky);
+        radky.push(g('f-defect') ? `  ${g('f-defect')}` : '  (nevyplněno)');
+        radky.push('');
+        const kontrolaLabel = typ==='wi' ? '🔧 PRACOVNÍ POSTUP' : '🔍 POPIS KONTROLY';
+        radky.push(kontrolaLabel);
+        radky.push(tenky);
+        if (g('f-control')) {
+            g('f-control').split('\n').forEach(r => radky.push(`  ${r}`));
+        } else {
+            radky.push('  (nevyplněno)');
+        }
+        radky.push('');
+        radky.push(radek);
+        radky.push(`  ✍️  Podpis QA:          ${g('f-podpisqa') || '—'}`);
+        radky.push(`  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}`);
+        radky.push(radek);
+        radky.push('');
+        radky.push(`Vygenerováno aplikací Quality Alert v5.7.0`);
+        radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}`);
+        return radky.join('\n');
+    }
+
+    function sestavitPredmet() {
+        const cislo  = (document.getElementById('f-number')||{}).value || '';
+        const defekt = (document.getElementById('f-defect')||{}).value || '';
+        return `[${typ==='wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – '+defekt : ''}`;
+    }
+
+    // ── Kopírovat shrnutí ───────────────────────────────────────────
+    async function kopirovatShrnutí() {
         const text = sestavitShrnutí();
         try {
             await navigator.clipboard.writeText(text);
