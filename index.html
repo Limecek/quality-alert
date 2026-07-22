@@ -364,9 +364,11 @@
         <div id="email-fields" style="display:none;">
             <div id="email-fields-nadpis" style="font-size:13px;color:#aaa;margin-bottom:12px;text-align:center;"></div>
             <label class="modal-label">Příjemce</label>
-            <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email" autocapitalize="none" autocorrect="off">
+            <input class="modal-input" type="text" id="email-to" placeholder="kolega@lear.com"
+                autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
             <label class="modal-label">Kopie (CC) – volitelné</label>
-            <input class="modal-input" type="email" id="email-cc" placeholder="vedouci@lear.com" autocomplete="email" autocapitalize="none" autocorrect="off">
+            <input class="modal-input" type="text" id="email-cc" placeholder="vedouci@lear.com"
+                autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
             <label class="modal-label">Předmět</label>
             <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
             <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-bottom:10px;">
@@ -384,7 +386,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.7.1</div>
+        <div class="version-badge">v5.7.2</div>
     </div>
 </div>
 
@@ -618,7 +620,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.1</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.2</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">22. 7. 2026</span></div>
@@ -757,7 +759,6 @@
     let _emailApp = null;
     const KLIC = 'qa-form-v5';
 
-    // ── Indikátor ukládání ──────────────────────────────────────────
     function indikator(stav) {
         const el = document.getElementById('save-indicator');
         const lb = document.getElementById('save-label');
@@ -771,7 +772,6 @@
         }
     }
 
-    // ── Uložení do localStorage ─────────────────────────────────────
     function ulozit() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -786,7 +786,6 @@
         catch(e) { console.warn(e); }
     }
 
-    // ── Načtení z localStorage ──────────────────────────────────────
     function nacist() {
         try {
             const raw = localStorage.getItem(KLIC);
@@ -819,7 +818,6 @@
         _timer = setTimeout(() => { update(); ulozit(); }, 400);
     }
 
-    // ── Inicializace ────────────────────────────────────────────────
     function inicializovat() {
         document.getElementById('sig-tbody-1').innerHTML = podpisy();
         const ok = nacist();
@@ -839,7 +837,6 @@
     document.addEventListener('DOMContentLoaded', inicializovat);
     window.addEventListener('pageshow', e => { if (e.persisted) { update(); indikator('saved'); } });
 
-    // ── Pomocné funkce ──────────────────────────────────────────────
     function esc(t) {
         return (t||'')
             .replace(/&/g, '&amp;')
@@ -865,7 +862,6 @@
         return `${d}. ${m}. ${r}`;
     }
 
-    // ── Progress bar ────────────────────────────────────────────────
     function progress() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -906,7 +902,6 @@
         return {sl:3, ra:2};
     }
 
-    // ── Sestavení gridu fotek v náhledu ─────────────────────────────
     function sestavitGrid() {
         const grid = document.getElementById('doc-imgs-grid');
         const n = fotky.length;
@@ -927,7 +922,6 @@
         }).join('');
     }
 
-    // ── Aktualizace náhledu ─────────────────────────────────────────
     function update() {
         const wi = typ === 'wi';
         document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -958,7 +952,6 @@
         progress();
     }
 
-    // ── Typ dokumentu ───────────────────────────────────────────────
     function nastavTyp(t) {
         typ = t;
         document.getElementById('btn-qa').className = 'doc-type-btn' + (t==='qa' ? ' active-qa' : '');
@@ -979,7 +972,6 @@
         ulozit();
     }
 
-    // ── Fotky – formulář ────────────────────────────────────────────
     function htmlFotky(i, nm, src, def) {
         return `<div class="photo-name-row">
             <span class="photo-name-label">Název:</span>
@@ -1068,7 +1060,6 @@
         toast('🗑️ Fotka odstraněna');
     }
 
-    // ── Navigace ────────────────────────────────────────────────────
     function zobrazit(nazev, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1143,7 +1134,6 @@
         location.reload();
     }
 
-    // ── Varování před opuštěním stránky ────────────────────────────
     window.addEventListener('beforeunload', (e) => {
         const cislo = document.getElementById('f-number')?.value;
         if (cislo && cislo.trim()) {
@@ -1152,7 +1142,6 @@
         }
     });
 
-    // ── Sestavení HTML obsahu dokumentu ────────────────────────────
     function sestavitHTMLObsah(docHTML, cislo) {
         const barvaTitulku = typ === 'wi' ? '#ffaa00' : '#cc0000';
         return `<!DOCTYPE html>
@@ -1243,7 +1232,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
 </html>`;
     }
 
-    // ── Stažení souboru ─────────────────────────────────────────────
     function stahnoutJakoSoubor(blob, nazev) {
         const url = URL.createObjectURL(blob);
         const a   = document.createElement('a');
@@ -1280,7 +1268,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
         }, 150);
     }
 
-    // ── Sestavení blob/file pro sdílení ────────────────────────────
     function sestavitSouborProSdileni() {
         update();
         const cislo = (document.getElementById('f-number')||{}).value || 'dokument';
@@ -1295,7 +1282,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
         return { blob, file, nazev };
     }
 
-    // ── Modal – Sdílení ─────────────────────────────────────────────
     function otevritSdileni() {
         document.getElementById('modal-share').classList.add('show');
     }
@@ -1322,7 +1308,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
         stahnoutJakoSoubor(blob, nazev);
     }
 
-    // ── Modal – Email ───────────────────────────────────────────────
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
         document.getElementById('email-app-vyber').style.display = 'block';
@@ -1377,15 +1362,15 @@ html, body { background:white; font-family:Arial,sans-serif; }
         setTimeout(() => document.getElementById('email-to').focus(), 300);
     }
 
-    // ── Odeslat email – jednoduchá validace ─────────────────────────
+    // ── Odeslat – bez validace emailu ──────────────────────────────
     function odeslat() {
         const toInput = document.getElementById('email-to');
         const to      = toInput.value.trim();
         const cc      = document.getElementById('email-cc').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
 
-        // Jednoduchá validace – jen @ musí být přítomno
-        if (!to || !to.includes('@')) {
+        // Pouze kontrola že pole není prázdné
+        if (!to) {
             toInput.classList.add('error');
             toInput.focus();
             toast('⚠️ Zadej emailovou adresu příjemce', 3000);
@@ -1452,7 +1437,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
         kopirovatShrnuti();
     }
 
-    // ── Sestavení shrnutí ───────────────────────────────────────────
     function sestavitShrnuti() {
         const g = id => (document.getElementById(id)||{}).value || '';
         const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -1504,7 +1488,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
         radky.push(`  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}`);
         radky.push(radek);
         radky.push('');
-        radky.push(`Vygenerováno aplikací Quality Alert v5.7.1`);
+        radky.push(`Vygenerováno aplikací Quality Alert v5.7.2`);
         radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}`);
         return radky.join('\n');
     }
