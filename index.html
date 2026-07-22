@@ -281,7 +281,7 @@
         <div class="modal-handle"></div>
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
-            <button class="share-option" onclick="sdiletSystemem()" id="btn-system-share">
+            <button class="share-option" onclick="sdiletSystemem()">
                 <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div>
                 <div>
                     <div class="share-option-title">Sdílet soubor (.html)</div>
@@ -364,9 +364,9 @@
         <div id="email-fields" style="display:none;">
             <div id="email-fields-nadpis" style="font-size:13px;color:#aaa;margin-bottom:12px;text-align:center;"></div>
             <label class="modal-label">Příjemce</label>
-            <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email">
+            <input class="modal-input" type="email" id="email-to" placeholder="kolega@lear.com" autocomplete="email" autocapitalize="none" autocorrect="off">
             <label class="modal-label">Kopie (CC) – volitelné</label>
-            <input class="modal-input" type="email" id="email-cc" placeholder="vedouci@lear.com" autocomplete="email">
+            <input class="modal-input" type="email" id="email-cc" placeholder="vedouci@lear.com" autocomplete="email" autocapitalize="none" autocorrect="off">
             <label class="modal-label">Předmět</label>
             <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
             <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-bottom:10px;">
@@ -374,7 +374,6 @@
             </div>
             <div class="modal-btn-row">
                 <button class="modal-btn cancel" onclick="zpetNaVyberAplikace()">← Zpět</button>
-                <!-- OPRAVA #1: přidán onclick="odeslat()" -->
                 <button class="modal-btn send" id="btn-odeslat-email" onclick="odeslat()">Otevřít →</button>
             </div>
         </div>
@@ -866,7 +865,7 @@
         return `${d}. ${m}. ${r}`;
     }
 
-    // OPRAVA #9: fmtDatum logika pro progress
+    // ── Progress bar ────────────────────────────────────────────────
     function progress() {
         const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
                      'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
@@ -875,7 +874,6 @@
             const e = document.getElementById(id);
             return e && e.value.trim();
         }).length;
-        // OPRAVA #6: bonus za nahrané fotky (max 10 %)
         const fotkyNahrane = fotky.filter(f => f.src).length;
         const fotkyBonus = fotky.length > 0 ? Math.round((fotkyNahrane / fotky.length) * 10) : 0;
         const p = Math.min(100, Math.round(vyplneno / ids.length * 90) + fotkyBonus);
@@ -937,7 +935,6 @@
         document.getElementById('d-defect-label').textContent = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
         document.getElementById('d-control-label').textContent = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup';
         const tc = document.querySelector('.doc-title-center');
-        // OPRAVA #5: barva hlavičky správně pro WI i QA
         if (tc) tc.style.background = wi ? '#ffaa00' : '#cc0000';
         [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
          ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
@@ -947,7 +944,6 @@
             const el = document.getElementById(dId);
             if (el) el.textContent = document.getElementById(fId).value || '—';
         });
-        // OPRAVA #9: správná logika pro datum
         const pocatekVal = document.getElementById('f-pocatek').value;
         const konecVal   = document.getElementById('f-konec').value;
         const datumVal   = document.getElementById('f-datum').value;
@@ -1081,7 +1077,6 @@
         window.scrollTo(0, 0);
         if (nazev === 'preview') {
             update();
-            // OPRAVA #8: upozornění na chybějící fotky
             const bezFotek = fotky.filter(f => !f.src).length;
             if (bezFotek > 0) {
                 setTimeout(() => toast(`ℹ️ ${bezFotek} fotka/fotek není nahrána`, 3000), 400);
@@ -1123,7 +1118,6 @@
         document.getElementById('page-preview').classList.add('active');
         document.getElementById('tab-preview').classList.add('active');
         window.scrollTo(0, 0);
-        // Upozornění na chybějící fotky
         const bezFotek = fotky.filter(f => !f.src).length;
         if (bezFotek > 0) {
             setTimeout(() => toast(`ℹ️ ${bezFotek} fotka/fotek není nahrána`, 3000), 600);
@@ -1149,7 +1143,7 @@
         location.reload();
     }
 
-    // OPRAVA #7: varování před opuštěním stránky s vyplněným formulářem
+    // ── Varování před opuštěním stránky ────────────────────────────
     window.addEventListener('beforeunload', (e) => {
         const cislo = document.getElementById('f-number')?.value;
         if (cislo && cislo.trim()) {
@@ -1160,7 +1154,6 @@
 
     // ── Sestavení HTML obsahu dokumentu ────────────────────────────
     function sestavitHTMLObsah(docHTML, cislo) {
-        // OPRAVA #5: dynamická barva hlavičky pro WI vs QA
         const barvaTitulku = typ === 'wi' ? '#ffaa00' : '#cc0000';
         return `<!DOCTYPE html>
 <html lang="cs">
@@ -1329,7 +1322,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
         stahnoutJakoSoubor(blob, nazev);
     }
 
-    // ── Modal – Email výběr aplikace ────────────────────────────────
+    // ── Modal – Email ───────────────────────────────────────────────
     function zobrazitEmailForm() {
         document.getElementById('modal-share').classList.remove('show');
         document.getElementById('email-app-vyber').style.display = 'block';
@@ -1384,24 +1377,21 @@ html, body { background:white; font-family:Arial,sans-serif; }
         setTimeout(() => document.getElementById('email-to').focus(), 300);
     }
 
-    // OPRAVA #4: validace emailu + OPRAVA #1: tato funkce je nyní volána přes onclick
-    function jeValidniEmail(email) {
-        return /^[\^\s@]+@[\^\s@]+\.[\^\s@]+$/.test(email);
-    }
-
+    // ── Odeslat email – jednoduchá validace ─────────────────────────
     function odeslat() {
-        const to      = document.getElementById('email-to').value.trim();
+        const toInput = document.getElementById('email-to');
+        const to      = toInput.value.trim();
         const cc      = document.getElementById('email-cc').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
 
-        // OPRAVA #4: validace formátu emailu
-        if (!to || !jeValidniEmail(to)) {
-            document.getElementById('email-to').classList.add('error');
-            document.getElementById('email-to').focus();
-            toast('⚠️ Zadej platnou emailovou adresu', 3000);
+        // Jednoduchá validace – jen @ musí být přítomno
+        if (!to || !to.includes('@')) {
+            toInput.classList.add('error');
+            toInput.focus();
+            toast('⚠️ Zadej emailovou adresu příjemce', 3000);
             return;
         }
-        document.getElementById('email-to').classList.remove('error');
+        toInput.classList.remove('error');
 
         const body = sestavitShrnuti();
         let url;
@@ -1462,8 +1452,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
         kopirovatShrnuti();
     }
 
-    // ── Sestavení shrnutí (text) ────────────────────────────────────
-    // OPRAVA #2: přejmenováno bez diakritiky
+    // ── Sestavení shrnutí ───────────────────────────────────────────
     function sestavitShrnuti() {
         const g = id => (document.getElementById(id)||{}).value || '';
         const label = typ==='wi' ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
@@ -1485,11 +1474,10 @@ html, body { background:white; font-family:Arial,sans-serif; }
         radky.push('');
         radky.push('📅 PLATNOST');
         radky.push(tenky);
-        // OPRAVA #9: správná logika pro datum
-        const datumVal = g('f-datum');
-        radky.push(`  Datum vystavení: ${datumVal ? fmtDatum(datumVal) : dnes}`);
+        const datumVal   = g('f-datum');
         const pocatekVal = g('f-pocatek');
         const konecVal   = g('f-konec');
+        radky.push(`  Datum vystavení: ${datumVal ? fmtDatum(datumVal) : dnes}`);
         if (pocatekVal || konecVal) {
             radky.push(`  Platnost:        ${pocatekVal ? fmtDatum(pocatekVal) : '—'} – ${konecVal ? fmtDatum(konecVal) : '—'}`);
         }
@@ -1527,7 +1515,6 @@ html, body { background:white; font-family:Arial,sans-serif; }
         return `[${typ==='wi' ? 'WI' : 'QA'}] ${cislo}${defekt ? ' – '+defekt : ''}`;
     }
 
-    // OPRAVA #2: přejmenováno bez diakritiky
     async function kopirovatShrnuti() {
         const text = sestavitShrnuti();
         try {
