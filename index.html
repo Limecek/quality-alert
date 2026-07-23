@@ -342,7 +342,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.9.3</div>
+        <div class="version-badge">v5.9.4</div>
     </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -516,7 +516,7 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.9.3</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.9.4</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 7. 2026</span></div>
@@ -531,7 +531,7 @@
         <div class="navod-section">
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <div style="padding:10px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:6px;">Jak otevřít editor</div><div class="navod-text">Po nahrání fotky klikni na modré tlačítko <strong style="color:white;">✏️</strong> vlevo nahoře na fotce.</div></div>
-                <div style="padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#cc0000;margin-bottom:6px;">☝️ Nástroj Výběr</div><div class="navod-text">Klikni na šipku, rámeček nebo kruh a přetáhni ho na jiné místo.</div></div>
+                <div style="padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#cc0000;margin-bottom:6px;">☝️ Nástroj Výběr</div><div class="navod-text">Klikni na objekt → přetáhni pro <strong style="color:white;">posun</strong>. Táhni za modrý kruh nahoře pro <strong style="color:white;">otočení</strong>.</div></div>
                 <div style="padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:6px;">🔆 Záložka Úpravy</div><div class="navod-text">Jas, Kontrast, Sytost, Teplota, Ostrost. Černobílé a Sépia filtry.</div></div>
                 <div style="padding:10px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:6px;">✂️ Záložka Ořez</div><div class="navod-text">Táhni za rohové body. Poměry 1:1, 4:3, 16:9, 3:4 nebo volný ořez.</div></div>
             </div>
@@ -598,7 +598,7 @@ function vymazat(){if(!confirm('Opravdu chceš vymazat celý formulář?'))retur
 window.addEventListener('beforeunload',e=>{if(_povolReload)return;const c=document.getElementById('f-number')?.value;if(c&&c.trim()){e.preventDefault();e.returnValue='';}});
 
 /* ══════════════════════════════════════════════════════════
-   EDITOR
+   EDITOR – s rotací objektů
 ══════════════════════════════════════════════════════════ */
 const ED = {
     idx:-1, canvas:null, ctx:null,
@@ -606,19 +606,29 @@ const ED = {
     objects:[], selectedIdx:-1,
     tool:'pen', color:'#ff3b30', size:4,
     drawing:false, startX:0, startY:0,
+    // posun
     draggingObj:false, dragOffX:0, dragOffY:0,
+    // rotace
+    rotating:false, rotCenterX:0, rotCenterY:0,
+    rotStartAngle:0, rotStartRot:0,
+    // ořez
     cropMode:false, cropX:0, cropY:0, cropW:0, cropH:0,
     cropHandle:null, cropRatioW:0, cropRatioH:0,
+    // filtry
     brightness:0, contrast:0, saturation:0, warmth:0, sharpen:0,
     textBg:true,
     history:[], historyIdx:-1,
+    // konstanta – poloměr rotačního úchytu
+    ROT_HANDLE_R: 10,
+    ROT_HANDLE_DIST: 32,
 };
 
 function otevritEditor(i){
     if(!fotky[i]||!fotky[i].src)return;
     ED.idx=i; ED.canvas=document.getElementById('editor-canvas'); ED.ctx=ED.canvas.getContext('2d');
     ED.objects=[]; ED.selectedIdx=-1; ED.history=[]; ED.historyIdx=-1;
-    ED.tool='pen'; ED.color='#ff3b30'; ED.size=4; ED.draggingObj=false; ED.cropMode=false;
+    ED.tool='pen'; ED.color='#ff3b30'; ED.size=4;
+    ED.draggingObj=false; ED.rotating=false; ED.cropMode=false;
     ED.brightness=0; ED.contrast=0; ED.saturation=0; ED.warmth=0; ED.sharpen=0;
     resetFiltryUI();
     const img=new Image();
@@ -655,47 +665,156 @@ function prekreslitVse(){
     ED.ctx.putImageData(ED.baseImageData,0,0);
     ED.objects.forEach((obj,idx)=>{
         kresliObjekt(ED.ctx,obj);
-        if(idx===ED.selectedIdx){
-            const bb=getBoundingBox(obj);
-            ED.ctx.save();
-            ED.ctx.strokeStyle='#0a84ff'; ED.ctx.lineWidth=2;
-            ED.ctx.setLineDash([5,3]);
-            ED.ctx.strokeRect(bb.x-6,bb.y-6,bb.w+12,bb.h+12);
-            ED.ctx.setLineDash([]);
-            ED.ctx.restore();
-        }
+        if(idx===ED.selectedIdx) kresliVyberUchyty(ED.ctx,obj);
     });
 }
 
+/* ── Kreslení objektu s rotací ── */
 function kresliObjekt(ctx,obj){
+    const bb=getBoundingBoxBezRotace(obj);
+    const cx=bb.x+bb.w/2;
+    const cy=bb.y+bb.h/2;
+    const rot=obj.rot||0;
+
     ctx.save();
+    // Rotace kolem středu objektu
+    ctx.translate(cx,cy);
+    ctx.rotate(rot);
+    ctx.translate(-cx,-cy);
+
     const dx=obj.dx||0, dy=obj.dy||0;
-    if(obj.type==='arrow'){kresliSipkuXY(ctx,obj.x1+dx,obj.y1+dy,obj.x2+dx,obj.y2+dy,obj.size,obj.color);}
-    else if(obj.type==='rect'){ctx.strokeStyle=obj.color;ctx.lineWidth=obj.size;ctx.lineCap='square';ctx.lineJoin='miter';ctx.strokeRect(obj.x1+dx,obj.y1+dy,obj.w,obj.h);}
-    else if(obj.type==='circle'){ctx.strokeStyle=obj.color;ctx.lineWidth=obj.size;ctx.beginPath();ctx.ellipse(obj.cx+dx,obj.cy+dy,obj.rx,obj.ry,0,0,Math.PI*2);ctx.stroke();}
-    else if(obj.type==='text'){const fs=Math.max(16,obj.size*4);ctx.font=`bold ${fs}px Arial`;if(obj.bg){const m=ctx.measureText(obj.text);ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(obj.x+dx-5,obj.y+dy-fs,m.width+10,fs+8);}ctx.fillStyle=obj.color;ctx.fillText(obj.text,obj.x+dx,obj.y+dy);}
+    if(obj.type==='arrow'){
+        kresliSipkuXY(ctx,obj.x1+dx,obj.y1+dy,obj.x2+dx,obj.y2+dy,obj.size,obj.color);
+    } else if(obj.type==='rect'){
+        ctx.strokeStyle=obj.color; ctx.lineWidth=obj.size; ctx.lineCap='square'; ctx.lineJoin='miter';
+        ctx.strokeRect(obj.x1+dx,obj.y1+dy,obj.w,obj.h);
+    } else if(obj.type==='circle'){
+        ctx.strokeStyle=obj.color; ctx.lineWidth=obj.size;
+        ctx.beginPath(); ctx.ellipse(obj.cx+dx,obj.cy+dy,obj.rx,obj.ry,0,0,Math.PI*2); ctx.stroke();
+    } else if(obj.type==='text'){
+        const fs=Math.max(16,obj.size*4); ctx.font=`bold ${fs}px Arial`;
+        if(obj.bg){const m=ctx.measureText(obj.text);ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(obj.x+dx-5,obj.y+dy-fs,m.width+10,fs+8);}
+        ctx.fillStyle=obj.color; ctx.fillText(obj.text,obj.x+dx,obj.y+dy);
+    }
+    ctx.restore();
+}
+
+/* ── Výběrový rámeček + rotační úchyt ── */
+function kresliVyberUchyty(ctx,obj){
+    const bb=getBoundingBox(obj); // rotovaný bb
+    const cx=bb.cx; const cy=bb.cy;
+    const rot=obj.rot||0;
+
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(rot);
+    ctx.translate(-cx,-cy);
+
+    // Modrý rámeček
+    const rbb=getBoundingBoxBezRotace(obj);
+    const rx=rbb.x+( obj.dx||0)-6;
+    const ry=rbb.y+(obj.dy||0)-6;
+    const rw=rbb.w+12;
+    const rh=rbb.h+12;
+    ctx.strokeStyle='#0a84ff'; ctx.lineWidth=2; ctx.setLineDash([5,3]);
+    ctx.strokeRect(rx,ry,rw,rh);
+    ctx.setLineDash([]);
+
+    // Čára k rotačnímu úchytu
+    const hx=rx+rw/2;
+    const hy=ry-ED.ROT_HANDLE_DIST;
+    ctx.beginPath();
+    ctx.moveTo(hx,ry);
+    ctx.lineTo(hx,hy+ED.ROT_HANDLE_R);
+    ctx.strokeStyle='#0a84ff'; ctx.lineWidth=1.5;
+    ctx.stroke();
+
+    // Rotační úchyt – kruh
+    ctx.beginPath();
+    ctx.arc(hx,hy,ED.ROT_HANDLE_R,0,Math.PI*2);
+    ctx.fillStyle='#0a84ff'; ctx.fill();
+    ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Symbol otočení
+    ctx.fillStyle='white'; ctx.font='bold 11px Arial';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('↻',hx,hy);
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+
     ctx.restore();
 }
 
 function kresliSipkuXY(ctx,x1,y1,x2,y2,size,color){
     const angle=Math.atan2(y2-y1,x2-x1),headLen=Math.max(20,size*5),ha=Math.PI/6;
-    ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=size;ctx.lineCap='square';ctx.lineJoin='miter';
+    ctx.save();
+    ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=size; ctx.lineCap='square'; ctx.lineJoin='miter';
     const bx=x2-headLen*0.7*Math.cos(angle),by=y2-headLen*0.7*Math.sin(angle);
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(bx,by);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-headLen*Math.cos(angle-ha),y2-headLen*Math.sin(angle-ha));ctx.lineTo(x2-headLen*Math.cos(angle+ha),y2-headLen*Math.sin(angle+ha));ctx.closePath();ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(bx,by); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-headLen*Math.cos(angle-ha),y2-headLen*Math.sin(angle-ha));
+    ctx.lineTo(x2-headLen*Math.cos(angle+ha),y2-headLen*Math.sin(angle+ha));
+    ctx.closePath(); ctx.fill();
     ctx.restore();
 }
 
-function getBoundingBox(obj){
-    const dx=obj.dx||0,dy=obj.dy||0;
-    if(obj.type==='arrow'){const x1=obj.x1+dx,y1=obj.y1+dy,x2=obj.x2+dx,y2=obj.y2+dy;return{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1)||10,h:Math.abs(y2-y1)||10};}
-    if(obj.type==='rect')return{x:obj.x1+dx,y:obj.y1+dy,w:obj.w,h:obj.h};
-    if(obj.type==='circle')return{x:obj.cx+dx-obj.rx,y:obj.cy+dy-obj.ry,w:obj.rx*2,h:obj.ry*2};
-    if(obj.type==='text'){const fs=Math.max(16,obj.size*4);ED.ctx.font=`bold ${fs}px Arial`;const m=ED.ctx.measureText(obj.text);return{x:obj.x+dx-5,y:obj.y+dy-fs,w:m.width+10,h:fs+8};}
-    return{x:0,y:0,w:10,h:10};
+/* ── Bounding box BEZ rotace (pro kreslení) ── */
+function getBoundingBoxBezRotace(obj){
+    const dx=obj.dx||0, dy=obj.dy||0;
+    if(obj.type==='arrow'){
+        const x1=obj.x1+dx,y1=obj.y1+dy,x2=obj.x2+dx,y2=obj.y2+dy;
+        return{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1)||20,h:Math.abs(y2-y1)||20};
+    }
+    if(obj.type==='rect') return{x:obj.x1+dx,y:obj.y1+dy,w:Math.abs(obj.w)||20,h:Math.abs(obj.h)||20};
+    if(obj.type==='circle') return{x:obj.cx+dx-obj.rx,y:obj.cy+dy-obj.ry,w:obj.rx*2||20,h:obj.ry*2||20};
+    if(obj.type==='text'){
+        const fs=Math.max(16,obj.size*4);
+        ED.ctx.font=`bold ${fs}px Arial`;
+        const m=ED.ctx.measureText(obj.text);
+        return{x:obj.x+dx-5,y:obj.y+dy-fs,w:m.width+10,h:fs+8};
+    }
+    return{x:0,y:0,w:20,h:20};
 }
 
-function hitTest(obj,px,py){const bb=getBoundingBox(obj);const pad=12;return px>=bb.x-pad&&px<=bb.x+bb.w+pad&&py>=bb.y-pad&&py<=bb.y+bb.h+pad;}
+/* ── Bounding box S rotací (pro hit test) – vrací střed a rotaci ── */
+function getBoundingBox(obj){
+    const bb=getBoundingBoxBezRotace(obj);
+    return{
+        x:bb.x, y:bb.y, w:bb.w, h:bb.h,
+        cx:bb.x+bb.w/2, cy:bb.y+bb.h/2
+    };
+}
+
+/* ── Hit test s rotací ── */
+function hitTest(obj,px,py){
+    const bb=getBoundingBox(obj);
+    const rot=obj.rot||0;
+    // Transformuj bod do lokálního prostoru objektu (inverzní rotace)
+    const cos=Math.cos(-rot), sin=Math.sin(-rot);
+    const lx=(px-bb.cx)*cos-(py-bb.cy)*sin+bb.cx;
+    const ly=(px-bb.cx)*sin+(py-bb.cy)*cos+bb.cy;
+    const pad=12;
+    return lx>=bb.x-pad&&lx<=bb.x+bb.w+pad&&ly>=bb.y-pad&&ly<=bb.y+bb.h+pad;
+}
+
+/* ── Hit test rotačního úchytu ── */
+function hitTestRotHandle(obj,px,py){
+    const bb=getBoundingBoxBezRotace(obj);
+    const cx=bb.x+bb.w/2;
+    const cy=bb.y+bb.h/2;
+    const rot=obj.rot||0;
+
+    // Pozice úchytu v lokálním prostoru
+    const hxL=cx;
+    const hyL=bb.y-6-ED.ROT_HANDLE_DIST;
+
+    // Transformuj do světového prostoru
+    const cos=Math.cos(rot), sin=Math.sin(rot);
+    const hxW=cos*(hxL-cx)-sin*(hyL-cy)+cx;
+    const hyW=sin*(hxL-cx)+cos*(hyL-cy)+cy;
+
+    const dist=Math.sqrt((px-hxW)**2+(py-hyW)**2);
+    return dist<=ED.ROT_HANDLE_R+8;
+}
 
 /* ── Undo/Redo ── */
 function ulozitHistorii(){
@@ -707,7 +826,16 @@ function editorUndo(){if(ED.historyIdx<=0){toast('Není co vrátit');return;}ED.
 function editorRedo(){if(ED.historyIdx>=ED.history.length-1){toast('Není co opakovat');return;}ED.historyIdx++;const s=ED.history[ED.historyIdx];ED.baseImageData=s.baseImageData;ED.objects=JSON.parse(JSON.stringify(s.objects));ED.selectedIdx=-1;prekreslitVse();aktualizovatSelInfo();}
 function editorClearAll(){if(!confirm('Vymazat všechny anotace?'))return;ED.objects=[];ED.selectedIdx=-1;nakresliObrazek();ulozitHistorii();aktualizovatSelInfo();}
 function smazatVybrany(){if(ED.selectedIdx<0){toast('Nic není vybráno');return;}ED.objects.splice(ED.selectedIdx,1);ED.selectedIdx=-1;prekreslitVse();ulozitHistorii();aktualizovatSelInfo();toast('🗑️ Objekt smazán');}
-function aktualizovatSelInfo(){const el=document.getElementById('sel-info');if(ED.selectedIdx>=0){const n={arrow:'Šipka',rect:'Rámeček',circle:'Kruh',text:'Text'};el.textContent=`☝️ Vybrán: ${n[ED.objects[ED.selectedIdx].type]||'?'} – táhni pro přesun`;}else{el.textContent='';}}
+function aktualizovatSelInfo(){
+    const el=document.getElementById('sel-info');
+    if(ED.selectedIdx>=0){
+        const n={arrow:'Šipka',rect:'Rámeček',circle:'Kruh',text:'Text'};
+        const deg=Math.round(((ED.objects[ED.selectedIdx].rot||0)*180/Math.PI)%360);
+        el.textContent=`☝️ Vybrán: ${n[ED.objects[ED.selectedIdx].type]||'?'} | Posun: táhni | Rotace: táhni ↻ (${deg}°)`;
+    } else {
+        el.textContent='';
+    }
+}
 
 /* ── Nástroje ── */
 function nastavNastroj(t){
@@ -736,15 +864,41 @@ function zacitKreslit(e){
     e.preventDefault();
     if(ED.cropMode){zacitOrez(e);return;}
     const p=getPos(e);
+
     if(ED.tool==='select'){
+        // Nejdřív zkontroluj rotační úchyt vybraného objektu
+        if(ED.selectedIdx>=0 && hitTestRotHandle(ED.objects[ED.selectedIdx],p.x,p.y)){
+            const obj=ED.objects[ED.selectedIdx];
+            const bb=getBoundingBox(obj);
+            ED.rotating=true;
+            ED.rotCenterX=bb.cx;
+            ED.rotCenterY=bb.cy;
+            ED.rotStartAngle=Math.atan2(p.y-bb.cy,p.x-bb.cx);
+            ED.rotStartRot=obj.rot||0;
+            ED.canvas.style.cursor='grabbing';
+            return;
+        }
+        // Pak zkontroluj posun
         let found=-1;
         for(let i=ED.objects.length-1;i>=0;i--){if(hitTest(ED.objects[i],p.x,p.y)){found=i;break;}}
         ED.selectedIdx=found;
-        if(found>=0){const obj=ED.objects[found];ED.draggingObj=true;ED.dragOffX=p.x-(obj.dx||0);ED.dragOffY=p.y-(obj.dy||0);ED.canvas.style.cursor='grabbing';}
+        if(found>=0){
+            const obj=ED.objects[found];
+            ED.draggingObj=true;
+            ED.dragOffX=p.x-(obj.dx||0);
+            ED.dragOffY=p.y-(obj.dy||0);
+            ED.canvas.style.cursor='grabbing';
+        }
         prekreslitVse();aktualizovatSelInfo();return;
     }
+
     ED.drawing=true;ED.startX=p.x;ED.startY=p.y;
-    if(ED.tool==='text'){ED.objects.push({type:'text',x:p.x,y:p.y,dx:0,dy:0,text:document.getElementById('e-text-input').value||'TEXT',color:ED.color,size:ED.size,bg:ED.textBg});ED.drawing=false;prekreslitVse();ulozitHistorii();return;}
+    if(ED.tool==='text'){
+        ED.objects.push({type:'text',x:p.x,y:p.y,dx:0,dy:0,rot:0,
+            text:document.getElementById('e-text-input').value||'TEXT',
+            color:ED.color,size:ED.size,bg:ED.textBg});
+        ED.drawing=false;prekreslitVse();ulozitHistorii();return;
+    }
     if(ED.tool==='pen'||ED.tool==='blur'){ED.ctx.beginPath();ED.ctx.moveTo(p.x,p.y);}
 }
 
@@ -752,30 +906,73 @@ function kreslit(e){
     e.preventDefault();
     if(ED.cropMode){if(ED.drawing)aktualizovatOrez(e);return;}
     const p=getPos(e);
-    if(ED.tool==='select'&&ED.draggingObj&&ED.selectedIdx>=0){const obj=ED.objects[ED.selectedIdx];obj.dx=p.x-ED.dragOffX;obj.dy=p.y-ED.dragOffY;prekreslitVse();return;}
+
+    // Rotace
+    if(ED.tool==='select'&&ED.rotating&&ED.selectedIdx>=0){
+        const obj=ED.objects[ED.selectedIdx];
+        const angle=Math.atan2(p.y-ED.rotCenterY,p.x-ED.rotCenterX);
+        obj.rot=ED.rotStartRot+(angle-ED.rotStartAngle);
+        prekreslitVse();aktualizovatSelInfo();return;
+    }
+
+    // Posun
+    if(ED.tool==='select'&&ED.draggingObj&&ED.selectedIdx>=0){
+        const obj=ED.objects[ED.selectedIdx];
+        obj.dx=p.x-ED.dragOffX;
+        obj.dy=p.y-ED.dragOffY;
+        prekreslitVse();return;
+    }
+
     if(!ED.drawing)return;
     const ctx=ED.ctx;
-    if(ED.tool==='pen'){ctx.strokeStyle=ED.color;ctx.lineWidth=ED.size;ctx.lineCap='round';ctx.lineJoin='round';ctx.lineTo(p.x,p.y);ctx.stroke();}
-    else if(ED.tool==='blur'){const r=ED.size*3;const ix=Math.max(0,Math.round(p.x-r)),iy=Math.max(0,Math.round(p.y-r));const iw=Math.min(ED.canvas.width-ix,r*2),ih=Math.min(ED.canvas.height-iy,r*2);if(iw>0&&ih>0){const id=ctx.getImageData(ix,iy,iw,ih);blurImageData(id,3);ctx.putImageData(id,ix,iy);}}
-    else{prekreslitVse();ctx.save();ctx.strokeStyle=ED.color;ctx.fillStyle=ED.color;ctx.lineWidth=ED.size;ctx.lineCap='square';ctx.lineJoin='miter';if(ED.tool==='arrow')kresliSipkuXY(ctx,ED.startX,ED.startY,p.x,p.y,ED.size,ED.color);else if(ED.tool==='rect')ctx.strokeRect(ED.startX,ED.startY,p.x-ED.startX,p.y-ED.startY);else if(ED.tool==='circle'){const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.stroke();}ctx.restore();}
+
+    if(ED.tool==='pen'){
+        ctx.strokeStyle=ED.color;ctx.lineWidth=ED.size;ctx.lineCap='round';ctx.lineJoin='round';
+        ctx.lineTo(p.x,p.y);ctx.stroke();
+    } else if(ED.tool==='blur'){
+        const r=ED.size*3;
+        const ix=Math.max(0,Math.round(p.x-r)),iy=Math.max(0,Math.round(p.y-r));
+        const iw=Math.min(ED.canvas.width-ix,r*2),ih=Math.min(ED.canvas.height-iy,r*2);
+        if(iw>0&&ih>0){const id=ctx.getImageData(ix,iy,iw,ih);blurImageData(id,3);ctx.putImageData(id,ix,iy);}
+    } else {
+        prekreslitVse();
+        ctx.save();ctx.strokeStyle=ED.color;ctx.fillStyle=ED.color;ctx.lineWidth=ED.size;ctx.lineCap='square';ctx.lineJoin='miter';
+        if(ED.tool==='arrow')kresliSipkuXY(ctx,ED.startX,ED.startY,p.x,p.y,ED.size,ED.color);
+        else if(ED.tool==='rect')ctx.strokeRect(ED.startX,ED.startY,p.x-ED.startX,p.y-ED.startY);
+        else if(ED.tool==='circle'){
+            const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;
+            const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;
+            ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.stroke();
+        }
+        ctx.restore();
+    }
 }
 
 function ukonciKreslit(e){
     if(ED.cropMode){ukonciOrez();return;}
-    if(ED.tool==='select'){if(ED.draggingObj){ED.draggingObj=false;ED.canvas.style.cursor='default';ulozitHistorii();}return;}
+    if(ED.tool==='select'){
+        if(ED.rotating){ED.rotating=false;ED.canvas.style.cursor='default';ulozitHistorii();aktualizovatSelInfo();return;}
+        if(ED.draggingObj){ED.draggingObj=false;ED.canvas.style.cursor='default';ulozitHistorii();return;}
+        return;
+    }
     if(!ED.drawing)return;ED.drawing=false;
     const rect=ED.canvas.getBoundingClientRect();
     const sx=ED.canvas.width/rect.width,sy=ED.canvas.height/rect.height;
     const src=e.changedTouches?e.changedTouches[0]:e;
     const p={x:(src.clientX-rect.left)*sx,y:(src.clientY-rect.top)*sy};
+
     if(ED.tool==='pen'||ED.tool==='blur'){
         ED.baseImageData=ED.ctx.getImageData(0,0,ED.canvas.width,ED.canvas.height);
         ED.objects.forEach(obj=>kresliObjekt(ED.ctx,obj));
         ulozitHistorii();return;
     }
-    if(ED.tool==='arrow')ED.objects.push({type:'arrow',x1:ED.startX,y1:ED.startY,x2:p.x,y2:p.y,dx:0,dy:0,color:ED.color,size:ED.size});
-    else if(ED.tool==='rect')ED.objects.push({type:'rect',x1:ED.startX,y1:ED.startY,w:p.x-ED.startX,h:p.y-ED.startY,dx:0,dy:0,color:ED.color,size:ED.size});
-    else if(ED.tool==='circle'){const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;ED.objects.push({type:'circle',cx,cy,rx:rx||5,ry:ry||5,dx:0,dy:0,color:ED.color,size:ED.size});}
+    if(ED.tool==='arrow')ED.objects.push({type:'arrow',x1:ED.startX,y1:ED.startY,x2:p.x,y2:p.y,dx:0,dy:0,rot:0,color:ED.color,size:ED.size});
+    else if(ED.tool==='rect')ED.objects.push({type:'rect',x1:ED.startX,y1:ED.startY,w:p.x-ED.startX,h:p.y-ED.startY,dx:0,dy:0,rot:0,color:ED.color,size:ED.size});
+    else if(ED.tool==='circle'){
+        const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;
+        const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;
+        ED.objects.push({type:'circle',cx,cy,rx:rx||5,ry:ry||5,dx:0,dy:0,rot:0,color:ED.color,size:ED.size});
+    }
     prekreslitVse();ulozitHistorii();
 }
 
@@ -799,122 +996,55 @@ function aplikovatSepia(){const ctx=ED.ctx,c=ED.canvas;ctx.drawImage(ED.original
 function editorRotate(deg){prekreslitVse();const c=ED.canvas,ctx=ED.ctx,tmp=document.createElement('canvas');tmp.width=c.width;tmp.height=c.height;tmp.getContext('2d').drawImage(c,0,0);const rad=deg*Math.PI/180,nW=Math.abs(Math.round(c.width*Math.cos(rad)+c.height*Math.sin(rad))),nH=Math.abs(Math.round(c.width*Math.sin(rad)+c.height*Math.cos(rad)));c.width=nW;c.height=nH;ctx.translate(nW/2,nH/2);ctx.rotate(rad);ctx.drawImage(tmp,-tmp.width/2,-tmp.height/2);ctx.setTransform(1,0,0,1,0,0);ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);ulozitHistorii();}
 function editorFlip(dir){prekreslitVse();const c=ED.canvas,ctx=ED.ctx,tmp=document.createElement('canvas');tmp.width=c.width;tmp.height=c.height;tmp.getContext('2d').drawImage(c,0,0);ctx.clearRect(0,0,c.width,c.height);ctx.save();if(dir==='h'){ctx.translate(c.width,0);ctx.scale(-1,1);}else{ctx.translate(0,c.height);ctx.scale(1,-1);}ctx.drawImage(tmp,0,0);ctx.restore();ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);ulozitHistorii();}
 
-/* ── Záložky – OPRAVA ── */
+/* ── Záložky ── */
 function editorTab(t){
     document.querySelectorAll('.editor-tab').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.editor-panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('etab-'+t).classList.add('active');
     document.getElementById('epanel-'+t).classList.add('active');
-    if(t==='crop'){
-        ED.cropMode=true;
-        ED.selectedIdx=-1;
-        ED.draggingObj=false;
-        prekreslitVse();          // nejdřív čistě překresli
-        inicializovatOrez();      // pak overlay
-    } else {
-        ED.cropMode=false;
-        prekreslitVse();
-    }
+    if(t==='crop'){ED.cropMode=true;ED.selectedIdx=-1;ED.draggingObj=false;ED.rotating=false;prekreslitVse();inicializovatOrez();}
+    else{ED.cropMode=false;prekreslitVse();}
 }
 
-/* ── Ořez – OPRAVA ── */
+/* ── Ořez ── */
 function inicializovatOrez(){
-    const c=ED.canvas, pad=20;
-    ED.cropX=pad; ED.cropY=pad;
-    ED.cropW=c.width-pad*2;
-    ED.cropH=c.height-pad*2;
-    ED.cropRatioW=0; ED.cropRatioH=0;
+    const c=ED.canvas,pad=20;
+    ED.cropX=pad;ED.cropY=pad;ED.cropW=c.width-pad*2;ED.cropH=c.height-pad*2;
+    ED.cropRatioW=0;ED.cropRatioH=0;
     kresliOrezOverlay();
 }
 
 function kresliOrezOverlay(){
-    const ctx=ED.ctx, c=ED.canvas;
-
-    // 1. Překresli čistě (base + objekty)
+    const ctx=ED.ctx,c=ED.canvas;
     prekreslitVse();
-
-    // 2. Tmavý overlay
-    ctx.fillStyle='rgba(0,0,0,0.55)';
-    ctx.fillRect(0,0,c.width,c.height);
-
-    // 3. Průhledný výřez – zkopíruj z tmp canvasu (base + objekty, bez overlay)
-    const tmp=document.createElement('canvas');
-    tmp.width=c.width; tmp.height=c.height;
+    ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(0,0,c.width,c.height);
+    const tmp=document.createElement('canvas');tmp.width=c.width;tmp.height=c.height;
     const tmpCtx=tmp.getContext('2d');
     tmpCtx.putImageData(ED.baseImageData,0,0);
     ED.objects.forEach(obj=>kresliObjekt(tmpCtx,obj));
-
-    // Oříznutý výřez
-    const cx=Math.max(0,Math.round(ED.cropX));
-    const cy=Math.max(0,Math.round(ED.cropY));
-    const cw=Math.min(c.width-cx,Math.round(ED.cropW));
-    const ch=Math.min(c.height-cy,Math.round(ED.cropH));
-    if(cw>0&&ch>0){
-        ctx.drawImage(tmp,cx,cy,cw,ch,cx,cy,cw,ch);
-    }
-
-    // 4. Rámeček
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.setLineDash([]);
-    ctx.strokeRect(ED.cropX,ED.cropY,ED.cropW,ED.cropH);
-
-    // 5. Mřížka třetin
-    ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.lineWidth=1;
-    for(let i=1;i<3;i++){
-        ctx.beginPath();ctx.moveTo(ED.cropX+ED.cropW*i/3,ED.cropY);ctx.lineTo(ED.cropX+ED.cropW*i/3,ED.cropY+ED.cropH);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(ED.cropX,ED.cropY+ED.cropH*i/3);ctx.lineTo(ED.cropX+ED.cropW,ED.cropY+ED.cropH*i/3);ctx.stroke();
-    }
-
-    // 6. Rohové body
-    const hs=10; ctx.fillStyle='#fff';
+    const cx=Math.max(0,Math.round(ED.cropX)),cy=Math.max(0,Math.round(ED.cropY));
+    const cw=Math.min(c.width-cx,Math.round(ED.cropW)),ch=Math.min(c.height-cy,Math.round(ED.cropH));
+    if(cw>0&&ch>0)ctx.drawImage(tmp,cx,cy,cw,ch,cx,cy,cw,ch);
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([]);ctx.strokeRect(ED.cropX,ED.cropY,ED.cropW,ED.cropH);
+    ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
+    for(let i=1;i<3;i++){ctx.beginPath();ctx.moveTo(ED.cropX+ED.cropW*i/3,ED.cropY);ctx.lineTo(ED.cropX+ED.cropW*i/3,ED.cropY+ED.cropH);ctx.stroke();ctx.beginPath();ctx.moveTo(ED.cropX,ED.cropY+ED.cropH*i/3);ctx.lineTo(ED.cropX+ED.cropW,ED.cropY+ED.cropH*i/3);ctx.stroke();}
+    const hs=10;ctx.fillStyle='#fff';
     [[ED.cropX,ED.cropY],[ED.cropX+ED.cropW,ED.cropY],[ED.cropX,ED.cropY+ED.cropH],[ED.cropX+ED.cropW,ED.cropY+ED.cropH]].forEach(([hx,hy])=>ctx.fillRect(hx-hs/2,hy-hs/2,hs,hs));
 }
 
-function zacitOrez(e){
-    const p=getPos(e),hs=22;
-    const corners=[{id:'tl',x:ED.cropX,y:ED.cropY},{id:'tr',x:ED.cropX+ED.cropW,y:ED.cropY},{id:'bl',x:ED.cropX,y:ED.cropY+ED.cropH},{id:'br',x:ED.cropX+ED.cropW,y:ED.cropY+ED.cropH}];
-    ED.cropHandle=null;
-    for(const c of corners){if(Math.abs(p.x-c.x)<hs&&Math.abs(p.y-c.y)<hs){ED.cropHandle=c.id;break;}}
-    ED.drawing=!!ED.cropHandle; ED.startX=p.x; ED.startY=p.y;
-}
-
-function aktualizovatOrez(e){
-    if(!ED.drawing||!ED.cropHandle)return;
-    const p=getPos(e),dx=p.x-ED.startX,dy=p.y-ED.startY;
-    ED.startX=p.x; ED.startY=p.y;
-    const ms=20;
-    if(ED.cropHandle==='tl'){ED.cropX+=dx;ED.cropY+=dy;ED.cropW-=dx;ED.cropH-=dy;}
-    else if(ED.cropHandle==='tr'){ED.cropY+=dy;ED.cropW+=dx;ED.cropH-=dy;}
-    else if(ED.cropHandle==='bl'){ED.cropX+=dx;ED.cropW-=dx;ED.cropH+=dy;}
-    else if(ED.cropHandle==='br'){ED.cropW+=dx;ED.cropH+=dy;}
-    if(ED.cropRatioW>0&&ED.cropRatioH>0)ED.cropH=ED.cropW*(ED.cropRatioH/ED.cropRatioW);
-    ED.cropW=Math.max(ms,ED.cropW); ED.cropH=Math.max(ms,ED.cropH);
-    kresliOrezOverlay();
-}
-
+function zacitOrez(e){const p=getPos(e),hs=22;const corners=[{id:'tl',x:ED.cropX,y:ED.cropY},{id:'tr',x:ED.cropX+ED.cropW,y:ED.cropY},{id:'bl',x:ED.cropX,y:ED.cropY+ED.cropH},{id:'br',x:ED.cropX+ED.cropW,y:ED.cropY+ED.cropH}];ED.cropHandle=null;for(const c of corners){if(Math.abs(p.x-c.x)<hs&&Math.abs(p.y-c.y)<hs){ED.cropHandle=c.id;break;}}ED.drawing=!!ED.cropHandle;ED.startX=p.x;ED.startY=p.y;}
+function aktualizovatOrez(e){if(!ED.drawing||!ED.cropHandle)return;const p=getPos(e),dx=p.x-ED.startX,dy=p.y-ED.startY;ED.startX=p.x;ED.startY=p.y;const ms=20;if(ED.cropHandle==='tl'){ED.cropX+=dx;ED.cropY+=dy;ED.cropW-=dx;ED.cropH-=dy;}else if(ED.cropHandle==='tr'){ED.cropY+=dy;ED.cropW+=dx;ED.cropH-=dy;}else if(ED.cropHandle==='bl'){ED.cropX+=dx;ED.cropW-=dx;ED.cropH+=dy;}else if(ED.cropHandle==='br'){ED.cropW+=dx;ED.cropH+=dy;}if(ED.cropRatioW>0&&ED.cropRatioH>0)ED.cropH=ED.cropW*(ED.cropRatioH/ED.cropRatioW);ED.cropW=Math.max(ms,ED.cropW);ED.cropH=Math.max(ms,ED.cropH);kresliOrezOverlay();}
 function ukonciOrez(){ED.drawing=false;ED.cropHandle=null;}
-
-function nastavPomerOreze(w,h){
-    ED.cropRatioW=w; ED.cropRatioH=h;
-    if(w>0&&h>0)ED.cropH=ED.cropW*(h/w);
-    kresliOrezOverlay();
-}
-
+function nastavPomerOreze(w,h){ED.cropRatioW=w;ED.cropRatioH=h;if(w>0&&h>0)ED.cropH=ED.cropW*(h/w);kresliOrezOverlay();}
 function potvrditOrez(){
     const ctx=ED.ctx,c=ED.canvas;
     const x=Math.max(0,Math.round(ED.cropX)),y=Math.max(0,Math.round(ED.cropY));
     const w=Math.min(c.width-x,Math.round(ED.cropW)),h=Math.min(c.height-y,Math.round(ED.cropH));
     if(w<10||h<10){toast('Ořez je příliš malý');return;}
-    // Vypálit vše (base + objekty) do canvasu
     prekreslitVse();
-    const id=ctx.getImageData(x,y,w,h);
-    c.width=w; c.height=h;
-    ctx.putImageData(id,0,0);
-    ED.objects=[]; ED.selectedIdx=-1;
-    ED.baseImageData=ctx.getImageData(0,0,w,h);
-    ED.cropMode=false;
-    nastavNastroj('pen');
-    ulozitHistorii();
-    toast('✂️ Ořez proveden');
+    const id=ctx.getImageData(x,y,w,h);c.width=w;c.height=h;ctx.putImageData(id,0,0);
+    ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,w,h);
+    ED.cropMode=false;nastavNastroj('pen');ulozitHistorii();toast('✂️ Ořez proveden');
 }
 
 /* ── Uložit / Zavřít ── */
@@ -949,7 +1079,7 @@ function otevritMailto(){_emailApp='mailto';document.getElementById('email-field
 function odeslat(){const ti=document.getElementById('email-to');const to=ti.value.trim();const cc=document.getElementById('email-cc').value.trim();const subject=document.getElementById('email-subject').value.trim();if(!to){ti.classList.add('error');ti.focus();toast('⚠️ Zadej emailovou adresu příjemce',3000);return;}ti.classList.remove('error');const body=sestavitShrnuti();let url;if(_emailApp==='gmail')url=`googlegmail://co?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;else if(_emailApp==='outlook')url=`ms-outlook://compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;else{let m=`mailto:${encodeURIComponent(to)}`;const p=[];if(cc)p.push(`cc=${encodeURIComponent(cc)}`);if(subject)p.push(`subject=${encodeURIComponent(subject)}`);p.push(`body=${encodeURIComponent(body)}`);if(p.length)m+='?'+p.join('&');url=m;}const start=Date.now();window.location.href=url;if(_emailApp!=='mailto')setTimeout(()=>{if(document.visibilityState==='visible'&&Date.now()-start<2500)toast(`⚠️ ${_emailApp==='gmail'?'Gmail':'Outlook'} není nainstalován`,4000);},2000);document.getElementById('modal-email').classList.remove('show');toast(`📧 Otevírám ${_emailApp==='gmail'?'Gmail':_emailApp==='outlook'?'Outlook':'email'}...`,2500);}
 async function sdiletSouborZEmailu(){document.getElementById('modal-email').classList.remove('show');const{blob,file,nazev}=sestavitSouborProSdileni();if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:sestavitPredmet(),files:[file]});toast('✅ Sdíleno!');return;}catch(e){if(e.name==='AbortError')return;}}stahnoutJakoSoubor(blob,nazev);toast('📥 Soubor stažen – přilož ho ručně do emailu',4000);}
 function kopirovatShrnutiZModalu(){document.getElementById('modal-share').classList.remove('show');kopirovatShrnuti();}
-function sestavitShrnuti(){const g=id=>(document.getElementById(id)||{}).value||'';const label=typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';const cislo=g('f-number');const dnes=new Date().toLocaleDateString('cs-CZ');const radek='━'.repeat(42);const tenky='─'.repeat(42);const radky=[];radky.push(radek);radky.push(`  🔴 ${label}${cislo?`  |  Nº ${cislo}`:''}`);radky.push(radek);radky.push('');radky.push('📋 INFORMACE O DOKUMENTU');radky.push(tenky);if(g('f-customer'))radky.push(`  Proces:     ${g('f-customer')}`);if(g('f-project'))radky.push(`  Projekt:    ${g('f-project')}`);if(g('f-pracoviste'))radky.push(`  Pracoviště: ${g('f-pracoviste')}`);if(g('f-dil'))radky.push(`  Díl:        ${g('f-dil')}`);radky.push('');radky.push('📅 PLATNOST');radky.push(tenky);radky.push(`  Datum: ${fmtDatum(g('f-datum'))||dnes}`);if(g('f-pocatek')||g('f-konec'))radky.push(`  Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);if(g('f-vydal'))radky.push(`  Vydal: ${g('f-vydal')}`);if(g('f-autor'))radky.push(`  Autor: ${g('f-autor')}`);if(g('f-duvod'))radky.push(`  Důvod: ${g('f-duvod')}`);radky.push('');radky.push(typ==='wi'?'📝 NÁZEV INSTRUKCE':'⚠️  POPIS DEFEKTU');radky.push(tenky);radky.push(g('f-defect')?`  ${g('f-defect')}`:'  (nevyplněno)');radky.push('');radky.push(typ==='wi'?'🔧 PRACOVNÍ POSTUP':'🔍 POPIS KONTROLY');radky.push(tenky);if(g('f-control'))g('f-control').split('\n').forEach(r=>radky.push(`  ${r}`));else radky.push('  (nevyplněno)');radky.push('');radky.push(radek);radky.push(`  ✍️  Podpis QA:        ${g('f-podpisqa')||'—'}`);radky.push(`  🏭  Schválení výroby: ${g('f-schvaleni')||'—'}`);radky.push(radek);radky.push('');radky.push(`Vygenerováno aplikací Quality Alert v5.9.3`);radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project')||'G2x/G8x'}`);return radky.join('\n');}
+function sestavitShrnuti(){const g=id=>(document.getElementById(id)||{}).value||'';const label=typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';const cislo=g('f-number');const dnes=new Date().toLocaleDateString('cs-CZ');const radek='━'.repeat(42);const tenky='─'.repeat(42);const radky=[];radky.push(radek);radky.push(`  🔴 ${label}${cislo?`  |  Nº ${cislo}`:''}`);radky.push(radek);radky.push('');radky.push('📋 INFORMACE O DOKUMENTU');radky.push(tenky);if(g('f-customer'))radky.push(`  Proces:     ${g('f-customer')}`);if(g('f-project'))radky.push(`  Projekt:    ${g('f-project')}`);if(g('f-pracoviste'))radky.push(`  Pracoviště: ${g('f-pracoviste')}`);if(g('f-dil'))radky.push(`  Díl:        ${g('f-dil')}`);radky.push('');radky.push('📅 PLATNOST');radky.push(tenky);radky.push(`  Datum: ${fmtDatum(g('f-datum'))||dnes}`);if(g('f-pocatek')||g('f-konec'))radky.push(`  Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);if(g('f-vydal'))radky.push(`  Vydal: ${g('f-vydal')}`);if(g('f-autor'))radky.push(`  Autor: ${g('f-autor')}`);if(g('f-duvod'))radky.push(`  Důvod: ${g('f-duvod')}`);radky.push('');radky.push(typ==='wi'?'📝 NÁZEV INSTRUKCE':'⚠️  POPIS DEFEKTU');radky.push(tenky);radky.push(g('f-defect')?`  ${g('f-defect')}`:'  (nevyplněno)');radky.push('');radky.push(typ==='wi'?'🔧 PRACOVNÍ POSTUP':'🔍 POPIS KONTROLY');radky.push(tenky);if(g('f-control'))g('f-control').split('\n').forEach(r=>radky.push(`  ${r}`));else radky.push('  (nevyplněno)');radky.push('');radky.push(radek);radky.push(`  ✍️  Podpis QA:        ${g('f-podpisqa')||'—'}`);radky.push(`  🏭  Schválení výroby: ${g('f-schvaleni')||'—'}`);radky.push(radek);radky.push('');radky.push(`Vygenerováno aplikací Quality Alert v5.9.4`);radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project')||'G2x/G8x'}`);return radky.join('\n');}
 function sestavitPredmet(){const cislo=(document.getElementById('f-number')||{}).value||'';const defekt=(document.getElementById('f-defect')||{}).value||'';return`[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;}
 async function kopirovatShrnuti(){const text=sestavitShrnuti();try{await navigator.clipboard.writeText(text);toast('✅ Shrnutí zkopírováno!');}catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('✅ Shrnutí zkopírováno!');}catch(_){toast('❌ Kopírování se nezdařilo',3000);}document.body.removeChild(ta);}}
 </script>
