@@ -15,8 +15,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/quality-alert/sw.js')
+          navigator.serviceWorker.register('/quality-alert/sw.js')
             .then(() => console.log('SW OK'))
             .catch(e => console.warn('SW chyba:', e));
         });
@@ -25,342 +24,222 @@
 
     <style>
         :root {
-            --red: #cc0000;
-            --green: #009900;
-            --dark: #1c1c1e;
-            --card: #2c2c2e;
-            --input: #3a3a3c;
-            --text: #ffffff;
-            --subtext: #ebebf5;
-            --border: #48484a;
+            --red: #cc0000; --green: #009900; --dark: #1c1c1e;
+            --card: #2c2c2e; --input: #3a3a3c; --text: #ffffff;
+            --subtext: #ebebf5; --border: #48484a;
         }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; padding-bottom:100px; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        .topbar { background:#000; padding:50px 20px 15px; position:sticky; top:0; z-index:100; border-bottom:2px solid var(--red); display:flex; align-items:center; justify-content:space-between; }
+        .topbar h1 { font-size:28px; font-weight:700; }
+        .topbar span { color:var(--red); }
+        .version-badge { background:#1c1c1e; border:1px solid #636366; border-radius:10px; padding:4px 10px; font-size:11px; color:#aaa; font-weight:600; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: var(--dark);
-            color: var(--text);
-            min-height: 100vh;
-            padding-bottom: 100px;
-        }
+        .tabbar { position:fixed; bottom:0; left:0; right:0; background:#000; border-top:2px solid var(--red); display:flex; padding:10px 0 25px; z-index:100; }
+        .tab-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; color:#aaaaaa; font-size:11px; font-weight:600; cursor:pointer; padding:5px; transition:color 0.2s; }
+        .tab-btn.active { color:var(--red); }
+        .tab-btn svg { width:24px; height:24px; }
 
-        .topbar {
-            background: #000;
-            padding: 50px 20px 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid var(--red);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .topbar h1 { font-size: 28px; font-weight: 700; }
-        .topbar span { color: var(--red); }
+        .page { display:none; padding:20px; }
+        .page.active { display:block; }
+        .card { background:var(--card); border-radius:16px; margin-bottom:16px; overflow:hidden; }
+        .card-header { padding:14px 16px 10px; font-size:12px; font-weight:600; color:var(--red); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border); }
 
-        .version-badge {
-            background: #1c1c1e;
-            border: 1px solid #636366;
-            border-radius: 10px;
-            padding: 4px 10px;
-            font-size: 11px;
-            color: #aaa;
-            font-weight: 600;
-        }
+        .form-row { display:flex; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); gap:12px; }
+        .form-row:last-child { border-bottom:none; }
+        .form-label { font-size:15px; color:var(--text); min-width:120px; }
+        .form-input { flex:1; background:none; border:none; outline:none; font-size:15px; color:var(--subtext); text-align:right; font-family:inherit; }
+        .form-input.error { border-bottom:2px solid var(--red); color:#ff6666; }
+        .form-input::placeholder { color:#636366; }
+        input[type="date"].form-input { color-scheme:dark; }
+        textarea.form-input { text-align:left; resize:none; min-height:80px; padding-top:4px; line-height:1.5; }
+        select.form-input { text-align:right; cursor:pointer; background:none; color:var(--subtext); }
+        select.form-input option { background:var(--card); color:var(--text); }
 
-        .tabbar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: #000;
-            border-top: 2px solid var(--red);
-            display: flex;
-            padding: 10px 0 25px;
-            z-index: 100;
-        }
-        .tab-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            background: none;
-            border: none;
-            color: #aaaaaa;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 5px;
-            transition: color 0.2s;
-        }
-        .tab-btn.active { color: var(--red); }
-        .tab-btn svg { width: 24px; height: 24px; }
+        .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border); }
+        .toggle-row:last-child { border-bottom:none; }
+        .toggle { position:relative; width:51px; height:31px; }
+        .toggle input { display:none; }
+        .toggle-slider { position:absolute; inset:0; background:#39393d; border-radius:31px; transition:0.3s; cursor:pointer; }
+        .toggle-slider:before { content:''; position:absolute; width:27px; height:27px; left:2px; top:2px; background:white; border-radius:50%; transition:0.3s; box-shadow:0 2px 4px rgba(0,0,0,0.3); }
+        .toggle input:checked + .toggle-slider { background:var(--red); }
+        .toggle input:checked + .toggle-slider:before { transform:translateX(20px); }
 
-        .page { display: none; padding: 20px; }
-        .page.active { display: block; }
+        .doc-type-selector { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:14px 16px; }
+        .doc-type-btn { padding:12px 8px; border-radius:12px; border:2px solid var(--border); background:var(--input); color:#636366; font-size:13px; font-weight:600; cursor:pointer; text-align:center; transition:all 0.2s; font-family:inherit; }
+        .doc-type-btn.active-qa { border-color:var(--red); background:rgba(204,0,0,0.15); color:var(--red); }
+        .doc-type-btn.active-wi { border-color:#ffaa00; background:rgba(255,170,0,0.15); color:#ffaa00; }
 
-        .card { background: var(--card); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
-        .card-header { padding: 14px 16px 10px; font-size: 12px; font-weight: 600; color: var(--red); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+        .photos-container { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+        .photo-item { background:var(--input); border-radius:12px; overflow:hidden; }
+        .photo-name-row { display:flex; align-items:center; padding:10px 12px; border-bottom:1px solid var(--border); gap:8px; }
+        .photo-name-label { font-size:12px; color:#636366; white-space:nowrap; }
+        .photo-name-input { flex:1; background:none; border:none; outline:none; font-size:14px; color:var(--text); font-family:inherit; }
+        .photo-name-input::placeholder { color:#636366; }
+        .img-upload { margin:10px; border:2px dashed var(--border); border-radius:10px; cursor:pointer; transition:all 0.3s; position:relative; height:120px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .img-upload.has-image { border-style:solid; height:auto; min-height:120px; }
+        .img-upload input[type="file"] { position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; z-index:1; }
+        .img-upload-placeholder { display:flex; flex-direction:column; align-items:center; gap:6px; pointer-events:none; }
+        .img-upload-icon { font-size:28px; }
+        .img-upload-text { font-size:12px; color:#636366; }
+        .img-upload img { width:100%; max-height:200px; object-fit:contain; display:block; border-radius:8px; }
+        .img-remove { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.65); border:none; color:white; width:28px; height:28px; border-radius:50%; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; }
+        .img-edit-btn { position:absolute; top:6px; left:6px; background:rgba(10,132,255,0.85); border:none; color:white; width:28px; height:28px; border-radius:50%; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; }
 
-        .form-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
-        .form-row:last-child { border-bottom: none; }
-        .form-label { font-size: 15px; color: var(--text); min-width: 120px; }
-        .form-input { flex: 1; background: none; border: none; outline: none; font-size: 15px; color: var(--subtext); text-align: right; font-family: inherit; }
-        .form-input.error { border-bottom: 2px solid var(--red); color: #ff6666; }
-        .form-input::placeholder { color: #636366; }
-        input[type="date"].form-input { color-scheme: dark; }
-        textarea.form-input { text-align: left; resize: none; min-height: 80px; padding-top: 4px; line-height: 1.5; }
-        select.form-input { text-align: right; cursor: pointer; background: none; color: var(--subtext); }
-        select.form-input option { background: var(--card); color: var(--text); }
+        .gen-btn { width:100%; padding:16px; background:var(--red); color:white; border:none; border-radius:14px; font-size:17px; font-weight:600; cursor:pointer; margin-top:8px; transition:all 0.2s; font-family:inherit; }
+        .gen-btn:active { transform:scale(0.97); background:#aa0000; }
 
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        .toggle-row:last-child { border-bottom: none; }
-        .toggle { position: relative; width: 51px; height: 31px; }
-        .toggle input { display: none; }
-        .toggle-slider { position: absolute; inset: 0; background: #39393d; border-radius: 31px; transition: 0.3s; cursor: pointer; }
-        .toggle-slider:before { content: ''; position: absolute; width: 27px; height: 27px; left: 2px; top: 2px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .toggle input:checked + .toggle-slider { background: var(--red); }
-        .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+        .progress-bar-wrap { background:var(--card); border-radius:12px; padding:14px 16px; margin-bottom:16px; }
+        .progress-bar-label { display:flex; justify-content:space-between; font-size:12px; color:#636366; margin-bottom:8px; }
+        .progress-bar-label span:last-child { color:var(--red); font-weight:700; }
+        .progress-bar-track { background:var(--border); border-radius:6px; height:6px; overflow:hidden; }
+        .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--red),#ff4444); border-radius:6px; transition:width 0.4s ease; }
 
-        .doc-type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 16px; }
-        .doc-type-btn { padding: 12px 8px; border-radius: 12px; border: 2px solid var(--border); background: var(--input); color: #636366; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
-        .doc-type-btn.active-qa { border-color: var(--red); background: rgba(204,0,0,0.15); color: var(--red); }
-        .doc-type-btn.active-wi { border-color: #ffaa00; background: rgba(255,170,0,0.15); color: #ffaa00; }
+        .save-indicator { display:flex; align-items:center; gap:6px; font-size:11px; color:#636366; transition:color 0.3s; }
+        .save-indicator.saving { color:#ffaa00; }
+        .save-indicator.saved { color:var(--green); }
+        .save-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
 
-        .photos-container { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
-        .photo-item { background: var(--input); border-radius: 12px; overflow: hidden; }
-        .photo-name-row { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); gap: 8px; }
-        .photo-name-label { font-size: 12px; color: #636366; white-space: nowrap; }
-        .photo-name-input { flex: 1; background: none; border: none; outline: none; font-size: 14px; color: var(--text); font-family: inherit; }
-        .photo-name-input::placeholder { color: #636366; }
-        .img-upload { margin: 10px; border: 2px dashed var(--border); border-radius: 10px; cursor: pointer; transition: all 0.3s; position: relative; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .img-upload:active { transform: scale(0.98); }
-        .img-upload.has-image { border-style: solid; height: auto; min-height: 120px; }
-        .img-upload input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 1; }
-        .img-upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
-        .img-upload-icon { font-size: 28px; }
-        .img-upload-text { font-size: 12px; color: #636366; }
-        .img-upload img { width: 100%; max-height: 200px; object-fit: contain; display: block; border-radius: 8px; }
-        .img-remove { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.65); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
-        .img-edit-btn { position: absolute; top: 6px; left: 6px; background: rgba(10,132,255,0.85); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
+        .navod-section { padding:16px; border-bottom:1px solid var(--border); }
+        .navod-section:last-child { border-bottom:none; }
+        .navod-text { font-size:14px; color:var(--subtext); line-height:1.6; }
+        .install-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; font-size:14px; color:var(--subtext); }
+        .install-step:last-child { margin-bottom:0; }
+        .step-num { background:var(--red); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
 
-        .gen-btn { width: 100%; padding: 16px; background: var(--red); color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.2s; font-family: inherit; }
-        .gen-btn:active { transform: scale(0.97); background: #aa0000; }
+        .action-buttons { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+        .download-btn { width:100%; padding:18px; background:var(--red); color:white; border:none; border-radius:14px; font-size:17px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:10px; }
+        .download-btn:active { transform:scale(0.97); background:#aa0000; }
+        .share-btn { width:100%; padding:16px; background:#1c1c1e; color:white; border:2px solid #0a84ff; border-radius:14px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .share-btn:active { transform:scale(0.97); background:rgba(10,132,255,0.1); }
 
-        .progress-bar-wrap { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
-        .progress-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: #636366; margin-bottom: 8px; }
-        .progress-bar-label span:last-child { color: var(--red); font-weight: 700; }
-        .progress-bar-track { background: var(--border); border-radius: 6px; height: 6px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--red), #ff4444); border-radius: 6px; transition: width 0.4s ease; }
+        .pc-hint { background:linear-gradient(135deg,rgba(10,132,255,0.1),rgba(10,132,255,0.05)); border:1px solid #0a84ff; border-radius:14px; padding:16px; margin-top:4px; }
+        .pc-hint-title { font-size:13px; font-weight:700; color:#0a84ff; margin-bottom:10px; }
+        .pc-hint-step { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; color:var(--subtext); }
+        .pc-hint-step:last-child { margin-bottom:0; }
+        .pc-step-num { background:#0a84ff; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
 
-        .save-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #636366; transition: color 0.3s; }
-        .save-indicator.saving { color: #ffaa00; }
-        .save-indicator.saved { color: var(--green); }
-        .save-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:500; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+        .modal-overlay.show { opacity:1; pointer-events:all; }
+        .modal { background:var(--card); border-radius:20px 20px 0 0; padding:20px; width:100%; max-width:600px; transform:translateY(100%); transition:transform 0.3s ease; padding-bottom:40px; max-height:90vh; overflow-y:auto; }
+        .modal-overlay.show .modal { transform:translateY(0); }
+        .modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+        .modal-title { font-size:18px; font-weight:700; margin-bottom:16px; text-align:center; }
+        .modal-input { width:100%; background:var(--input); border:1px solid var(--border); border-radius:12px; padding:14px 16px; font-size:15px; color:var(--text); font-family:inherit; outline:none; margin-bottom:10px; transition:border-color 0.2s; }
+        .modal-input:focus { border-color:#0a84ff; }
+        .modal-input::placeholder { color:#636366; }
+        .modal-input.error { border-color:var(--red); }
+        .modal-label { font-size:12px; color:#636366; margin-bottom:6px; display:block; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .modal-btn-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+        .modal-btn { padding:14px; border-radius:12px; border:none; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+        .modal-btn.cancel { background:var(--input); color:#636366; }
+        .modal-btn.send { background:#0a84ff; color:white; }
 
-        .navod-section { padding: 16px; border-bottom: 1px solid var(--border); }
-        .navod-section:last-child { border-bottom: none; }
-        .navod-text { font-size: 14px; color: var(--subtext); line-height: 1.6; }
-        .install-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: var(--subtext); }
-        .install-step:last-child { margin-bottom: 0; }
-        .step-num { background: var(--red); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+        .share-options { display:flex; flex-direction:column; gap:10px; margin-bottom:4px; }
+        .share-option { display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--input); border-radius:14px; cursor:pointer; border:1px solid var(--border); transition:all 0.2s; font-family:inherit; color:var(--text); width:100%; text-align:left; }
+        .share-option:active { transform:scale(0.98); background:#48484a; }
+        .share-option-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+        .share-option-title { font-size:15px; font-weight:600; }
+        .share-option-sub { font-size:12px; color:#aaaaaa; margin-top:2px; }
+        .modal-info { background:rgba(10,132,255,0.1); border:1px solid #0a84ff; border-radius:12px; padding:12px 14px; font-size:12px; color:#0a84ff; line-height:1.5; margin-top:4px; }
 
-        .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-        .download-btn { width: 100%; padding: 18px; background: var(--red); color: white; border: none; border-radius: 14px; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .download-btn:active { transform: scale(0.97); background: #aa0000; }
-        .share-btn { width: 100%; padding: 16px; background: #1c1c1e; color: white; border: 2px solid #0a84ff; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .share-btn:active { transform: scale(0.97); background: rgba(10,132,255,0.1); }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .page.active { animation:fadeIn 0.3s ease; }
+        .toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:rgba(50,50,50,0.95); color:white; padding:12px 24px; border-radius:20px; font-size:14px; z-index:999; opacity:0; transition:opacity 0.3s; white-space:nowrap; max-width:90vw; text-align:center; pointer-events:none; }
+        .toast.show { opacity:1; }
 
-        .pc-hint { background: linear-gradient(135deg, rgba(10,132,255,0.1), rgba(10,132,255,0.05)); border: 1px solid #0a84ff; border-radius: 14px; padding: 16px; margin-top: 4px; }
-        .pc-hint-title { font-size: 13px; font-weight: 700; color: #0a84ff; margin-bottom: 10px; }
-        .pc-hint-step { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--subtext); }
-        .pc-hint-step:last-child { margin-bottom: 0; }
-        .pc-step-num { background: #0a84ff; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .modal-overlay.show { opacity: 1; pointer-events: all; }
-        .modal { background: var(--card); border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-width: 600px; transform: translateY(100%); transition: transform 0.3s ease; padding-bottom: 40px; max-height: 90vh; overflow-y: auto; }
-        .modal-overlay.show .modal { transform: translateY(0); }
-        .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
-        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-align: center; }
-        .modal-input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 15px; color: var(--text); font-family: inherit; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
-        .modal-input:focus { border-color: #0a84ff; }
-        .modal-input::placeholder { color: #636366; }
-        .modal-input.error { border-color: var(--red); }
-        .modal-label { font-size: 12px; color: #636366; margin-bottom: 6px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-        .modal-btn { padding: 14px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-        .modal-btn:active { transform: scale(0.97); }
-        .modal-btn.cancel { background: var(--input); color: #636366; }
-        .modal-btn.send { background: #0a84ff; color: white; }
-
-        .share-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
-        .share-option { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--input); border-radius: 14px; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; font-family: inherit; color: var(--text); width: 100%; text-align: left; }
-        .share-option:active { transform: scale(0.98); background: #48484a; }
-        .share-option-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-        .share-option-title { font-size: 15px; font-weight: 600; }
-        .share-option-sub { font-size: 12px; color: #aaaaaa; margin-top: 2px; }
-        .modal-info { background: rgba(10,132,255,0.1); border: 1px solid #0a84ff; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #0a84ff; line-height: 1.5; margin-top: 4px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .page.active { animation: fadeIn 0.3s ease; }
-
-        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(50,50,50,0.95); color: white; padding: 12px 24px; border-radius: 20px; font-size: 14px; z-index: 999; opacity: 0; transition: opacity 0.3s; white-space: nowrap; max-width: 90vw; text-align: center; pointer-events: none; }
-        .toast.show { opacity: 1; }
-
-        #doc-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-
-        .doc-page1 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; height: 297mm; max-height: 297mm; display: flex; flex-direction: column; overflow: hidden; }
-        .doc-page2 { font-family: Arial, sans-serif; font-size: 9px; color: #000; background: white; padding: 8px; border-top: 3px solid #000; margin-top: 4px; display: flex; flex-direction: column; min-height: 200px; }
-        .doc-page-footer { text-align: center; font-size: 8px; font-weight: 600; color: #000; padding: 3px 0 2px; border-top: 1px solid #ccc; margin-top: 3px; flex-shrink: 0; }
-        .doc-page2-title { font-size: 9px; color: #cc0000; font-weight: 700; padding: 6px 0 8px; display: block; flex-shrink: 0; }
-        .sig-table { width: 100%; border-collapse: collapse; font-size: 9px; flex: 1; }
-        .sig-table th { background: #2c2c2c; color: white; padding: 6px 8px; text-align: center; border: 1px solid #000; font-size: 9px; font-weight: 700; }
-        .sig-table td { border: 1px solid #000; padding: 0; height: 22px; }
-        .doc-top { display: grid; grid-template-columns: 110px 1fr auto; align-items: stretch; margin-bottom: 3px; gap: 0; flex-shrink: 0; border: 1px solid #ddd; overflow: hidden; }
-        .doc-logo-box { background: white; padding: 8px 10px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #ddd; }
-        .doc-title-center { background: #cc0000; display: flex; align-items: center; justify-content: center; padding: 8px; }
-        .doc-title-main { font-size: 22px; font-weight: 900; color: white; letter-spacing: 2px; line-height: 1; font-family: Arial, sans-serif; }
-        .doc-num-box { background: #000; color: white; padding: 6px 10px; text-align: center; min-width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .doc-num-label { font-size: 7px; letter-spacing: 1px; color: #aaa; font-weight: 600; }
-        .doc-num-val { font-size: 12px; font-weight: 900; color: white; white-space: nowrap; }
-        .doc-info-section { border: 1px solid #bbb; margin-bottom: 3px; flex-shrink: 0; }
-        .doc-info-row { display: grid; border-bottom: 1px solid #bbb; }
-        .doc-info-row:last-child { border-bottom: none; }
-        .doc-info-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-        .doc-info-row-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
-        .doc-info-cell { border-right: 1px solid #bbb; overflow: hidden; }
-        .doc-info-cell:last-child { border-right: none; }
-        .doc-cell-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-cell-val { font-size: 10px; font-weight: 700; color: #000; padding: 3px 6px 3px; background: #fff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .doc-typqa-section { display: grid; grid-template-columns: 1fr auto; border: 1px solid #bbb; margin-bottom: 3px; flex-shrink: 0; }
-        .doc-typqa-left { border-right: 1px solid #bbb; }
-        .doc-typqa-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-typqa-items { display: flex; gap: 4px; flex-wrap: wrap; padding: 3px 6px; }
-        .doc-typqa-item { border: 1.5px solid #999; padding: 2px 7px; font-size: 7px; font-weight: 700; color: #666; text-transform: uppercase; border-radius: 2px; }
-        .doc-typqa-item.active { background: #cc0000; color: white; border-color: #cc0000; }
-        .doc-defect-section { border: 1px solid #bbb; margin-bottom: 3px; overflow: hidden; flex-shrink: 0; }
-        .doc-defect-label { background: #cc0000; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-defect-val { display: flex; align-items: center; gap: 6px; padding: 3px 8px 4px; background: #fdf0ed; }
-        .doc-defect-icon { font-size: 12px; color: #cc0000; flex-shrink: 0; }
-        .doc-defect-text { font-size: 13px; font-weight: 900; color: #000; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .doc-control-section { border: 1px solid #bbb; margin-bottom: 3px; overflow: hidden; flex-shrink: 0; }
-        .doc-control-label { background: #1a4a8a; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-control-val { font-size: 11px; font-weight: 700; color: #000; padding: 4px 8px 5px; line-height: 1.5; background: #ffff00; white-space: pre-wrap; max-height: 26mm; overflow: hidden; }
-        .doc-imgs-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
-        .doc-imgs { flex: 1; min-height: 0; display: grid; gap: 3px; overflow: hidden; }
-        .doc-img-cell { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-        .qa-cell-ok { border: 2.5px solid #009900; }
-        .qa-cell-nok { border: 2.5px solid #cc0000; }
-        .wi-cell { border: 2.5px solid #ffaa00; }
-        .doc-img-header { padding: 2px 5px; font-size: 8px; font-weight: 900; letter-spacing: 0.5px; text-align: center; flex-shrink: 0; }
-        .doc-img-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 2px; overflow: hidden; }
-        .doc-img-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
-        .doc-img-placeholder-icon { font-size: 20px; color: #ccc; }
-        .doc-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #bbb; overflow: hidden; flex-shrink: 0; margin-top: auto; margin-bottom: 3px; }
-        .doc-footer-cell { border-right: 1px solid #bbb; }
-        .doc-footer-cell:last-child { border-right: none; }
-        .doc-footer-label { background: #2c2c2c; color: #fff; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; display: block; }
-        .doc-footer-val { font-size: 9px; font-weight: 700; color: #000; padding: 2px 6px 3px; min-height: 8px; background: #fff; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        #doc-wrapper { background:white; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+        .doc-page1 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; height:297mm; max-height:297mm; display:flex; flex-direction:column; overflow:hidden; }
+        .doc-page2 { font-family:Arial,sans-serif; font-size:9px; color:#000; background:white; padding:8px; border-top:3px solid #000; margin-top:4px; display:flex; flex-direction:column; min-height:200px; }
+        .doc-page-footer { text-align:center; font-size:8px; font-weight:600; color:#000; padding:3px 0 2px; border-top:1px solid #ccc; margin-top:3px; flex-shrink:0; }
+        .doc-page2-title { font-size:9px; color:#cc0000; font-weight:700; padding:6px 0 8px; display:block; flex-shrink:0; }
+        .sig-table { width:100%; border-collapse:collapse; font-size:9px; flex:1; }
+        .sig-table th { background:#2c2c2c; color:white; padding:6px 8px; text-align:center; border:1px solid #000; font-size:9px; font-weight:700; }
+        .sig-table td { border:1px solid #000; padding:0; height:22px; }
+        .doc-top { display:grid; grid-template-columns:110px 1fr auto; align-items:stretch; margin-bottom:3px; flex-shrink:0; border:1px solid #ddd; overflow:hidden; }
+        .doc-logo-box { background:white; padding:8px 10px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
+        .doc-title-center { background:#cc0000; display:flex; align-items:center; justify-content:center; padding:8px; }
+        .doc-title-main { font-size:22px; font-weight:900; color:white; letter-spacing:2px; line-height:1; font-family:Arial,sans-serif; }
+        .doc-num-box { background:#000; color:white; padding:6px 10px; text-align:center; min-width:70px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .doc-num-label { font-size:7px; letter-spacing:1px; color:#aaa; font-weight:600; }
+        .doc-num-val { font-size:12px; font-weight:900; color:white; white-space:nowrap; }
+        .doc-info-section { border:1px solid #bbb; margin-bottom:3px; flex-shrink:0; }
+        .doc-info-row { display:grid; border-bottom:1px solid #bbb; }
+        .doc-info-row:last-child { border-bottom:none; }
+        .doc-info-row-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+        .doc-info-row-5 { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
+        .doc-info-cell { border-right:1px solid #bbb; overflow:hidden; }
+        .doc-info-cell:last-child { border-right:none; }
+        .doc-cell-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+        .doc-cell-val { font-size:10px; font-weight:700; color:#000; padding:3px 6px; background:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+        .doc-typqa-section { display:grid; grid-template-columns:1fr auto; border:1px solid #bbb; margin-bottom:3px; flex-shrink:0; }
+        .doc-typqa-left { border-right:1px solid #bbb; }
+        .doc-typqa-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+        .doc-typqa-items { display:flex; gap:4px; flex-wrap:wrap; padding:3px 6px; }
+        .doc-typqa-item { border:1.5px solid #999; padding:2px 7px; font-size:7px; font-weight:700; color:#666; text-transform:uppercase; border-radius:2px; }
+        .doc-typqa-item.active { background:#cc0000; color:white; border-color:#cc0000; }
+        .doc-defect-section { border:1px solid #bbb; margin-bottom:3px; overflow:hidden; flex-shrink:0; }
+        .doc-defect-label { background:#cc0000; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+        .doc-defect-val { display:flex; align-items:center; gap:6px; padding:3px 8px 4px; background:#fdf0ed; }
+        .doc-defect-icon { font-size:12px; color:#cc0000; flex-shrink:0; }
+        .doc-defect-text { font-size:13px; font-weight:900; color:#000; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+        .doc-control-section { border:1px solid #bbb; margin-bottom:3px; overflow:hidden; flex-shrink:0; }
+        .doc-control-label { background:#1a4a8a; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+        .doc-control-val { font-size:11px; font-weight:700; color:#000; padding:4px 8px 5px; line-height:1.5; background:#ffff00; white-space:pre-wrap; max-height:26mm; overflow:hidden; }
+        .doc-imgs-wrap { flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+        .doc-imgs { flex:1; min-height:0; display:grid; gap:3px; overflow:hidden; }
+        .doc-img-cell { display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+        .qa-cell-ok { border:2.5px solid #009900; }
+        .qa-cell-nok { border:2.5px solid #cc0000; }
+        .wi-cell { border:2.5px solid #ffaa00; }
+        .doc-img-header { padding:2px 5px; font-size:8px; font-weight:900; letter-spacing:0.5px; text-align:center; flex-shrink:0; }
+        .doc-img-body { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:2px; overflow:hidden; }
+        .doc-img-body img { width:100%; height:100%; object-fit:contain; display:block; }
+        .doc-img-placeholder-icon { font-size:20px; color:#ccc; }
+        .doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; margin-top:auto; margin-bottom:3px; }
+        .doc-footer-cell { border-right:1px solid #bbb; }
+        .doc-footer-cell:last-child { border-right:none; }
+        .doc-footer-label { background:#2c2c2c; color:#fff; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; padding:2px 6px; display:block; }
+        .doc-footer-val { font-size:9px; font-weight:700; color:#000; padding:2px 6px 3px; min-height:8px; background:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 
         /* ══ EDITOR ══ */
-        .editor-overlay {
-            position: fixed; inset: 0; background: #000;
-            z-index: 600; display: flex; flex-direction: column;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .editor-overlay.show { opacity: 1; pointer-events: all; }
-        .editor-topbar {
-            background: #1c1c1e; padding: 50px 16px 12px;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #333; flex-shrink: 0;
-        }
-        .editor-title { font-size: 17px; font-weight: 700; }
-        .editor-close {
-            background: #3a3a3c; border: none; color: white;
-            width: 32px; height: 32px; border-radius: 50%;
-            font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .editor-save {
-            background: var(--red); border: none; color: white;
-            padding: 8px 18px; border-radius: 10px; font-size: 14px;
-            font-weight: 700; cursor: pointer; font-family: inherit;
-        }
-        .editor-canvas-wrap {
-            flex: 1; overflow: hidden; position: relative;
-            display: flex; align-items: center; justify-content: center;
-            background: #111;
-            touch-action: none;
-        }
-        #editor-canvas {
-            display: block;
-            cursor: crosshair;
-            touch-action: none;
-            max-width: 100%;
-            max-height: 100%;
-            will-change: transform;
-        }
-        .editor-toolbar {
-            background: #1c1c1e; border-top: 1px solid #333;
-            padding: 10px 12px; flex-shrink: 0;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .tool-row { display: flex; gap: 8px; align-items: center; overflow-x: auto; padding-bottom: 2px; }
-        .tool-row::-webkit-scrollbar { display: none; }
-        .tool-btn {
-            flex-shrink: 0;
-            background: #3a3a3c; border: 2px solid transparent;
-            color: white; padding: 8px 12px; border-radius: 10px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            font-family: inherit; white-space: nowrap;
-            display: flex; align-items: center; gap: 5px;
-            transition: all 0.15s;
-        }
-        .tool-btn.active { border-color: var(--red); background: rgba(204,0,0,0.2); color: var(--red); }
-        .tool-btn:active { transform: scale(0.95); }
-        .tool-btn-sm {
-            flex-shrink: 0;
-            background: #3a3a3c; border: none;
-            color: white; padding: 8px 10px; border-radius: 10px;
-            font-size: 13px; cursor: pointer; font-family: inherit;
-            white-space: nowrap; transition: all 0.15s;
-        }
-        .tool-btn-sm:active { transform: scale(0.95); background: #555; }
-        .color-btn {
-            flex-shrink: 0;
-            width: 32px; height: 32px; border-radius: 50%;
-            border: 3px solid transparent; cursor: pointer;
-            transition: all 0.15s;
-        }
-        .color-btn.active { border-color: white; transform: scale(1.15); }
-        .size-slider { flex: 1; min-width: 80px; max-width: 140px; accent-color: var(--red); }
-        .adj-row { display: flex; gap: 8px; align-items: center; }
-        .adj-label { font-size: 11px; color: #aaa; min-width: 60px; }
-        .adj-slider { flex: 1; accent-color: var(--red); }
-        .adj-val { font-size: 11px; color: var(--red); font-weight: 700; min-width: 36px; text-align: right; }
-        .editor-tabs { display: flex; gap: 6px; padding: 0 0 4px; }
-        .editor-tab {
-            flex: 1; padding: 8px 4px; background: #3a3a3c;
-            border: none; color: #aaa; border-radius: 8px;
-            font-size: 12px; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: all 0.15s;
-        }
-        .editor-tab.active { background: var(--red); color: white; }
-        .editor-panel { display: none; }
-        .editor-panel.active { display: flex; flex-direction: column; gap: 8px; }
-        .text-input-row { display: flex; gap: 8px; align-items: center; }
-        .text-input-field {
-            flex: 1; background: #3a3a3c; border: 1px solid #555;
-            border-radius: 8px; padding: 8px 12px; color: white;
-            font-size: 14px; font-family: inherit; outline: none;
-        }
-        .text-input-field::placeholder { color: #666; }
+        .editor-overlay { position:fixed; inset:0; background:#000; z-index:600; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+        .editor-overlay.show { opacity:1; pointer-events:all; }
+        .editor-topbar { background:#1c1c1e; padding:50px 16px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #333; flex-shrink:0; }
+        .editor-title { font-size:17px; font-weight:700; }
+        .editor-close { background:#3a3a3c; border:none; color:white; width:32px; height:32px; border-radius:50%; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .editor-save { background:var(--red); border:none; color:white; padding:8px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+        .editor-canvas-wrap { flex:1; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; background:#111; touch-action:none; }
+        #editor-canvas { display:block; touch-action:none; max-width:100%; max-height:100%; }
+        .editor-toolbar { background:#1c1c1e; border-top:1px solid #333; padding:10px 12px; flex-shrink:0; display:flex; flex-direction:column; gap:10px; }
+        .tool-row { display:flex; gap:8px; align-items:center; overflow-x:auto; padding-bottom:2px; }
+        .tool-row::-webkit-scrollbar { display:none; }
+        .tool-btn { flex-shrink:0; background:#3a3a3c; border:2px solid transparent; color:white; padding:8px 12px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; display:flex; align-items:center; gap:5px; transition:all 0.15s; }
+        .tool-btn.active { border-color:var(--red); background:rgba(204,0,0,0.2); color:var(--red); }
+        .tool-btn-sm { flex-shrink:0; background:#3a3a3c; border:none; color:white; padding:8px 10px; border-radius:10px; font-size:13px; cursor:pointer; font-family:inherit; white-space:nowrap; transition:all 0.15s; }
+        .tool-btn-sm:active { transform:scale(0.95); background:#555; }
+        .color-btn { flex-shrink:0; width:32px; height:32px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:all 0.15s; }
+        .color-btn.active { border-color:white; transform:scale(1.15); }
+        .size-slider { flex:1; min-width:80px; max-width:140px; accent-color:var(--red); }
+        .adj-row { display:flex; gap:8px; align-items:center; }
+        .adj-label { font-size:11px; color:#aaa; min-width:60px; }
+        .adj-slider { flex:1; accent-color:var(--red); }
+        .adj-val { font-size:11px; color:var(--red); font-weight:700; min-width:36px; text-align:right; }
+        .editor-tabs { display:flex; gap:6px; padding:0 0 4px; }
+        .editor-tab { flex:1; padding:8px 4px; background:#3a3a3c; border:none; color:#aaa; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+        .editor-tab.active { background:var(--red); color:white; }
+        .editor-panel { display:none; }
+        .editor-panel.active { display:flex; flex-direction:column; gap:8px; }
+        .text-input-row { display:flex; gap:8px; align-items:center; }
+        .text-input-field { flex:1; background:#3a3a3c; border:1px solid #555; border-radius:8px; padding:8px 12px; color:white; font-size:14px; font-family:inherit; outline:none; }
+        .text-input-field::placeholder { color:#666; }
+        .sel-info { font-size:11px; color:#ffaa00; padding:2px 0; min-height:16px; }
     </style>
 </head>
 <body>
 
-<!-- ══ EDITOR OVERLAY ══ -->
+<!-- ══ EDITOR ══ -->
 <div class="editor-overlay" id="editor-overlay">
     <div class="editor-topbar">
         <button class="editor-close" onclick="zavritEditor()">✕</button>
@@ -376,7 +255,7 @@
             <button class="editor-tab"         id="etab-adjust" onclick="editorTab('adjust')">🔆 Úpravy</button>
             <button class="editor-tab"         id="etab-crop"   onclick="editorTab('crop')">✂️ Ořez</button>
         </div>
-        <!-- Panel: Kreslit -->
+        <!-- Kreslit -->
         <div class="editor-panel active" id="epanel-draw">
             <div class="tool-row">
                 <button class="tool-btn active" id="etool-pen"    onclick="nastavNastroj('pen')">🖊️ Pero</button>
@@ -385,7 +264,7 @@
                 <button class="tool-btn"        id="etool-circle" onclick="nastavNastroj('circle')">⭕ Kruh</button>
                 <button class="tool-btn"        id="etool-text"   onclick="nastavNastroj('text')">📝 Text</button>
                 <button class="tool-btn"        id="etool-blur"   onclick="nastavNastroj('blur')">🌫️ Blur</button>
-                <button class="tool-btn"        id="etool-move"   onclick="nastavNastroj('move')">✋ Posun</button>
+                <button class="tool-btn"        id="etool-select" onclick="nastavNastroj('select')">☝️ Výběr</button>
             </div>
             <div class="tool-row">
                 <div class="color-btn active" id="ec-red"    style="background:#ff3b30;" onclick="nastavBarvu('#ff3b30','ec-red')"></div>
@@ -402,54 +281,34 @@
                 <input class="text-input-field" id="e-text-input" placeholder="Napiš text..." value="DEFEKT">
                 <div class="color-btn" id="ec-textbg" style="background:#ff3b30;border:2px solid #888;" onclick="toggleTextBg()" title="Pozadí textu"></div>
             </div>
+            <div class="sel-info" id="sel-info"></div>
             <div class="tool-row">
                 <button class="tool-btn-sm" onclick="editorUndo()">↩️ Zpět</button>
                 <button class="tool-btn-sm" onclick="editorRedo()">↪️ Znovu</button>
-                <button class="tool-btn-sm" onclick="editorClear()">🗑️ Vymazat</button>
+                <button class="tool-btn-sm" onclick="smazatVybrany()">🗑️ Smazat vybraný</button>
+                <button class="tool-btn-sm" onclick="editorClearAll()">🗑️ Vše</button>
                 <button class="tool-btn-sm" onclick="editorRotate(-90)">↺ -90°</button>
                 <button class="tool-btn-sm" onclick="editorRotate(90)">↻ +90°</button>
-                <button class="tool-btn-sm" onclick="editorFlip('h')">↔️ Flip H</button>
-                <button class="tool-btn-sm" onclick="editorFlip('v')">↕️ Flip V</button>
+                <button class="tool-btn-sm" onclick="editorFlip('h')">↔️</button>
+                <button class="tool-btn-sm" onclick="editorFlip('v')">↕️</button>
             </div>
         </div>
-        <!-- Panel: Úpravy -->
+        <!-- Úpravy -->
         <div class="editor-panel" id="epanel-adjust">
-            <div class="adj-row">
-                <span class="adj-label">☀️ Jas</span>
-                <input type="range" class="adj-slider" id="adj-brightness" min="-100" max="100" value="0" oninput="aplikovatFiltry()">
-                <span class="adj-val" id="adj-brightness-val">0</span>
-            </div>
-            <div class="adj-row">
-                <span class="adj-label">◑ Kontrast</span>
-                <input type="range" class="adj-slider" id="adj-contrast" min="-100" max="100" value="0" oninput="aplikovatFiltry()">
-                <span class="adj-val" id="adj-contrast-val">0</span>
-            </div>
-            <div class="adj-row">
-                <span class="adj-label">🎨 Sytost</span>
-                <input type="range" class="adj-slider" id="adj-saturation" min="-100" max="100" value="0" oninput="aplikovatFiltry()">
-                <span class="adj-val" id="adj-saturation-val">0</span>
-            </div>
-            <div class="adj-row">
-                <span class="adj-label">🌡️ Teplota</span>
-                <input type="range" class="adj-slider" id="adj-warmth" min="-100" max="100" value="0" oninput="aplikovatFiltry()">
-                <span class="adj-val" id="adj-warmth-val">0</span>
-            </div>
-            <div class="adj-row">
-                <span class="adj-label">🔲 Ostrost</span>
-                <input type="range" class="adj-slider" id="adj-sharpen" min="0" max="10" value="0" oninput="aplikovatFiltry()">
-                <span class="adj-val" id="adj-sharpen-val">0</span>
-            </div>
+            <div class="adj-row"><span class="adj-label">☀️ Jas</span><input type="range" class="adj-slider" id="adj-brightness" min="-100" max="100" value="0" oninput="aplikovatFiltry()"><span class="adj-val" id="adj-brightness-val">0</span></div>
+            <div class="adj-row"><span class="adj-label">◑ Kontrast</span><input type="range" class="adj-slider" id="adj-contrast" min="-100" max="100" value="0" oninput="aplikovatFiltry()"><span class="adj-val" id="adj-contrast-val">0</span></div>
+            <div class="adj-row"><span class="adj-label">🎨 Sytost</span><input type="range" class="adj-slider" id="adj-saturation" min="-100" max="100" value="0" oninput="aplikovatFiltry()"><span class="adj-val" id="adj-saturation-val">0</span></div>
+            <div class="adj-row"><span class="adj-label">🌡️ Teplota</span><input type="range" class="adj-slider" id="adj-warmth" min="-100" max="100" value="0" oninput="aplikovatFiltry()"><span class="adj-val" id="adj-warmth-val">0</span></div>
+            <div class="adj-row"><span class="adj-label">🔲 Ostrost</span><input type="range" class="adj-slider" id="adj-sharpen" min="0" max="10" value="0" oninput="aplikovatFiltry()"><span class="adj-val" id="adj-sharpen-val">0</span></div>
             <div class="tool-row" style="margin-top:4px;">
                 <button class="tool-btn-sm" onclick="resetFiltry()">↩️ Reset</button>
                 <button class="tool-btn-sm" onclick="aplikovatCernobile()">⬛ Černobílé</button>
                 <button class="tool-btn-sm" onclick="aplikovatSepia()">🟫 Sépia</button>
             </div>
         </div>
-        <!-- Panel: Ořez -->
+        <!-- Ořez -->
         <div class="editor-panel" id="epanel-crop">
-            <div style="font-size:12px;color:#aaa;line-height:1.6;">
-                Táhni za rohové body pro nastavení ořezu.
-            </div>
+            <div style="font-size:12px;color:#aaa;">Táhni za rohové body pro nastavení ořezu.</div>
             <div class="tool-row">
                 <button class="tool-btn-sm" onclick="nastavPomerOreze(1,1)">1:1</button>
                 <button class="tool-btn-sm" onclick="nastavPomerOreze(4,3)">4:3</button>
@@ -468,20 +327,11 @@
         <div class="modal-handle"></div>
         <div class="modal-title">📤 Sdílet dokument</div>
         <div class="share-options">
-            <button class="share-option" onclick="sdiletSystemem()">
-                <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div>
-                <div><div class="share-option-title">Sdílet soubor (.html)</div><div class="share-option-sub">AirDrop, Uložit do souborů, Teams, WhatsApp...</div></div>
-            </button>
-            <button class="share-option" onclick="zobrazitEmailForm()">
-                <div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div>
-                <div><div class="share-option-title">Odeslat emailem</div><div class="share-option-sub">Outlook, Gmail nebo jiná aplikace</div></div>
-            </button>
-            <button class="share-option" onclick="kopirovatShrnutiZModalu()">
-                <div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div>
-                <div><div class="share-option-title">Kopírovat shrnutí</div><div class="share-option-sub">Text do schránky</div></div>
-            </button>
+            <button class="share-option" onclick="sdiletSystemem()"><div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div><div><div class="share-option-title">Sdílet soubor (.html)</div><div class="share-option-sub">AirDrop, Uložit do souborů, Teams...</div></div></button>
+            <button class="share-option" onclick="zobrazitEmailForm()"><div class="share-option-icon" style="background:rgba(255,159,10,0.15);">✉️</div><div><div class="share-option-title">Odeslat emailem</div><div class="share-option-sub">Outlook, Gmail nebo jiná aplikace</div></div></button>
+            <button class="share-option" onclick="kopirovatShrnutiZModalu()"><div class="share-option-icon" style="background:rgba(255,214,10,0.15);">📋</div><div><div class="share-option-title">Kopírovat shrnutí</div><div class="share-option-sub">Text do schránky</div></div></button>
         </div>
-        <div class="modal-info">💡 Nejlepší způsob na iPhone: <strong>Sdílet soubor → AirDrop</strong> na Mac, nebo <strong>Uložit do souborů</strong> a pak přiložit do emailu.</div>
+        <div class="modal-info">💡 Nejlepší způsob na iPhone: <strong>Sdílet soubor → AirDrop</strong> na Mac, nebo <strong>Uložit do souborů</strong>.</div>
     </div>
 </div>
 
@@ -492,26 +342,10 @@
         <div class="modal-title">✉️ Odeslat přes</div>
         <div id="email-app-vyber">
             <div class="share-options">
-                <button class="share-option" onclick="otevritOutlook()">
-                    <div class="share-option-icon" style="background:rgba(0,114,198,0.15);">
-                        <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#0072C6"/><path d="M6 10l10 7 10-7" stroke="white" stroke-width="2" fill="none"/><rect x="6" y="10" width="20" height="14" rx="1" stroke="white" stroke-width="2" fill="none"/></svg>
-                    </div>
-                    <div><div class="share-option-title">Outlook</div><div class="share-option-sub">Otevře Microsoft Outlook aplikaci</div></div>
-                </button>
-                <button class="share-option" onclick="otevritGmail()">
-                    <div class="share-option-icon" style="background:rgba(234,67,53,0.15);">
-                        <svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#fff"/><path d="M6 10l10 7 10-7M6 10v14h20V10" stroke="#EA4335" stroke-width="2" fill="none"/><path d="M6 10l10 7 10-7" stroke="#4285F4" stroke-width="2" fill="none"/></svg>
-                    </div>
-                    <div><div class="share-option-title">Gmail</div><div class="share-option-sub">Otevře Gmail aplikaci</div></div>
-                </button>
-                <button class="share-option" onclick="otevritMailto()">
-                    <div class="share-option-icon" style="background:rgba(255,255,255,0.1);">📨</div>
-                    <div><div class="share-option-title">Výchozí email</div><div class="share-option-sub">Mail.app nebo jiná výchozí aplikace</div></div>
-                </button>
-                <button class="share-option" onclick="sdiletSouborZEmailu()">
-                    <div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div>
-                    <div><div class="share-option-title">Sdílet soubor (.html)</div><div class="share-option-sub">AirDrop, Uložit do souborů, Teams...</div></div>
-                </button>
+                <button class="share-option" onclick="otevritOutlook()"><div class="share-option-icon" style="background:rgba(0,114,198,0.15);"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#0072C6"/><path d="M6 10l10 7 10-7" stroke="white" stroke-width="2" fill="none"/><rect x="6" y="10" width="20" height="14" rx="1" stroke="white" stroke-width="2" fill="none"/></svg></div><div><div class="share-option-title">Outlook</div><div class="share-option-sub">Otevře Microsoft Outlook</div></div></button>
+                <button class="share-option" onclick="otevritGmail()"><div class="share-option-icon" style="background:rgba(234,67,53,0.15);"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#fff"/><path d="M6 10l10 7 10-7M6 10v14h20V10" stroke="#EA4335" stroke-width="2" fill="none"/><path d="M6 10l10 7 10-7" stroke="#4285F4" stroke-width="2" fill="none"/></svg></div><div><div class="share-option-title">Gmail</div><div class="share-option-sub">Otevře Gmail aplikaci</div></div></button>
+                <button class="share-option" onclick="otevritMailto()"><div class="share-option-icon" style="background:rgba(255,255,255,0.1);">📨</div><div><div class="share-option-title">Výchozí email</div><div class="share-option-sub">Mail.app nebo jiná aplikace</div></div></button>
+                <button class="share-option" onclick="sdiletSouborZEmailu()"><div class="share-option-icon" style="background:rgba(48,209,88,0.15);">📁</div><div><div class="share-option-title">Sdílet soubor (.html)</div><div class="share-option-sub">AirDrop, Uložit do souborů...</div></div></button>
             </div>
             <button class="modal-btn cancel" style="width:100%;margin-top:12px;" onclick="zavritEmailModal(null)">Zavřít</button>
         </div>
@@ -523,9 +357,7 @@
             <input class="modal-input" type="text" id="email-cc" placeholder="vedouci@lear.com" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
             <label class="modal-label">Předmět</label>
             <input class="modal-input" type="text" id="email-subject" placeholder="Quality Alert QABMW001">
-            <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-bottom:10px;">
-                ⚠️ Aplikace pouze <strong>připraví email</strong>. Soubor .html musíš přiložit ručně.
-            </div>
+            <div style="background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;padding:10px 14px;font-size:12px;color:#ffaa00;line-height:1.5;margin-bottom:10px;">⚠️ Aplikace pouze <strong>připraví email</strong>. Soubor .html musíš přiložit ručně.</div>
             <div class="modal-btn-row">
                 <button class="modal-btn cancel" onclick="zpetNaVyberAplikace()">← Zpět</button>
                 <button class="modal-btn send" id="btn-odeslat-email" onclick="odeslat()">Otevřít →</button>
@@ -538,10 +370,9 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.8.1</div>
+        <div class="version-badge">v5.9.0</div>
     </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <!-- FORMULÁŘ -->
@@ -622,21 +453,14 @@
                 <div class="doc-logo-box">
                     <div style="display:flex;flex-direction:column;align-items:flex-start;">
                         <div style="display:flex;align-items:center;gap:5px;">
-                            <div style="width:26px;height:26px;background:#cc0000;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <span style="color:white;font-size:16px;font-weight:900;font-style:italic;font-family:Arial,sans-serif;line-height:1;margin-left:-2px;">L</span>
-                            </div>
+                            <div style="width:26px;height:26px;background:#cc0000;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:white;font-size:16px;font-weight:900;font-style:italic;font-family:Arial,sans-serif;line-height:1;margin-left:-2px;">L</span></div>
                             <span style="font-size:18px;font-weight:900;color:#000;letter-spacing:2px;font-family:Arial,sans-serif;line-height:1;">LEAR</span>
                         </div>
                         <div style="font-size:6px;color:#333;letter-spacing:2px;font-family:Arial,sans-serif;margin-top:2px;margin-left:31px;">CORPORATION</div>
                     </div>
                 </div>
-                <div class="doc-title-center">
-                    <div class="doc-title-main" id="d-doc-title">QUALITY ALERT</div>
-                </div>
-                <div class="doc-num-box">
-                    <div class="doc-num-label">N°</div>
-                    <div class="doc-num-val" id="d-number">—</div>
-                </div>
+                <div class="doc-title-center"><div class="doc-title-main" id="d-doc-title">QUALITY ALERT</div></div>
+                <div class="doc-num-box"><div class="doc-num-label">N°</div><div class="doc-num-val" id="d-number">—</div></div>
             </div>
             <div class="doc-info-section">
                 <div class="doc-info-row doc-info-row-4">
@@ -666,38 +490,24 @@
                 </div>
                 <div class="doc-typqa-right">
                     <span class="doc-typqa-label">Proces / Process</span>
-                    <div class="doc-typqa-items">
-                        <div class="doc-typqa-item" id="dqa-eol">EOL</div>
-                    </div>
+                    <div class="doc-typqa-items"><div class="doc-typqa-item" id="dqa-eol">EOL</div></div>
                 </div>
             </div>
             <div class="doc-defect-section">
                 <span class="doc-defect-label" id="d-defect-label">⚠ Popis defektu / Defect description</span>
-                <div class="doc-defect-val">
-                    <span class="doc-defect-icon">⚠</span>
-                    <span class="doc-defect-text" id="d-defect">—</span>
-                </div>
+                <div class="doc-defect-val"><span class="doc-defect-icon">⚠</span><span class="doc-defect-text" id="d-defect">—</span></div>
             </div>
             <div class="doc-control-section">
                 <span class="doc-control-label" id="d-control-label">📋 Popis kontroly / Pracovní postup</span>
                 <div class="doc-control-val" id="d-control">—</div>
             </div>
-            <div class="doc-imgs-wrap">
-                <div class="doc-imgs" id="doc-imgs-grid"></div>
-            </div>
+            <div class="doc-imgs-wrap"><div class="doc-imgs" id="doc-imgs-grid"></div></div>
             <div class="doc-page-footer">MPM_20.22_F11</div>
         </div>
         <div class="doc-page2">
             <span class="doc-page2-title">Tento Quality Alert jsem četl, porozuměl jsem obsahu a potvrzuji podpisem. Pokud nerozumím, zeptám se svého nadřízeného.</span>
             <table class="sig-table">
-                <thead>
-                    <tr>
-                        <th style="width:15%;">Datum</th>
-                        <th style="width:35%;">Jméno / Name</th>
-                        <th style="width:15%;">Osobní č.</th>
-                        <th style="width:35%;">Podpis / Signature</th>
-                    </tr>
-                </thead>
+                <thead><tr><th style="width:15%;">Datum</th><th style="width:35%;">Jméno / Name</th><th style="width:15%;">Osobní č.</th><th style="width:35%;">Podpis / Signature</th></tr></thead>
                 <tbody id="sig-tbody-1"></tbody>
             </table>
             <div class="doc-footer">
@@ -714,29 +524,27 @@
     </div>
     <div class="pc-hint">
         <div class="pc-hint-title">💻 Jak vytisknout PDF na PC</div>
-        <div class="pc-hint-step"><div class="pc-step-num">1</div><div>Stáhni nebo sdílej dokument tlačítkem výše</div></div>
-        <div class="pc-hint-step"><div class="pc-step-num">2</div><div>Pošli soubor <strong>emailem jako přílohu</strong> na PC</div></div>
-        <div class="pc-hint-step"><div class="pc-step-num">3</div><div>Na PC otevři soubor v <strong>Chrome</strong> nebo <strong>Edge</strong></div></div>
-        <div class="pc-hint-step"><div class="pc-step-num">4</div><div>Stiskni <strong>Ctrl+P</strong> → Okraje: Žádné → <strong>Uložit jako PDF</strong></div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">1</div><div>Stáhni nebo sdílej dokument</div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">2</div><div>Na PC otevři v <strong>Chrome</strong> nebo <strong>Edge</strong></div></div>
+        <div class="pc-hint-step"><div class="pc-step-num">3</div><div>Stiskni <strong>Ctrl+P</strong> → Okraje: Žádné → <strong>Uložit jako PDF</strong></div></div>
     </div>
 </div>
 
 <!-- INFO -->
 <div class="page" id="page-install">
     <div class="card">
-        <div class="card-header">📱 Přidat na plochu – iPhone / iPad</div>
+        <div class="card-header">📱 Přidat na plochu</div>
         <div class="navod-section">
             <div style="padding:12px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
                 <div class="install-step"><div class="step-num" style="background:#0a84ff;">1</div><div>Otevři v <strong style="color:white;">Safari</strong></div></div>
                 <div class="install-step"><div class="step-num" style="background:#0a84ff;">2</div><div>Klikni na ikonu <strong style="color:white;">Sdílet</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#0a84ff;">3</div><div>Vyber <strong style="color:white;">"Přidat na plochu"</strong></div></div>
-                <div class="install-step"><div class="step-num" style="background:#0a84ff;">4</div><div>Klikni <strong style="color:white;">"Přidat"</strong> → Hotovo! 🎉</div></div>
+                <div class="install-step"><div class="step-num" style="background:#0a84ff;">3</div><div>Vyber <strong style="color:white;">"Přidat na plochu"</strong> → Hotovo! 🎉</div></div>
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.8.1</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.9.0</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
         <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 7. 2026</span></div>
@@ -750,30 +558,16 @@
         <div class="card-header">✏️ Editor fotek – návod</div>
         <div class="navod-section">
             <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="padding:10px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:6px;">Jak otevřít editor</div>
-                    <div class="navod-text">Po nahrání fotky klikni na modré tlačítko <strong style="color:white;">✏️</strong> vlevo nahoře na fotce.</div>
-                </div>
-                <div style="padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#cc0000;margin-bottom:6px;">✏️ Záložka Kreslit</div>
-                    <div class="navod-text">Pero, Šipka, Rámeček, Kruh, Text, Blur. <strong style="color:white;">Posun</strong> – táhni pro posunutí obrázku.</div>
-                </div>
-                <div style="padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:6px;">🔆 Záložka Úpravy</div>
-                    <div class="navod-text">Jas, Kontrast, Sytost, Teplota, Ostrost. Černobílé a Sépia filtry.</div>
-                </div>
-                <div style="padding:10px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;">
-                    <div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:6px;">✂️ Záložka Ořez</div>
-                    <div class="navod-text">Táhni za rohové body. Poměry 1:1, 4:3, 16:9, 3:4 nebo volný ořez.</div>
-                </div>
+                <div style="padding:10px;background:rgba(10,132,255,0.1);border:1px solid #0a84ff;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#0a84ff;margin-bottom:6px;">Jak otevřít editor</div><div class="navod-text">Po nahrání fotky klikni na modré tlačítko <strong style="color:white;">✏️</strong> vlevo nahoře na fotce.</div></div>
+                <div style="padding:10px;background:rgba(204,0,0,0.1);border:1px solid #cc0000;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#cc0000;margin-bottom:6px;">☝️ Nástroj Výběr</div><div class="navod-text">Klikni na šipku, rámeček nebo kruh a přetáhni ho na jiné místo. Vybraný objekt je označen modrým rámečkem.</div></div>
+                <div style="padding:10px;background:rgba(255,170,0,0.1);border:1px solid #ffaa00;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:6px;">🔆 Záložka Úpravy</div><div class="navod-text">Jas, Kontrast, Sytost, Teplota, Ostrost. Černobílé a Sépia filtry.</div></div>
+                <div style="padding:10px;background:rgba(48,209,88,0.1);border:1px solid #30d158;border-radius:10px;"><div style="font-size:13px;font-weight:700;color:#30d158;margin-bottom:6px;">✂️ Záložka Ořez</div><div class="navod-text">Táhni za rohové body. Poměry 1:1, 4:3, 16:9, 3:4 nebo volný ořez.</div></div>
             </div>
         </div>
     </div>
     <div class="card">
         <div class="card-header">💾 Automatické ukládání</div>
-        <div class="navod-section">
-            <div class="navod-text">Text se ukládá automaticky. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div>
-        </div>
+        <div class="navod-section"><div class="navod-text">Text se ukládá automaticky. Fotky se <strong style="color:white;">neukládají</strong> — nahraj je vždy čerstvě.</div></div>
     </div>
 </div>
 
@@ -801,1370 +595,723 @@
 /* ══════════════════════════════════════════════════════════
    HLAVNÍ APLIKACE
 ══════════════════════════════════════════════════════════ */
-let typ = 'qa';
-let pocet = 2;
-let fotky = [];
-let _timer = null;
-let _timerInd = null;
-let _emailApp = null;
-let _povolReload = false;
+let typ = 'qa', pocet = 2, fotky = [];
+let _timer = null, _timerInd = null, _emailApp = null, _povolReload = false;
 const KLIC = 'qa-form-v5';
 
 function indikator(stav) {
-    const el = document.getElementById('save-indicator');
-    const lb = document.getElementById('save-label');
-    el.className = 'save-indicator ' + stav;
-    lb.textContent = stav === 'saving' ? 'Ukládám…' : 'Uloženo';
-    if (stav !== 'saving') {
-        clearTimeout(_timerInd);
-        _timerInd = setTimeout(() => { el.className = 'save-indicator'; }, 2000);
-    }
+    const el=document.getElementById('save-indicator'), lb=document.getElementById('save-label');
+    el.className='save-indicator '+stav;
+    lb.textContent=stav==='saving'?'Ukládám…':'Uloženo';
+    if (stav!=='saving') { clearTimeout(_timerInd); _timerInd=setTimeout(()=>{el.className='save-indicator';},2000); }
 }
-
 function ulozit() {
-    const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-                 'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-                 'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
-    const d = { typ, pocet: parseInt(document.getElementById('photo-count').value) };
-    ids.forEach(id => { const e = document.getElementById(id); if (e) d[id] = e.value; });
-    ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-        const e = document.getElementById('qa-'+t); if (e) d['qa-'+t] = e.checked;
-    });
-    d.nazvy = fotky.map(f => f.name);
-    try { localStorage.setItem(KLIC, JSON.stringify(d)); indikator('saved'); }
-    catch(e) { console.warn(e); }
+    const ids=['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+    const d={typ,pocet:parseInt(document.getElementById('photo-count').value)};
+    ids.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
+    ['engineering','maintenance','logistics','production','quality','eol'].forEach(t=>{const e=document.getElementById('qa-'+t);if(e)d['qa-'+t]=e.checked;});
+    d.nazvy=fotky.map(f=>f.name);
+    try{localStorage.setItem(KLIC,JSON.stringify(d));indikator('saved');}catch(e){console.warn(e);}
 }
-
 function nacist() {
     try {
-        const raw = localStorage.getItem(KLIC);
-        if (!raw) return false;
-        const d = JSON.parse(raw);
-        if (d.typ) {
-            typ = d.typ;
-            document.getElementById('btn-qa').className = 'doc-type-btn' + (typ==='qa' ? ' active-qa' : '');
-            document.getElementById('btn-wi').className = 'doc-type-btn' + (typ==='wi' ? ' active-wi' : '');
-            document.getElementById('card-typqa').style.display = typ==='qa' ? 'block' : 'none';
-        }
-        if (d.pocet) document.getElementById('photo-count').value = d.pocet;
-        ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-         'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-         'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id => {
-            const e = document.getElementById(id);
-            if (e && d[id] !== undefined) e.value = d[id];
-        });
-        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-            const e = document.getElementById('qa-'+t);
-            if (e && d['qa-'+t] !== undefined) e.checked = d['qa-'+t];
-        });
+        const raw=localStorage.getItem(KLIC); if(!raw)return false;
+        const d=JSON.parse(raw);
+        if(d.typ){typ=d.typ;document.getElementById('btn-qa').className='doc-type-btn'+(typ==='qa'?' active-qa':'');document.getElementById('btn-wi').className='doc-type-btn'+(typ==='wi'?' active-wi':'');document.getElementById('card-typqa').style.display=typ==='qa'?'block':'none';}
+        if(d.pocet)document.getElementById('photo-count').value=d.pocet;
+        ['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'].forEach(id=>{const e=document.getElementById(id);if(e&&d[id]!==undefined)e.value=d[id];});
+        ['engineering','maintenance','logistics','production','quality','eol'].forEach(t=>{const e=document.getElementById('qa-'+t);if(e&&d['qa-'+t]!==undefined)e.checked=d['qa-'+t];});
         return true;
-    } catch(e) { return false; }
+    }catch(e){return false;}
 }
-
-function planovatUlozeni() {
-    clearTimeout(_timer);
-    indikator('saving');
-    _timer = setTimeout(() => { update(); ulozit(); }, 400);
+function planovatUlozeni(){clearTimeout(_timer);indikator('saving');_timer=setTimeout(()=>{update();ulozit();},400);}
+function inicializovat(){
+    document.getElementById('sig-tbody-1').innerHTML=podpisy();
+    const ok=nacist(); sestavitFotky(false);
+    const dnes=new Date().toISOString().split('T')[0];
+    if(!document.getElementById('f-datum').value)document.getElementById('f-datum').value=dnes;
+    if(!document.getElementById('f-pocatek').value)document.getElementById('f-pocatek').value=dnes;
+    if(typ==='wi'){document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>';document.getElementById('control-header').textContent='📋 Popis pracovního postupu';}
+    update(); indikator('saved'); if(ok)toast('📂 Formulář obnoven',2000);
 }
+document.addEventListener('DOMContentLoaded',inicializovat);
+window.addEventListener('pageshow',e=>{if(e.persisted){update();indikator('saved');}});
 
-function inicializovat() {
-    document.getElementById('sig-tbody-1').innerHTML = podpisy();
-    const ok = nacist();
-    sestavitFotky(false);
-    const dnes = new Date().toISOString().split('T')[0];
-    if (!document.getElementById('f-datum').value) document.getElementById('f-datum').value = dnes;
-    if (!document.getElementById('f-pocatek').value) document.getElementById('f-pocatek').value = dnes;
-    if (typ === 'wi') {
-        document.getElementById('defect-header').innerHTML = '📝 Název instrukce <span style="color:var(--red)">*</span>';
-        document.getElementById('control-header').textContent = '📋 Popis pracovního postupu';
-    }
-    update();
-    indikator('saved');
-    if (ok) toast('📂 Formulář obnoven', 2000);
+function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;').replace(/\n/g,'&#10;').replace(/\r/g,'&#13;');}
+function toast(msg,ms=2500){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),ms);}
+function fmtDatum(v){if(!v)return'—';const p=v.split('-').map(Number);if(p.length!==3||!p[0])return'—';return`${p[2]}. ${p[1]}. ${p[0]}`;}
+function progress(){
+    const ids=['f-number','f-customer','f-project','f-pracoviste','f-dil','f-vydal','f-pocatek','f-konec','f-datum','f-autor','f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
+    const v=ids.filter(id=>{const e=document.getElementById(id);return e&&e.value.trim();}).length;
+    const fb=fotky.length>0?Math.round((fotky.filter(f=>f.src).length/fotky.length)*10):0;
+    const p=Math.min(100,Math.round(v/ids.length*90)+fb);
+    document.getElementById('progress-fill').style.width=p+'%';
+    document.getElementById('progress-pct').textContent=p+' %';
 }
-
-document.addEventListener('DOMContentLoaded', inicializovat);
-window.addEventListener('pageshow', e => { if (e.persisted) { update(); indikator('saved'); } });
-
-function esc(t) {
-    return (t||'')
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;').replace(/'/g,'&#x27;')
-        .replace(/\n/g,'&#10;').replace(/\r/g,'&#13;');
+function vychoziNazev(i,t,n){if(t==='qa'){if(n===1)return'Foto';if(n===2)return i===0?'OK':'NOK';if(i===0)return'OK';if(i===n-1)return'NOK';return`Detail ${i}`;}if(n===1)return'Krok 1';return`Krok ${i+1}`;}
+function stylFotky(nm){const n=(nm||'').trim();if(/\bNOK\b/i.test(n))return{cls:'qa-cell-nok',h:'background:#cc0000;color:white;',b:'background:#fff0f0;'};if(/\bOK\b/i.test(n))return{cls:'qa-cell-ok',h:'background:#009900;color:white;',b:'background:#f0fff0;'};return{cls:'wi-cell',h:'background:#ffaa00;color:#000;',b:'background:#fffde7;'};}
+function gridLayout(n){if(n===1)return{sl:1,ra:1};if(n===2)return{sl:2,ra:1};if(n===3)return{sl:3,ra:1};if(n===4)return{sl:2,ra:2};if(n===5)return{sl:3,ra:2};return{sl:3,ra:2};}
+function sestavitGrid(){
+    const grid=document.getElementById('doc-imgs-grid');const n=fotky.length;const{sl,ra}=gridLayout(n);
+    grid.style.gridTemplateColumns=`repeat(${sl},1fr)`;grid.style.gridTemplateRows=`repeat(${ra},1fr)`;grid.style.height='100%';
+    grid.innerHTML=fotky.map(foto=>{const nm=foto.name||'Foto';const s=stylFotky(nm);const im=foto.src?`<img src="${foto.src}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`:`<div class="doc-img-placeholder-icon">📷</div>`;return`<div class="doc-img-cell ${s.cls}"><div class="doc-img-header" style="${s.h}">${esc(nm)}</div><div class="doc-img-body" style="${s.b}">${im}</div></div>`;}).join('');
 }
-
-function toast(msg, ms=2500) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), ms);
+function update(){
+    const wi=typ==='wi';
+    document.getElementById('d-doc-title').textContent=wi?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
+    document.getElementById('d-typqa-section').style.display=wi?'none':'grid';
+    document.getElementById('d-defect-label').textContent=wi?'📝 Název instrukce':'⚠ Popis defektu / Defect description';
+    document.getElementById('d-control-label').textContent=wi?'📋 Popis pracovního postupu':'📋 Popis kontroly / Pracovní postup';
+    const tc=document.querySelector('.doc-title-center');if(tc)tc.style.background=wi?'#ffaa00':'#cc0000';
+    [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']].forEach(([dId,fId])=>{const el=document.getElementById(dId);if(el)el.textContent=document.getElementById(fId).value||'—';});
+    document.getElementById('d-pocatek').textContent=fmtDatum(document.getElementById('f-pocatek').value);
+    document.getElementById('d-konec').textContent=fmtDatum(document.getElementById('f-konec').value);
+    document.getElementById('d-datum').textContent=fmtDatum(document.getElementById('f-datum').value);
+    ['engineering','maintenance','logistics','production','quality','eol'].forEach(t=>{const el=document.getElementById('dqa-'+t);if(el)el.className='doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':'');});
+    sestavitGrid(); progress();
 }
-
-function fmtDatum(v) {
-    if (!v) return '—';
-    const p = v.split('-').map(Number);
-    if (p.length !== 3 || !p[0]) return '—';
-    return `${p[2]}. ${p[1]}. ${p[0]}`;
-}
-
-function progress() {
-    const ids = ['f-number','f-customer','f-project','f-pracoviste','f-dil',
-                 'f-vydal','f-pocatek','f-konec','f-datum','f-autor',
-                 'f-duvod','f-defect','f-control','f-podpisqa','f-schvaleni'];
-    const vyplneno = ids.filter(id => { const e=document.getElementById(id); return e&&e.value.trim(); }).length;
-    const fotkyNahrane = fotky.filter(f=>f.src).length;
-    const fotkyBonus = fotky.length>0 ? Math.round((fotkyNahrane/fotky.length)*10) : 0;
-    const p = Math.min(100, Math.round(vyplneno/ids.length*90)+fotkyBonus);
-    document.getElementById('progress-fill').style.width = p+'%';
-    document.getElementById('progress-pct').textContent = p+' %';
-}
-
-function vychoziNazev(i, t, n) {
-    if (t==='qa') {
-        if (n===1) return 'Foto';
-        if (n===2) return i===0 ? 'OK' : 'NOK';
-        if (i===0) return 'OK';
-        if (i===n-1) return 'NOK';
-        return `Detail ${i}`;
-    }
-    if (n===1) return 'Krok 1';
-    return `Krok ${i+1}`;
-}
-
-function stylFotky(nm) {
-    const n=(nm||'').trim();
-    if (/\bNOK\b/i.test(n)) return {cls:'qa-cell-nok',h:'background:#cc0000;color:white;',b:'background:#fff0f0;'};
-    if (/\bOK\b/i.test(n))  return {cls:'qa-cell-ok', h:'background:#009900;color:white;',b:'background:#f0fff0;'};
-    return                         {cls:'wi-cell',     h:'background:#ffaa00;color:#000;', b:'background:#fffde7;'};
-}
-
-function gridLayout(n) {
-    if (n===1) return {sl:1,ra:1};
-    if (n===2) return {sl:2,ra:1};
-    if (n===3) return {sl:3,ra:1};
-    if (n===4) return {sl:2,ra:2};
-    if (n===5) return {sl:3,ra:2};
-    return {sl:3,ra:2};
-}
-
-function sestavitGrid() {
-    const grid = document.getElementById('doc-imgs-grid');
-    const n = fotky.length;
-    const {sl,ra} = gridLayout(n);
-    grid.style.gridTemplateColumns = `repeat(${sl},1fr)`;
-    grid.style.gridTemplateRows    = `repeat(${ra},1fr)`;
-    grid.style.height = '100%';
-    grid.innerHTML = fotky.map((foto) => {
-        const nm = foto.name||'Foto';
-        const s  = stylFotky(nm);
-        const im = foto.src
-            ? `<img src="${foto.src}" style="width:100%;height:100%;object-fit:contain;display:block;" alt="${esc(nm)}">`
-            : `<div class="doc-img-placeholder-icon">📷</div>`;
-        return `<div class="doc-img-cell ${s.cls}">
-                    <div class="doc-img-header" style="${s.h}">${esc(nm)}</div>
-                    <div class="doc-img-body" style="${s.b}">${im}</div>
-                </div>`;
-    }).join('');
-}
-
-function update() {
-    const wi = typ==='wi';
-    document.getElementById('d-doc-title').textContent = wi ? 'PRACOVNÍ INSTRUKCE' : 'QUALITY ALERT';
-    document.getElementById('d-typqa-section').style.display = wi ? 'none' : 'grid';
-    document.getElementById('d-defect-label').textContent = wi ? '📝 Název instrukce' : '⚠ Popis defektu / Defect description';
-    document.getElementById('d-control-label').textContent = wi ? '📋 Popis pracovního postupu' : '📋 Popis kontroly / Pracovní postup';
-    const tc = document.querySelector('.doc-title-center');
-    if (tc) tc.style.background = wi ? '#ffaa00' : '#cc0000';
-    [['d-number','f-number'],['d-customer','f-customer'],['d-project','f-project'],
-     ['d-pracoviste','f-pracoviste'],['d-dil','f-dil'],['d-vydal','f-vydal'],
-     ['d-autor','f-autor'],['d-duvod','f-duvod'],['d-defect','f-defect'],
-     ['d-control','f-control'],['d-podpisqa','f-podpisqa'],['d-schvaleni','f-schvaleni']
-    ].forEach(([dId,fId]) => {
-        const el=document.getElementById(dId);
-        if (el) el.textContent=document.getElementById(fId).value||'—';
-    });
-    document.getElementById('d-pocatek').textContent = fmtDatum(document.getElementById('f-pocatek').value);
-    document.getElementById('d-konec').textContent   = fmtDatum(document.getElementById('f-konec').value);
-    document.getElementById('d-datum').textContent   = fmtDatum(document.getElementById('f-datum').value);
-    ['engineering','maintenance','logistics','production','quality','eol'].forEach(t => {
-        const el=document.getElementById('dqa-'+t);
-        if (el) el.className='doc-typqa-item'+(document.getElementById('qa-'+t).checked?' active':'');
-    });
-    sestavitGrid();
-    progress();
-}
-
-function nastavTyp(t) {
+function nastavTyp(t){
     typ=t;
     document.getElementById('btn-qa').className='doc-type-btn'+(t==='qa'?' active-qa':'');
     document.getElementById('btn-wi').className='doc-type-btn'+(t==='wi'?' active-wi':'');
     document.getElementById('card-typqa').style.display=t==='qa'?'block':'none';
-    if (t==='wi') {
-        document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>';
-        document.getElementById('control-header').textContent='📋 Popis pracovního postupu';
-        document.getElementById('f-defect').placeholder='Název pracovní instrukce';
-        document.getElementById('f-control').placeholder='Popis pracovního postupu...';
-    } else {
-        document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>';
-        document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup';
-        document.getElementById('f-defect').placeholder='Kontrola zajištění KST';
-        document.getElementById('f-control').placeholder='Proveď manuální kontrolu...';
-    }
-    sestavitFotky(true);
-    ulozit();
+    if(t==='wi'){document.getElementById('defect-header').innerHTML='📝 Název instrukce <span style="color:var(--red)">*</span>';document.getElementById('control-header').textContent='📋 Popis pracovního postupu';document.getElementById('f-defect').placeholder='Název pracovní instrukce';document.getElementById('f-control').placeholder='Popis pracovního postupu...';}
+    else{document.getElementById('defect-header').innerHTML='⚠️ Popis defektu <span style="color:var(--red)">*</span>';document.getElementById('control-header').textContent='📝 Popis kontroly / pracovní postup';document.getElementById('f-defect').placeholder='Kontrola zajištění KST';document.getElementById('f-control').placeholder='Proveď manuální kontrolu...';}
+    sestavitFotky(true); ulozit();
 }
-
-function htmlFotky(i, nm, src, def) {
-    const editBtn = src ? `<button class="img-edit-btn" onclick="otevritEditor(${i})">✏️</button>` : '';
-    return `<div class="photo-name-row">
-        <span class="photo-name-label">Název:</span>
-        <input class="photo-name-input" type="text" id="pn-${i}" value="${esc(nm)}" placeholder="${esc(def)}" oninput="zmenNazev(${i})">
-    </div>
+function htmlFotky(i,nm,src,def){
+    const editBtn=src?`<button class="img-edit-btn" onclick="otevritEditor(${i})">✏️</button>`:'';
+    return`<div class="photo-name-row"><span class="photo-name-label">Název:</span><input class="photo-name-input" type="text" id="pn-${i}" value="${esc(nm)}" placeholder="${esc(def)}" oninput="zmenNazev(${i})"></div>
     <div class="img-upload ${src?'has-image':''}" id="pu-${i}">
         <input type="file" accept="image/*" onchange="nacistFotku(${i})">
-        ${src
-            ? `<img id="pp-${i}" alt="foto">${editBtn}<button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`
-            : `<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`
-        }
+        ${src?`<img id="pp-${i}" alt="foto">${editBtn}<button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`:`<div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`}
     </div>`;
 }
-
-function sestavitFotky(zachovat) {
-    const novyPocet = parseInt(document.getElementById('photo-count').value);
-    let ulozeneNazvy = [];
-    try {
-        const raw = localStorage.getItem(KLIC);
-        if (raw) { const d=JSON.parse(raw); ulozeneNazvy=d.nazvy||[]; }
-    } catch(_) {}
-    const stare = zachovat ? fotky.slice() : [];
-    pocet = novyPocet;
-    fotky = [];
-    const kont = document.getElementById('photos-container');
-    kont.innerHTML = '';
-    for (let i=0; i<pocet; i++) {
-        const ex  = stare[i]||{};
-        const def = vychoziNazev(i,typ,pocet);
-        const nm  = ex.name||ulozeneNazvy[i]||def;
-        const src = ex.src||null;
+function sestavitFotky(zachovat){
+    const novyPocet=parseInt(document.getElementById('photo-count').value);
+    let ulozeneNazvy=[];try{const raw=localStorage.getItem(KLIC);if(raw){const d=JSON.parse(raw);ulozeneNazvy=d.nazvy||[];}}catch(_){}
+    const stare=zachovat?fotky.slice():[];pocet=novyPocet;fotky=[];
+    const kont=document.getElementById('photos-container');kont.innerHTML='';
+    for(let i=0;i<pocet;i++){
+        const ex=stare[i]||{};const def=vychoziNazev(i,typ,pocet);const nm=ex.name||ulozeneNazvy[i]||def;const src=ex.src||null;
         fotky.push({name:nm,src:src});
-        const el = document.createElement('div');
-        el.className = 'photo-item';
-        el.innerHTML = htmlFotky(i,nm,src,def);
-        kont.appendChild(el);
-        if (src) { const img=document.getElementById(`pp-${i}`); if (img) img.src=src; }
+        const el=document.createElement('div');el.className='photo-item';el.innerHTML=htmlFotky(i,nm,src,def);kont.appendChild(el);
+        if(src){const img=document.getElementById(`pp-${i}`);if(img)img.src=src;}
     }
     update();
 }
-
-function zmenNazev(i) {
-    fotky[i].name = document.getElementById(`pn-${i}`).value;
-    planovatUlozeni();
-}
-
-function nacistFotku(i) {
-    const inp = document.querySelector(`#pu-${i} input[type=file]`);
-    const f   = inp&&inp.files[0];
-    if (!f) return;
-    const mb = (f.size/1024/1024).toFixed(1);
-    if (parseFloat(mb)>3) toast(`⚠️ Velká fotka (${mb} MB) – soubor bude velký`,4000);
-    const r = new FileReader();
-    r.onload = e => {
-        fotky[i].src = e.target.result;
-        const pu = document.getElementById(`pu-${i}`);
-        pu.classList.add('has-image');
-        pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})">
-            <img id="pp-${i}" alt="foto">
-            <button class="img-edit-btn" onclick="otevritEditor(${i})">✏️</button>
-            <button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
-        document.getElementById(`pp-${i}`).src = e.target.result;
-        update();
-        toast(`✅ Fotka nahrána (${mb} MB)`);
+function zmenNazev(i){fotky[i].name=document.getElementById(`pn-${i}`).value;planovatUlozeni();}
+function nacistFotku(i){
+    const inp=document.querySelector(`#pu-${i} input[type=file]`);const f=inp&&inp.files[0];if(!f)return;
+    const mb=(f.size/1024/1024).toFixed(1);if(parseFloat(mb)>3)toast(`⚠️ Velká fotka (${mb} MB)`,4000);
+    const r=new FileReader();
+    r.onload=e=>{
+        fotky[i].src=e.target.result;
+        const pu=document.getElementById(`pu-${i}`);pu.classList.add('has-image');
+        pu.innerHTML=`<input type="file" accept="image/*" onchange="nacistFotku(${i})"><img id="pp-${i}" alt="foto"><button class="img-edit-btn" onclick="otevritEditor(${i})">✏️</button><button class="img-remove" onclick="smazatFotku(event,${i})">✕</button>`;
+        document.getElementById(`pp-${i}`).src=e.target.result;update();toast(`✅ Fotka nahrána (${mb} MB)`);
     };
-    r.onerror = () => toast('❌ Chyba při načítání fotky',3000);
-    r.readAsDataURL(f);
+    r.onerror=()=>toast('❌ Chyba při načítání fotky',3000);r.readAsDataURL(f);
 }
-
-function smazatFotku(e,i) {
-    e.stopPropagation();
-    fotky[i].src = null;
-    const pu = document.getElementById(`pu-${i}`);
-    pu.classList.remove('has-image');
-    pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${i})">
-        <div class="img-upload-placeholder">
-            <div class="img-upload-icon">📷</div>
-            <div class="img-upload-text">Klikni pro nahrání fotky</div>
-        </div>
-        <img id="pp-${i}" style="display:none" alt="">`;
-    update();
-    toast('🗑️ Fotka odstraněna');
+function smazatFotku(e,i){
+    e.stopPropagation();fotky[i].src=null;
+    const pu=document.getElementById(`pu-${i}`);pu.classList.remove('has-image');
+    pu.innerHTML=`<input type="file" accept="image/*" onchange="nacistFotku(${i})"><div class="img-upload-placeholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Klikni pro nahrání fotky</div></div><img id="pp-${i}" style="display:none" alt="">`;
+    update();toast('🗑️ Fotka odstraněna');
 }
-
-function zobrazit(nazev,btn) {
+function zobrazit(nazev,btn){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('page-'+nazev).classList.add('active');
-    btn.classList.add('active');
-    window.scrollTo(0,0);
-    if (nazev==='preview') {
-        update();
-        const bez = fotky.filter(f=>!f.src).length;
-        if (bez>0) setTimeout(()=>toast(`ℹ️ ${bez} fotka/fotek není nahrána`,3000),400);
-    }
+    document.getElementById('page-'+nazev).classList.add('active');btn.classList.add('active');window.scrollTo(0,0);
+    if(nazev==='preview'){update();const bez=fotky.filter(f=>!f.src).length;if(bez>0)setTimeout(()=>toast(`ℹ️ ${bez} fotka/fotek není nahrána`,3000),400);}
 }
-
-function ziskatChyby() {
-    const pole = {
-        'f-number':'Číslo dokumentu',
-        'f-defect':typ==='wi'?'Název instrukce':'Popis defektu',
-        'f-vydal':'Vydal'
-    };
-    return Object.entries(pole)
-        .filter(([id])=>{ const e=document.getElementById(id); return !e||!e.value.trim(); })
-        .map(([,label])=>label);
+function ziskatChyby(){const pole={'f-number':'Číslo dokumentu','f-defect':typ==='wi'?'Název instrukce':'Popis defektu','f-vydal':'Vydal'};return Object.entries(pole).filter(([id])=>{const e=document.getElementById(id);return!e||!e.value.trim();}).map(([,label])=>label);}
+function oznacitChyby(){['f-number','f-defect','f-vydal'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('error',!e.value.trim());});}
+function prejitNaNahled(){
+    oznacitChyby();const chyby=ziskatChyby();if(chyby.length){toast(`⚠️ Chybí: ${chyby.join(', ')}`,3500);return;}
+    update();document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('page-preview').classList.add('active');document.getElementById('tab-preview').classList.add('active');window.scrollTo(0,0);
+    const bez=fotky.filter(f=>!f.src).length;if(bez>0)setTimeout(()=>toast(`ℹ️ ${bez} fotka/fotek není nahrána`,3000),600);else toast('✅ Dokument aktualizován!');
 }
-
-function oznacitChyby() {
-    ['f-number','f-defect','f-vydal'].forEach(id=>{
-        const e=document.getElementById(id);
-        if (e) e.classList.toggle('error',!e.value.trim());
-    });
-}
-
-function prejitNaNahled() {
-    oznacitChyby();
-    const chyby = ziskatChyby();
-    if (chyby.length) { toast(`⚠️ Chybí: ${chyby.join(', ')}`,3500); return; }
-    update();
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('page-preview').classList.add('active');
-    document.getElementById('tab-preview').classList.add('active');
-    window.scrollTo(0,0);
-    const bez = fotky.filter(f=>!f.src).length;
-    if (bez>0) setTimeout(()=>toast(`ℹ️ ${bez} fotka/fotek není nahrána`,3000),600);
-    else toast('✅ Dokument aktualizován!');
-}
-
-function podpisy() {
-    return Array.from({length:30},()=>
-        `<tr>
-            <td style="border:1px solid #000;height:22px;"></td>
-            <td style="border:1px solid #000;"></td>
-            <td style="border:1px solid #000;"></td>
-            <td style="border:1px solid #000;"></td>
-        </tr>`
-    ).join('');
-}
-
-function vymazat() {
-    if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
-    _povolReload = true;
-    try { localStorage.removeItem(KLIC); } catch(_) {}
-    location.reload();
-}
-
-window.addEventListener('beforeunload',(e)=>{
-    if (_povolReload) return;
-    const cislo = document.getElementById('f-number')?.value;
-    if (cislo&&cislo.trim()) { e.preventDefault(); e.returnValue=''; }
-});
+function podpisy(){return Array.from({length:30},()=>`<tr><td style="border:1px solid #000;height:22px;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`).join('');}
+function vymazat(){if(!confirm('Opravdu chceš vymazat celý formulář?'))return;_povolReload=true;try{localStorage.removeItem(KLIC);}catch(_){}location.reload();}
+window.addEventListener('beforeunload',e=>{if(_povolReload)return;const c=document.getElementById('f-number')?.value;if(c&&c.trim()){e.preventDefault();e.returnValue='';}});
 
 /* ══════════════════════════════════════════════════════════
-   EDITOR FOTEK
+   EDITOR – OBJEKTOVÝ SYSTÉM
+   Každý objekt je uložen v poli ED.objects[]
+   Pero a blur jsou "raster" objekty (vypálené do baseImageData)
+   Šipka, rámeček, kruh, text jsou "vector" objekty (lze přesouvat)
 ══════════════════════════════════════════════════════════ */
 const ED = {
     idx: -1,
-    canvas: null,
-    ctx: null,
+    canvas: null, ctx: null,
     originalImage: null,
-    baseImageData: null,
-    history: [],
-    historyIdx: -1,
+    baseImageData: null,   // obrázek + filtry + raster objekty
+    objects: [],           // vector objekty
+    selectedIdx: -1,       // index vybraného objektu
     tool: 'pen',
-    color: '#ff3b30',
-    size: 4,
+    color: '#ff3b30', size: 4,
     drawing: false,
     startX: 0, startY: 0,
-    // posun
-    isPanning: false,
-    panX: 0, panY: 0,
-    panStartX: 0, panStartY: 0,
-    panOriginX: 0, panOriginY: 0,
+    // přesun objektu
+    draggingObj: false,
+    dragOffX: 0, dragOffY: 0,
     // ořez
     cropMode: false,
     cropX: 0, cropY: 0, cropW: 0, cropH: 0,
-    cropHandle: null,
-    cropRatioW: 0, cropRatioH: 0,
+    cropHandle: null, cropRatioW: 0, cropRatioH: 0,
     // filtry
     brightness: 0, contrast: 0, saturation: 0, warmth: 0, sharpen: 0,
     // text
     textBg: true,
-    // pinch
-    lastTouchDist: 0,
-    pinching: false,
+    // undo/redo snapshots (zahrnují objects + baseImageData)
+    history: [], historyIdx: -1,
 };
 
+/* ── Otevřít editor ── */
 function otevritEditor(i) {
     if (!fotky[i]||!fotky[i].src) return;
-    ED.idx = i;
-    ED.canvas = document.getElementById('editor-canvas');
-    ED.ctx    = ED.canvas.getContext('2d');
-    ED.history = [];
-    ED.historyIdx = -1;
-    ED.tool = 'pen';
-    ED.color = '#ff3b30';
-    ED.size = 4;
-    ED.isPanning = false;
-    ED.panX = 0; ED.panY = 0;
+    ED.idx=i; ED.canvas=document.getElementById('editor-canvas'); ED.ctx=ED.canvas.getContext('2d');
+    ED.objects=[]; ED.selectedIdx=-1; ED.history=[]; ED.historyIdx=-1;
+    ED.tool='pen'; ED.color='#ff3b30'; ED.size=4;
     ED.brightness=0; ED.contrast=0; ED.saturation=0; ED.warmth=0; ED.sharpen=0;
-
-    // Reset transform
-    ED.canvas.style.transform = '';
-    ED.canvas.style.cursor = 'crosshair';
-
     resetFiltryUI();
-
-    const img = new Image();
-    img.onload = () => {
-        ED.originalImage = img;
+    const img=new Image();
+    img.onload=()=>{
+        ED.originalImage=img;
         nastavitCanvasRozmery(img);
         nakresliObrazek();
         ulozitHistorii();
         nastavNastroj('pen');
         editorTab('draw');
     };
-    img.src = fotky[i].src;
-
+    img.src=fotky[i].src;
     document.getElementById('editor-overlay').classList.add('show');
     pripojitEditorEventy();
 }
 
 function nastavitCanvasRozmery(img) {
-    const wrap = document.getElementById('editor-canvas-wrap');
-    const maxW = wrap.clientWidth  || window.innerWidth;
-    const maxH = wrap.clientHeight || Math.round(window.innerHeight * 0.55);
-    const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
-    ED.canvas.width  = Math.round(img.width  * ratio);
-    ED.canvas.height = Math.round(img.height * ratio);
-    ED.canvas.style.width  = '';
-    ED.canvas.style.height = '';
+    const wrap=document.getElementById('editor-canvas-wrap');
+    const maxW=wrap.clientWidth||window.innerWidth;
+    const maxH=wrap.clientHeight||Math.round(window.innerHeight*0.55);
+    const ratio=Math.min(maxW/img.width,maxH/img.height,1);
+    ED.canvas.width=Math.round(img.width*ratio);
+    ED.canvas.height=Math.round(img.height*ratio);
 }
 
 function nakresliObrazek() {
-    const ctx = ED.ctx;
-    const c   = ED.canvas;
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.drawImage(ED.originalImage, 0, 0, c.width, c.height);
-    aplikovatPixelFiltry();
-    ED.baseImageData = ctx.getImageData(0, 0, c.width, c.height);
-}
-
-function aplikovatPixelFiltry() {
-    const ctx = ED.ctx;
-    const c   = ED.canvas;
-    if (ED.brightness===0 && ED.contrast===0 && ED.saturation===0 && ED.warmth===0 && ED.sharpen===0) return;
-    const id = ctx.getImageData(0, 0, c.width, c.height);
-    const d  = id.data;
-    const br = ED.brightness / 100;
-    const co = (ED.contrast + 100) / 100;
-    const sa = (ED.saturation + 100) / 100;
-    const wa = ED.warmth / 100;
-    for (let i=0; i<d.length; i+=4) {
-        let r=d[i], g=d[i+1], b=d[i+2];
-        r+=br*255; g+=br*255; b+=br*255;
-        r=(r-128)*co+128; g=(g-128)*co+128; b=(b-128)*co+128;
-        r+=wa*30; b-=wa*30;
-        const gray=0.299*r+0.587*g+0.114*b;
-        r=gray+(r-gray)*sa; g=gray+(g-gray)*sa; b=gray+(b-gray)*sa;
-        d[i]=Math.max(0,Math.min(255,r));
-        d[i+1]=Math.max(0,Math.min(255,g));
-        d[i+2]=Math.max(0,Math.min(255,b));
-    }
-    if (ED.sharpen>0) aplikovatOstrost(d, c.width, c.height, ED.sharpen);
-    ctx.putImageData(id, 0, 0);
-}
-
-function aplikovatOstrost(data, w, h, amount) {
-    const copy = new Uint8ClampedArray(data);
-    const k = amount * 0.3;
-    for (let y=1; y<h-1; y++) {
-        for (let x=1; x<w-1; x++) {
-            const i=(y*w+x)*4;
-            for (let c=0; c<3; c++) {
-                const val = 5*copy[i+c]
-                    - copy[((y-1)*w+x)*4+c]
-                    - copy[((y+1)*w+x)*4+c]
-                    - copy[(y*w+x-1)*4+c]
-                    - copy[(y*w+x+1)*4+c];
-                data[i+c] = Math.max(0, Math.min(255, copy[i+c]*(1-k)+val*k));
-            }
-        }
-    }
-}
-
-function aplikovatFiltry() {
-    ['brightness','contrast','saturation','warmth','sharpen'].forEach(k => {
-        const el = document.getElementById('adj-'+k);
-        ED[k] = parseInt(el.value);
-        document.getElementById('adj-'+k+'-val').textContent = el.value;
-    });
-    const ctx = ED.ctx; const c = ED.canvas;
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.drawImage(ED.originalImage, 0, 0, c.width, c.height);
-    aplikovatPixelFiltry();
-    ED.baseImageData = ctx.getImageData(0, 0, c.width, c.height);
-    // Překresli anotace
-    if (ED.historyIdx >= 0) ctx.putImageData(ED.history[ED.historyIdx], 0, 0);
-}
-
-function resetFiltry() {
-    ED.brightness=0; ED.contrast=0; ED.saturation=0; ED.warmth=0; ED.sharpen=0;
-    resetFiltryUI();
-    nakresliObrazek();
-    ulozitHistorii();
-}
-
-function resetFiltryUI() {
-    ['brightness','contrast','saturation','warmth','sharpen'].forEach(k => {
-        const el = document.getElementById('adj-'+k);
-        if (el) { el.value=0; document.getElementById('adj-'+k+'-val').textContent='0'; }
-    });
-}
-
-function aplikovatCernobile() {
-    document.getElementById('adj-saturation').value = -100;
-    ED.saturation = -100;
-    document.getElementById('adj-saturation-val').textContent = '-100';
-    aplikovatFiltry();
-    ulozitHistorii();
-}
-
-function aplikovatSepia() {
-    const ctx=ED.ctx; const c=ED.canvas;
-    ctx.drawImage(ED.originalImage, 0, 0, c.width, c.height);
-    const id=ctx.getImageData(0,0,c.width,c.height);
-    const d=id.data;
-    for (let i=0; i<d.length; i+=4) {
-        const r=d[i],g=d[i+1],b=d[i+2];
-        d[i]  =Math.min(255,r*0.393+g*0.769+b*0.189);
-        d[i+1]=Math.min(255,r*0.349+g*0.686+b*0.168);
-        d[i+2]=Math.min(255,r*0.272+g*0.534+b*0.131);
-    }
-    ctx.putImageData(id,0,0);
-    ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);
-    ulozitHistorii();
-}
-
-function editorRotate(deg) {
-    const c=ED.canvas; const ctx=ED.ctx;
-    const tmp=document.createElement('canvas');
-    tmp.width=c.width; tmp.height=c.height;
-    tmp.getContext('2d').drawImage(c,0,0);
-    const rad=deg*Math.PI/180;
-    const newW=Math.abs(Math.round(c.width*Math.cos(rad)+c.height*Math.sin(rad)));
-    const newH=Math.abs(Math.round(c.width*Math.sin(rad)+c.height*Math.cos(rad)));
-    c.width=newW; c.height=newH;
-    ctx.translate(newW/2,newH/2);
-    ctx.rotate(rad);
-    ctx.drawImage(tmp,-tmp.width/2,-tmp.height/2);
-    ctx.setTransform(1,0,0,1,0,0);
-    ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);
-    ulozitHistorii();
-}
-
-function editorFlip(dir) {
-    const c=ED.canvas; const ctx=ED.ctx;
-    const tmp=document.createElement('canvas');
-    tmp.width=c.width; tmp.height=c.height;
-    tmp.getContext('2d').drawImage(c,0,0);
+    const ctx=ED.ctx,c=ED.canvas;
     ctx.clearRect(0,0,c.width,c.height);
-    ctx.save();
-    if (dir==='h') { ctx.translate(c.width,0); ctx.scale(-1,1); }
-    else           { ctx.translate(0,c.height); ctx.scale(1,-1); }
-    ctx.drawImage(tmp,0,0);
-    ctx.restore();
+    ctx.drawImage(ED.originalImage,0,0,c.width,c.height);
+    aplikovatPixelFiltry();
     ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);
-    ulozitHistorii();
 }
 
+function prekreslitVse() {
+    const ctx=ED.ctx,c=ED.canvas;
+    // 1. base (obrázek + filtry + raster)
+    ctx.putImageData(ED.baseImageData,0,0);
+    // 2. vector objekty
+    ED.objects.forEach((obj,idx)=>{
+        kresliObjekt(ctx,obj);
+        // výběrový rámeček
+        if (idx===ED.selectedIdx) {
+            const bb=getBoundingBox(obj);
+            ctx.save();
+            ctx.strokeStyle='#0a84ff';
+            ctx.lineWidth=2;
+            ctx.setLineDash([5,3]);
+            ctx.strokeRect(bb.x-6,bb.y-6,bb.w+12,bb.h+12);
+            ctx.setLineDash([]);
+            ctx.restore();
+        }
+    });
+}
+
+/* ── Kreslení objektu ── */
+function kresliObjekt(ctx, obj) {
+    ctx.save();
+    ctx.strokeStyle=obj.color;
+    ctx.fillStyle=obj.color;
+    ctx.lineWidth=obj.size;
+    ctx.lineCap='square';
+    ctx.lineJoin='miter';
+    if (obj.type==='arrow') {
+        kresliSipkuXY(ctx,obj.x1+obj.dx,obj.y1+obj.dy,obj.x2+obj.dx,obj.y2+obj.dy,obj.size,obj.color);
+    } else if (obj.type==='rect') {
+        ctx.strokeRect(obj.x1+obj.dx,obj.y1+obj.dy,obj.w,obj.h);
+    } else if (obj.type==='circle') {
+        ctx.beginPath();
+        ctx.ellipse(obj.cx+obj.dx,obj.cy+obj.dy,obj.rx,obj.ry,0,0,Math.PI*2);
+        ctx.stroke();
+    } else if (obj.type==='text') {
+        const fontSize=Math.max(16,obj.size*4);
+        ctx.font=`bold ${fontSize}px Arial`;
+        if (obj.bg) {
+            const m=ctx.measureText(obj.text);
+            ctx.fillStyle='rgba(0,0,0,0.6)';
+            ctx.fillRect(obj.x+obj.dx-5,obj.y+obj.dy-fontSize,m.width+10,fontSize+8);
+        }
+        ctx.fillStyle=obj.color;
+        ctx.fillText(obj.text,obj.x+obj.dx,obj.y+obj.dy);
+    }
+    ctx.restore();
+}
+
+function kresliSipkuXY(ctx,x1,y1,x2,y2,size,color) {
+    const angle=Math.atan2(y2-y1,x2-x1);
+    const headLen=Math.max(20,size*5);
+    const headAngle=Math.PI/6;
+    ctx.save();
+    ctx.strokeStyle=color; ctx.fillStyle=color;
+    ctx.lineWidth=size; ctx.lineCap='square'; ctx.lineJoin='miter';
+    const bx=x2-headLen*0.7*Math.cos(angle);
+    const by=y2-headLen*0.7*Math.sin(angle);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(bx,by); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-headLen*Math.cos(angle-headAngle),y2-headLen*Math.sin(angle-headAngle));
+    ctx.lineTo(x2-headLen*Math.cos(angle+headAngle),y2-headLen*Math.sin(angle+headAngle));
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+}
+
+/* ── Bounding box pro výběr ── */
+function getBoundingBox(obj) {
+    if (obj.type==='arrow') {
+        const x1=obj.x1+obj.dx,y1=obj.y1+obj.dy,x2=obj.x2+obj.dx,y2=obj.y2+obj.dy;
+        return{x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1)||10,h:Math.abs(y2-y1)||10};
+    } else if (obj.type==='rect') {
+        return{x:obj.x1+obj.dx,y:obj.y1+obj.dy,w:obj.w,h:obj.h};
+    } else if (obj.type==='circle') {
+        return{x:obj.cx+obj.dx-obj.rx,y:obj.cy+obj.dy-obj.ry,w:obj.rx*2,h:obj.ry*2};
+    } else if (obj.type==='text') {
+        const fontSize=Math.max(16,obj.size*4);
+        ED.ctx.font=`bold ${fontSize}px Arial`;
+        const m=ED.ctx.measureText(obj.text);
+        return{x:obj.x+obj.dx-5,y:obj.y+obj.dy-fontSize,w:m.width+10,h:fontSize+8};
+    }
+    return{x:0,y:0,w:10,h:10};
+}
+
+function hitTest(obj,px,py) {
+    const bb=getBoundingBox(obj);
+    const pad=10;
+    return px>=bb.x-pad&&px<=bb.x+bb.w+pad&&py>=bb.y-pad&&py<=bb.y+bb.h+pad;
+}
+
+/* ── Undo/Redo ── */
 function ulozitHistorii() {
-    const snap = ED.ctx.getImageData(0,0,ED.canvas.width,ED.canvas.height);
-    ED.history = ED.history.slice(0, ED.historyIdx+1);
+    const snap={
+        baseImageData: ED.ctx.getImageData(0,0,ED.canvas.width,ED.canvas.height),
+        objects: JSON.parse(JSON.stringify(ED.objects)),
+    };
+    ED.history=ED.history.slice(0,ED.historyIdx+1);
     ED.history.push(snap);
-    if (ED.history.length>30) ED.history.shift();
-    ED.historyIdx = ED.history.length-1;
+    if(ED.history.length>30)ED.history.shift();
+    ED.historyIdx=ED.history.length-1;
 }
-
-function editorUndo() {
-    if (ED.historyIdx<=0) { toast('Není co vrátit'); return; }
+function editorUndo(){
+    if(ED.historyIdx<=0){toast('Není co vrátit');return;}
     ED.historyIdx--;
-    ED.ctx.putImageData(ED.history[ED.historyIdx],0,0);
+    const snap=ED.history[ED.historyIdx];
+    ED.baseImageData=snap.baseImageData;
+    ED.objects=JSON.parse(JSON.stringify(snap.objects));
+    ED.selectedIdx=-1;
+    prekreslitVse(); aktualizovatSelInfo();
 }
-
-function editorRedo() {
-    if (ED.historyIdx>=ED.history.length-1) { toast('Není co opakovat'); return; }
+function editorRedo(){
+    if(ED.historyIdx>=ED.history.length-1){toast('Není co opakovat');return;}
     ED.historyIdx++;
-    ED.ctx.putImageData(ED.history[ED.historyIdx],0,0);
+    const snap=ED.history[ED.historyIdx];
+    ED.baseImageData=snap.baseImageData;
+    ED.objects=JSON.parse(JSON.stringify(snap.objects));
+    ED.selectedIdx=-1;
+    prekreslitVse(); aktualizovatSelInfo();
 }
-
-function editorClear() {
-    if (!confirm('Vymazat všechny anotace?')) return;
-    ED.ctx.putImageData(ED.baseImageData,0,0);
-    ulozitHistorii();
+function editorClearAll(){
+    if(!confirm('Vymazat všechny anotace?'))return;
+    ED.objects=[]; ED.selectedIdx=-1;
+    nakresliObrazek(); ulozitHistorii(); aktualizovatSelInfo();
+}
+function smazatVybrany(){
+    if(ED.selectedIdx<0){toast('Nic není vybráno');return;}
+    ED.objects.splice(ED.selectedIdx,1);
+    ED.selectedIdx=-1;
+    prekreslitVse(); ulozitHistorii(); aktualizovatSelInfo();
+    toast('🗑️ Objekt smazán');
+}
+function aktualizovatSelInfo(){
+    const el=document.getElementById('sel-info');
+    if(ED.selectedIdx>=0){
+        const obj=ED.objects[ED.selectedIdx];
+        const nazvy={arrow:'Šipka',rect:'Rámeček',circle:'Kruh',text:'Text'};
+        el.textContent=`☝️ Vybrán: ${nazvy[obj.type]||obj.type} – táhni pro přesun`;
+    } else {
+        el.textContent='';
+    }
 }
 
 /* ── Nástroje ── */
-function nastavNastroj(t) {
-    ED.tool = t;
+function nastavNastroj(t){
+    ED.tool=t;
     document.querySelectorAll('[id^="etool-"]').forEach(b=>b.classList.remove('active'));
-    const btn = document.getElementById('etool-'+t);
-    if (btn) btn.classList.add('active');
-    if (t==='move') {
-        ED.canvas.style.cursor = 'grab';
-    } else if (t==='text') {
-        ED.canvas.style.cursor = 'text';
-    } else {
-        ED.canvas.style.cursor = 'crosshair';
-    }
-    document.getElementById('text-input-row').style.display = t==='text' ? 'flex' : 'none';
-    ED.cropMode = false;
+    const btn=document.getElementById('etool-'+t);if(btn)btn.classList.add('active');
+    ED.canvas.style.cursor=t==='select'?'default':'crosshair';
+    document.getElementById('text-input-row').style.display=t==='text'?'flex':'none';
+    ED.cropMode=false; ED.selectedIdx=-1; prekreslitVse(); aktualizovatSelInfo();
 }
-
-function nastavBarvu(c,id) {
-    ED.color = c;
-    document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function nastavVelikost(v) {
-    ED.size = parseInt(v);
-    document.getElementById('e-size-val').textContent = v;
-}
-
-function toggleTextBg() {
-    ED.textBg = !ED.textBg;
-    document.getElementById('ec-textbg').style.opacity = ED.textBg ? '1' : '0.3';
-}
+function nastavBarvu(c,id){ED.color=c;document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function nastavVelikost(v){ED.size=parseInt(v);document.getElementById('e-size-val').textContent=v;}
+function toggleTextBg(){ED.textBg=!ED.textBg;document.getElementById('ec-textbg').style.opacity=ED.textBg?'1':'0.3';}
 
 /* ── Souřadnice ── */
-function getPos(e) {
-    const rect = ED.canvas.getBoundingClientRect();
-    const scaleX = ED.canvas.width  / rect.width;
-    const scaleY = ED.canvas.height / rect.height;
-    const src = e.touches ? e.touches[0] : e;
-    return {
-        x: (src.clientX - rect.left) * scaleX,
-        y: (src.clientY - rect.top)  * scaleY
-    };
+function getPos(e){
+    const rect=ED.canvas.getBoundingClientRect();
+    const scaleX=ED.canvas.width/rect.width,scaleY=ED.canvas.height/rect.height;
+    const src=e.touches?e.touches[0]:e;
+    return{x:(src.clientX-rect.left)*scaleX,y:(src.clientY-rect.top)*scaleY};
 }
 
 /* ── Hlavní handlery ── */
-function zacitKreslit(e) {
+function zacitKreslit(e){
     e.preventDefault();
-    if (ED.tool === 'move') { zacitPosun(e); return; }
-    if (ED.cropMode)        { zacitOrez(e); return; }
-    if (e.touches && e.touches.length === 2) { zacitPinch(e); return; }
+    if(ED.cropMode){zacitOrez(e);return;}
 
-    const p = getPos(e);
-    ED.drawing = true;
-    ED.startX = p.x; ED.startY = p.y;
+    const p=getPos(e);
 
-    if (ED.tool === 'text') {
-        kresliText(p.x, p.y);
-        ED.drawing = false;
+    // SELECT nástroj
+    if(ED.tool==='select'){
+        // Hledej objekt od posledního (navrchu)
+        let found=-1;
+        for(let i=ED.objects.length-1;i>=0;i--){
+            if(hitTest(ED.objects[i],p.x,p.y)){found=i;break;}
+        }
+        ED.selectedIdx=found;
+        if(found>=0){
+            const obj=ED.objects[found];
+            ED.draggingObj=true;
+            // offset = klik - pozice objektu
+            const bb=getBoundingBox(obj);
+            ED.dragOffX=p.x-(bb.x+bb.w/2);
+            ED.dragOffY=p.y-(bb.y+bb.h/2);
+            ED.canvas.style.cursor='grabbing';
+        }
+        prekreslitVse(); aktualizovatSelInfo();
         return;
     }
-    if (ED.tool === 'pen' || ED.tool === 'blur') {
-        ED.ctx.beginPath();
-        ED.ctx.moveTo(p.x, p.y);
+
+    ED.drawing=true; ED.startX=p.x; ED.startY=p.y;
+
+    if(ED.tool==='text'){
+        ED.objects.push({type:'text',x:p.x,y:p.y,dx:0,dy:0,text:document.getElementById('e-text-input').value||'TEXT',color:ED.color,size:ED.size,bg:ED.textBg});
+        ED.drawing=false; prekreslitVse(); ulozitHistorii(); return;
+    }
+    if(ED.tool==='pen'||ED.tool==='blur'){
+        ED.ctx.beginPath(); ED.ctx.moveTo(p.x,p.y);
     }
 }
 
-function kreslit(e) {
+function kreslit(e){
     e.preventDefault();
-    if (e.touches && e.touches.length === 2) { aktualizovatPinch(e); return; }
+    if(ED.cropMode){if(ED.drawing)aktualizovatOrez(e);return;}
 
-    if (ED.tool === 'move') {
-        if (ED.isPanning) aktualizovatPosun(e);
-        return;
+    const p=getPos(e);
+
+    // Přesun vybraného objektu
+    if(ED.tool==='select'&&ED.draggingObj&&ED.selectedIdx>=0){
+        const obj=ED.objects[ED.selectedIdx];
+        const bb=getBoundingBox(obj);
+        const cx=bb.x+bb.w/2-obj.dx;
+        const cy=bb.y+bb.h/2-obj.dy;
+        obj.dx=p.x-ED.dragOffX-cx;
+        obj.dy=p.y-ED.dragOffY-cy;
+        prekreslitVse(); return;
     }
-    if (ED.cropMode) {
-        if (ED.drawing) aktualizovatOrez(e);
-        return;
-    }
-    if (!ED.drawing) return;
 
-    const p   = getPos(e);
-    const ctx = ED.ctx;
+    if(!ED.drawing)return;
+    const ctx=ED.ctx;
 
-    if (ED.tool === 'pen') {
-        ctx.strokeStyle = ED.color;
-        ctx.lineWidth   = ED.size;
-        ctx.lineCap     = 'round';
-        ctx.lineJoin    = 'round';
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-    } else if (ED.tool === 'blur') {
-        const r = ED.size * 3;
-        const ix = Math.max(0, Math.round(p.x - r));
-        const iy = Math.max(0, Math.round(p.y - r));
-        const iw = Math.min(ED.canvas.width  - ix, r*2);
-        const ih = Math.min(ED.canvas.height - iy, r*2);
-        if (iw>0 && ih>0) {
-            const id = ctx.getImageData(ix, iy, iw, ih);
-            blurImageData(id, 3);
-            ctx.putImageData(id, ix, iy);
-        }
+    if(ED.tool==='pen'){
+        ctx.strokeStyle=ED.color; ctx.lineWidth=ED.size; ctx.lineCap='round'; ctx.lineJoin='round';
+        ctx.lineTo(p.x,p.y); ctx.stroke();
+    } else if(ED.tool==='blur'){
+        const r=ED.size*3;
+        const ix=Math.max(0,Math.round(p.x-r)),iy=Math.max(0,Math.round(p.y-r));
+        const iw=Math.min(ED.canvas.width-ix,r*2),ih=Math.min(ED.canvas.height-iy,r*2);
+        if(iw>0&&ih>0){const id=ctx.getImageData(ix,iy,iw,ih);blurImageData(id,3);ctx.putImageData(id,ix,iy);}
     } else {
-        // Tvar – překresli snapshot + nakresli preview
-        ctx.putImageData(ED.history[ED.historyIdx], 0, 0);
-        kresliTvar(ctx, ED.startX, ED.startY, p.x, p.y);
-    }
-}
-
-function ukonciKreslit(e) {
-    if (ED.tool === 'move') { ukonciPosun(); return; }
-    if (ED.cropMode)        { ukonciOrez(); return; }
-    if (!ED.drawing) return;
-    ED.drawing = false;
-
-    if (ED.tool !== 'pen' && ED.tool !== 'blur' && ED.tool !== 'text') {
-        const p = e.changedTouches ? {
-            x: (e.changedTouches[0].clientX - ED.canvas.getBoundingClientRect().left) * (ED.canvas.width / ED.canvas.getBoundingClientRect().width),
-            y: (e.changedTouches[0].clientY - ED.canvas.getBoundingClientRect().top)  * (ED.canvas.height / ED.canvas.getBoundingClientRect().height)
-        } : getPos(e);
-        ED.ctx.putImageData(ED.history[ED.historyIdx], 0, 0);
-        kresliTvar(ED.ctx, ED.startX, ED.startY, p.x, p.y);
-    }
-    ulozitHistorii();
-}
-
-function blurImageData(id, r) {
-    const d=id.data; const w=id.width; const h=id.height;
-    const copy=new Uint8ClampedArray(d);
-    for (let y=r; y<h-r; y++) {
-        for (let x=r; x<w-r; x++) {
-            let sr=0,sg=0,sb=0,cnt=0;
-            for (let dy=-r; dy<=r; dy++) {
-                for (let dx=-r; dx<=r; dx++) {
-                    const i=((y+dy)*w+(x+dx))*4;
-                    sr+=copy[i]; sg+=copy[i+1]; sb+=copy[i+2]; cnt++;
-                }
-            }
-            const i=(y*w+x)*4;
-            d[i]=sr/cnt; d[i+1]=sg/cnt; d[i+2]=sb/cnt;
+        // Preview tvaru
+        prekreslitVse();
+        ctx.save();
+        ctx.strokeStyle=ED.color; ctx.fillStyle=ED.color;
+        ctx.lineWidth=ED.size; ctx.lineCap='square'; ctx.lineJoin='miter';
+        if(ED.tool==='arrow') kresliSipkuXY(ctx,ED.startX,ED.startY,p.x,p.y,ED.size,ED.color);
+        else if(ED.tool==='rect') ctx.strokeRect(ED.startX,ED.startY,p.x-ED.startX,p.y-ED.startY);
+        else if(ED.tool==='circle'){
+            const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;
+            const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;
+            ctx.beginPath(); ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2); ctx.stroke();
         }
+        ctx.restore();
     }
 }
 
-function kresliTvar(ctx, x1, y1, x2, y2) {
-    ctx.strokeStyle = ED.color;
-    ctx.fillStyle   = ED.color;
-    ctx.lineWidth   = ED.size;
-    ctx.lineCap     = 'square';
-    ctx.lineJoin    = 'miter';
-    if (ED.tool === 'rect') {
-        ctx.strokeRect(x1, y1, x2-x1, y2-y1);
-    } else if (ED.tool === 'circle') {
-        const rx=Math.abs(x2-x1)/2, ry=Math.abs(y2-y1)/2;
-        const cx=Math.min(x1,x2)+rx, cy=Math.min(y1,y2)+ry;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI*2);
-        ctx.stroke();
-    } else if (ED.tool === 'arrow') {
-        kresliSipku(ctx, x1, y1, x2, y2);
+function ukonciKreslit(e){
+    if(ED.cropMode){ukonciOrez();return;}
+
+    if(ED.tool==='select'){
+        if(ED.draggingObj){ED.draggingObj=false;ED.canvas.style.cursor='default';ulozitHistorii();}
+        return;
     }
-}
 
-function kresliSipku(ctx, x1, y1, x2, y2) {
-    const angle   = Math.atan2(y2-y1, x2-x1);
-    const headLen = Math.max(20, ED.size * 5);
-    const headAngle = Math.PI / 6; // 30°
+    if(!ED.drawing)return; ED.drawing=false;
 
-    ctx.save();
-    ctx.strokeStyle = ED.color;
-    ctx.fillStyle   = ED.color;
-    ctx.lineWidth   = ED.size;
-    ctx.lineCap     = 'square';
-    ctx.lineJoin    = 'miter';
+    const p=e.changedTouches?{
+        x:(e.changedTouches[0].clientX-ED.canvas.getBoundingClientRect().left)*(ED.canvas.width/ED.canvas.getBoundingClientRect().width),
+        y:(e.changedTouches[0].clientY-ED.canvas.getBoundingClientRect().top)*(ED.canvas.height/ED.canvas.getBoundingClientRect().height)
+    }:getPos(e);
 
-    // Tělo šipky – zkrátit aby nepřesahovalo do hlavičky
-    const bodyEndX = x2 - headLen * 0.7 * Math.cos(angle);
-    const bodyEndY = y2 - headLen * 0.7 * Math.sin(angle);
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(bodyEndX, bodyEndY);
-    ctx.stroke();
-
-    // Hlavička – plný trojúhelník
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(
-        x2 - headLen * Math.cos(angle - headAngle),
-        y2 - headLen * Math.sin(angle - headAngle)
-    );
-    ctx.lineTo(
-        x2 - headLen * Math.cos(angle + headAngle),
-        y2 - headLen * Math.sin(angle + headAngle)
-    );
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.restore();
-}
-
-function kresliText(x, y) {
-    const text = document.getElementById('e-text-input').value || 'TEXT';
-    const ctx  = ED.ctx;
-    const fontSize = Math.max(16, ED.size * 4);
-    ctx.font = `bold ${fontSize}px Arial`;
-    const metrics = ctx.measureText(text);
-    const tw = metrics.width + 10;
-    const th = fontSize + 8;
-    if (ED.textBg) {
-        ctx.fillStyle = 'rgba(0,0,0,0.6)';
-        ctx.fillRect(x-5, y-fontSize, tw, th);
+    if(ED.tool==='pen'||ED.tool==='blur'){
+        // Vypálit pero/blur do baseImageData
+        ED.baseImageData=ED.ctx.getImageData(0,0,ED.canvas.width,ED.canvas.height);
+        ulozitHistorii(); return;
     }
-    ctx.fillStyle = ED.color;
-    ctx.fillText(text, x, y);
-    ulozitHistorii();
-}
 
-/* ── Posun – CSS transform ── */
-function zacitPosun(e) {
-    ED.isPanning = true;
-    ED.canvas.style.cursor = 'grabbing';
-    const src = e.touches ? e.touches[0] : e;
-    ED.panStartX  = src.clientX;
-    ED.panStartY  = src.clientY;
-    ED.panOriginX = ED.panX;
-    ED.panOriginY = ED.panY;
-}
-
-function aktualizovatPosun(e) {
-    if (!ED.isPanning) return;
-    const src = e.touches ? e.touches[0] : e;
-    ED.panX = ED.panOriginX + (src.clientX - ED.panStartX);
-    ED.panY = ED.panOriginY + (src.clientY - ED.panStartY);
-    ED.canvas.style.transform = `translate(${ED.panX}px, ${ED.panY}px)`;
-}
-
-function ukonciPosun() {
-    ED.isPanning = false;
-    ED.canvas.style.cursor = 'grab';
-}
-
-/* ── Pinch zoom ── */
-function zacitPinch(e) {
-    ED.pinching = true;
-    const t = e.touches;
-    ED.lastTouchDist = Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
-}
-
-function aktualizovatPinch(e) {
-    if (!ED.pinching) return;
-    const t = e.touches;
-    const dist = Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
-    const delta = dist - ED.lastTouchDist;
-    ED.lastTouchDist = dist;
-    const wrap = document.getElementById('editor-canvas-wrap');
-    const cur  = ED.canvas.getBoundingClientRect().width;
-    const newW = Math.max(100, Math.min(wrap.clientWidth * 2.5, cur + delta));
-    ED.canvas.style.width = newW + 'px';
-}
-
-/* ── Ořez ── */
-function inicializovatOrez() {
-    const c = ED.canvas;
-    const pad = 20;
-    ED.cropX = pad; ED.cropY = pad;
-    ED.cropW = c.width - pad*2;
-    ED.cropH = c.height - pad*2;
-    kresliOrezOverlay();
-}
-
-function kresliOrezOverlay() {
-    const ctx = ED.ctx; const c = ED.canvas;
-    // Obnov poslední snapshot
-    if (ED.historyIdx >= 0) ctx.putImageData(ED.history[ED.historyIdx], 0, 0);
-    // Tmavý overlay
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(0, 0, c.width, c.height);
-    // Průhledný výřez
-    if (ED.historyIdx >= 0) {
-        const tmp = document.createElement('canvas');
-        tmp.width=c.width; tmp.height=c.height;
-        tmp.getContext('2d').putImageData(ED.history[ED.historyIdx], 0, 0);
-        ctx.drawImage(tmp, ED.cropX, ED.cropY, ED.cropW, ED.cropH,
-                          ED.cropX, ED.cropY, ED.cropW, ED.cropH);
+    // Přidat vector objekt
+    if(ED.tool==='arrow'){
+        ED.objects.push({type:'arrow',x1:ED.startX,y1:ED.startY,x2:p.x,y2:p.y,dx:0,dy:0,color:ED.color,size:ED.size});
+    } else if(ED.tool==='rect'){
+        ED.objects.push({type:'rect',x1:ED.startX,y1:ED.startY,w:p.x-ED.startX,h:p.y-ED.startY,dx:0,dy:0,color:ED.color,size:ED.size});
+    } else if(ED.tool==='circle'){
+        const rx=Math.abs(p.x-ED.startX)/2,ry=Math.abs(p.y-ED.startY)/2;
+        const cx=Math.min(ED.startX,p.x)+rx,cy=Math.min(ED.startY,p.y)+ry;
+        ED.objects.push({type:'circle',cx,cy,rx:rx||5,ry:ry||5,dx:0,dy:0,color:ED.color,size:ED.size});
     }
-    // Rámeček
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(ED.cropX, ED.cropY, ED.cropW, ED.cropH);
-    // Mřížka třetin
-    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-    ctx.lineWidth = 1;
-    for (let i=1; i<3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(ED.cropX + ED.cropW*i/3, ED.cropY);
-        ctx.lineTo(ED.cropX + ED.cropW*i/3, ED.cropY + ED.cropH);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(ED.cropX, ED.cropY + ED.cropH*i/3);
-        ctx.lineTo(ED.cropX + ED.cropW, ED.cropY + ED.cropH*i/3);
-        ctx.stroke();
+    prekreslitVse(); ulozitHistorii();
+}
+
+function blurImageData(id,r){
+    const d=id.data,w=id.width,h=id.height,copy=new Uint8ClampedArray(d);
+    for(let y=r;y<h-r;y++)for(let x=r;x<w-r;x++){let sr=0,sg=0,sb=0,cnt=0;for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){const i=((y+dy)*w+(x+dx))*4;sr+=copy[i];sg+=copy[i+1];sb+=copy[i+2];cnt++;}const i=(y*w+x)*4;d[i]=sr/cnt;d[i+1]=sg/cnt;d[i+2]=sb/cnt;}
+}
+
+/* ── Filtry ── */
+function aplikovatPixelFiltry(){
+    if(ED.brightness===0&&ED.contrast===0&&ED.saturation===0&&ED.warmth===0&&ED.sharpen===0)return;
+    const ctx=ED.ctx,c=ED.canvas,id=ctx.getImageData(0,0,c.width,c.height),d=id.data;
+    const br=ED.brightness/100,co=(ED.contrast+100)/100,sa=(ED.saturation+100)/100,wa=ED.warmth/100;
+    for(let i=0;i<d.length;i+=4){
+        let r=d[i],g=d[i+1],b=d[i+2];
+        r+=br*255;g+=br*255;b+=br*255;
+        r=(r-128)*co+128;g=(g-128)*co+128;b=(b-128)*co+128;
+        r+=wa*30;b-=wa*30;
+        const gray=0.299*r+0.587*g+0.114*b;
+        r=gray+(r-gray)*sa;g=gray+(g-gray)*sa;b=gray+(b-gray)*sa;
+        d[i]=Math.max(0,Math.min(255,r));d[i+1]=Math.max(0,Math.min(255,g));d[i+2]=Math.max(0,Math.min(255,b));
     }
-    // Rohové body
-    const hs = 10;
-    ctx.fillStyle = '#fff';
-    [[ED.cropX, ED.cropY],
-     [ED.cropX+ED.cropW, ED.cropY],
-     [ED.cropX, ED.cropY+ED.cropH],
-     [ED.cropX+ED.cropW, ED.cropY+ED.cropH]
-    ].forEach(([hx,hy]) => ctx.fillRect(hx-hs/2, hy-hs/2, hs, hs));
+    if(ED.sharpen>0)aplikovatOstrost(d,c.width,c.height,ED.sharpen);
+    ctx.putImageData(id,0,0);
+}
+function aplikovatOstrost(data,w,h,amount){
+    const copy=new Uint8ClampedArray(data),k=amount*0.3;
+    for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=(y*w+x)*4;for(let c=0;c<3;c++){const val=5*copy[i+c]-copy[((y-1)*w+x)*4+c]-copy[((y+1)*w+x)*4+c]-copy[(y*w+x-1)*4+c]-copy[(y*w+x+1)*4+c];data[i+c]=Math.max(0,Math.min(255,copy[i+c]*(1-k)+val*k));}}
+}
+function aplikovatFiltry(){
+    ['brightness','contrast','saturation','warmth','sharpen'].forEach(k=>{const el=document.getElementById('adj-'+k);ED[k]=parseInt(el.value);document.getElementById('adj-'+k+'-val').textContent=el.value;});
+    const ctx=ED.ctx,c=ED.canvas;
+    ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(ED.originalImage,0,0,c.width,c.height);
+    aplikovatPixelFiltry();ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);
+    prekreslitVse();
+}
+function resetFiltry(){ED.brightness=0;ED.contrast=0;ED.saturation=0;ED.warmth=0;ED.sharpen=0;resetFiltryUI();nakresliObrazek();prekreslitVse();ulozitHistorii();}
+function resetFiltryUI(){['brightness','contrast','saturation','warmth','sharpen'].forEach(k=>{const el=document.getElementById('adj-'+k);if(el){el.value=0;document.getElementById('adj-'+k+'-val').textContent='0';}});}
+function aplikovatCernobile(){document.getElementById('adj-saturation').value=-100;ED.saturation=-100;document.getElementById('adj-saturation-val').textContent='-100';aplikovatFiltry();ulozitHistorii();}
+function aplikovatSepia(){
+    const ctx=ED.ctx,c=ED.canvas;ctx.drawImage(ED.originalImage,0,0,c.width,c.height);
+    const id=ctx.getImageData(0,0,c.width,c.height),d=id.data;
+    for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2];d[i]=Math.min(255,r*0.393+g*0.769+b*0.189);d[i+1]=Math.min(255,r*0.349+g*0.686+b*0.168);d[i+2]=Math.min(255,r*0.272+g*0.534+b*0.131);}
+    ctx.putImageData(id,0,0);ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);prekreslitVse();ulozitHistorii();
+}
+function editorRotate(deg){
+    // Vypálit objekty před rotací
+    prekreslitVse();
+    const c=ED.canvas,ctx=ED.ctx,tmp=document.createElement('canvas');
+    tmp.width=c.width;tmp.height=c.height;tmp.getContext('2d').drawImage(c,0,0);
+    const rad=deg*Math.PI/180,newW=Math.abs(Math.round(c.width*Math.cos(rad)+c.height*Math.sin(rad))),newH=Math.abs(Math.round(c.width*Math.sin(rad)+c.height*Math.cos(rad)));
+    c.width=newW;c.height=newH;ctx.translate(newW/2,newH/2);ctx.rotate(rad);ctx.drawImage(tmp,-tmp.width/2,-tmp.height/2);ctx.setTransform(1,0,0,1,0,0);
+    ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);ulozitHistorii();
+}
+function editorFlip(dir){
+    prekreslitVse();
+    const c=ED.canvas,ctx=ED.ctx,tmp=document.createElement('canvas');
+    tmp.width=c.width;tmp.height=c.height;tmp.getContext('2d').drawImage(c,0,0);
+    ctx.clearRect(0,0,c.width,c.height);ctx.save();
+    if(dir==='h'){ctx.translate(c.width,0);ctx.scale(-1,1);}else{ctx.translate(0,c.height);ctx.scale(1,-1);}
+    ctx.drawImage(tmp,0,0);ctx.restore();
+    ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,c.width,c.height);ulozitHistorii();
 }
 
-function zacitOrez(e) {
-    const p  = getPos(e);
-    const hs = 22;
-    const corners = [
-        {id:'tl', x:ED.cropX,          y:ED.cropY},
-        {id:'tr', x:ED.cropX+ED.cropW, y:ED.cropY},
-        {id:'bl', x:ED.cropX,          y:ED.cropY+ED.cropH},
-        {id:'br', x:ED.cropX+ED.cropW, y:ED.cropY+ED.cropH},
-    ];
-    ED.cropHandle = null;
-    for (const c of corners) {
-        if (Math.abs(p.x-c.x)<hs && Math.abs(p.y-c.y)<hs) {
-            ED.cropHandle = c.id; break;
-        }
-    }
-    ED.drawing  = !!ED.cropHandle;
-    ED.startX   = p.x; ED.startY = p.y;
-}
-
-function aktualizovatOrez(e) {
-    if (!ED.drawing || !ED.cropHandle) return;
-    const p  = getPos(e);
-    const dx = p.x - ED.startX;
-    const dy = p.y - ED.startY;
-    ED.startX = p.x; ED.startY = p.y;
-    const minS = 20;
-    if      (ED.cropHandle==='tl') { ED.cropX+=dx; ED.cropY+=dy; ED.cropW-=dx; ED.cropH-=dy; }
-    else if (ED.cropHandle==='tr') { ED.cropY+=dy; ED.cropW+=dx; ED.cropH-=dy; }
-    else if (ED.cropHandle==='bl') { ED.cropX+=dx; ED.cropW-=dx; ED.cropH+=dy; }
-    else if (ED.cropHandle==='br') { ED.cropW+=dx; ED.cropH+=dy; }
-    if (ED.cropRatioW>0 && ED.cropRatioH>0) {
-        ED.cropH = ED.cropW * (ED.cropRatioH / ED.cropRatioW);
-    }
-    ED.cropW = Math.max(minS, ED.cropW);
-    ED.cropH = Math.max(minS, ED.cropH);
-    kresliOrezOverlay();
-}
-
-function ukonciOrez() { ED.drawing=false; ED.cropHandle=null; }
-
-function nastavPomerOreze(w, h) {
-    ED.cropRatioW=w; ED.cropRatioH=h;
-    if (w>0 && h>0) ED.cropH = ED.cropW * (h/w);
-    kresliOrezOverlay();
-}
-
-function potvrditOrez() {
-    const ctx = ED.ctx; const c = ED.canvas;
-    const x = Math.max(0, Math.round(ED.cropX));
-    const y = Math.max(0, Math.round(ED.cropY));
-    const w = Math.min(c.width-x,  Math.round(ED.cropW));
-    const h = Math.min(c.height-y, Math.round(ED.cropH));
-    if (w<10 || h<10) { toast('Ořez je příliš malý'); return; }
-    const id = ctx.getImageData(x, y, w, h);
-    c.width=w; c.height=h;
-    ctx.putImageData(id, 0, 0);
-    ED.baseImageData = ctx.getImageData(0, 0, w, h);
-    ED.cropMode = false;
-    nastavNastroj('pen');
-    ulozitHistorii();
-    toast('✂️ Ořez proveden');
-}
-
-/* ── Záložky editoru ── */
-function editorTab(t) {
+/* ── Záložky ── */
+function editorTab(t){
     document.querySelectorAll('.editor-tab').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.editor-panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('etab-'+t).classList.add('active');
     document.getElementById('epanel-'+t).classList.add('active');
-    if (t === 'crop') {
-        ED.cropMode = true;
-        inicializovatOrez();
-    } else {
-        ED.cropMode = false;
-    }
+    if(t==='crop'){ED.cropMode=true;inicializovatOrez();}else{ED.cropMode=false;}
+}
+
+/* ── Ořez ── */
+function inicializovatOrez(){
+    const c=ED.canvas,pad=20;ED.cropX=pad;ED.cropY=pad;ED.cropW=c.width-pad*2;ED.cropH=c.height-pad*2;kresliOrezOverlay();
+}
+function kresliOrezOverlay(){
+    const ctx=ED.ctx,c=ED.canvas;
+    prekreslitVse();
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,c.width,c.height);
+    const tmp=document.createElement('canvas');tmp.width=c.width;tmp.height=c.height;
+    tmp.getContext('2d').putImageData(ED.baseImageData,0,0);
+    ctx.drawImage(tmp,ED.cropX,ED.cropY,ED.cropW,ED.cropH,ED.cropX,ED.cropY,ED.cropW,ED.cropH);
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(ED.cropX,ED.cropY,ED.cropW,ED.cropH);
+    ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;
+    for(let i=1;i<3;i++){ctx.beginPath();ctx.moveTo(ED.cropX+ED.cropW*i/3,ED.cropY);ctx.lineTo(ED.cropX+ED.cropW*i/3,ED.cropY+ED.cropH);ctx.stroke();ctx.beginPath();ctx.moveTo(ED.cropX,ED.cropY+ED.cropH*i/3);ctx.lineTo(ED.cropX+ED.cropW,ED.cropY+ED.cropH*i/3);ctx.stroke();}
+    const hs=10;ctx.fillStyle='#fff';
+    [[ED.cropX,ED.cropY],[ED.cropX+ED.cropW,ED.cropY],[ED.cropX,ED.cropY+ED.cropH],[ED.cropX+ED.cropW,ED.cropY+ED.cropH]].forEach(([hx,hy])=>ctx.fillRect(hx-hs/2,hy-hs/2,hs,hs));
+}
+function zacitOrez(e){
+    const p=getPos(e),hs=22;
+    const corners=[{id:'tl',x:ED.cropX,y:ED.cropY},{id:'tr',x:ED.cropX+ED.cropW,y:ED.cropY},{id:'bl',x:ED.cropX,y:ED.cropY+ED.cropH},{id:'br',x:ED.cropX+ED.cropW,y:ED.cropY+ED.cropH}];
+    ED.cropHandle=null;for(const c of corners){if(Math.abs(p.x-c.x)<hs&&Math.abs(p.y-c.y)<hs){ED.cropHandle=c.id;break;}}
+    ED.drawing=!!ED.cropHandle;ED.startX=p.x;ED.startY=p.y;
+}
+function aktualizovatOrez(e){
+    if(!ED.drawing||!ED.cropHandle)return;
+    const p=getPos(e),dx=p.x-ED.startX,dy=p.y-ED.startY;ED.startX=p.x;ED.startY=p.y;const minS=20;
+    if(ED.cropHandle==='tl'){ED.cropX+=dx;ED.cropY+=dy;ED.cropW-=dx;ED.cropH-=dy;}
+    else if(ED.cropHandle==='tr'){ED.cropY+=dy;ED.cropW+=dx;ED.cropH-=dy;}
+    else if(ED.cropHandle==='bl'){ED.cropX+=dx;ED.cropW-=dx;ED.cropH+=dy;}
+    else if(ED.cropHandle==='br'){ED.cropW+=dx;ED.cropH+=dy;}
+    if(ED.cropRatioW>0&&ED.cropRatioH>0)ED.cropH=ED.cropW*(ED.cropRatioH/ED.cropRatioW);
+    ED.cropW=Math.max(minS,ED.cropW);ED.cropH=Math.max(minS,ED.cropH);kresliOrezOverlay();
+}
+function ukonciOrez(){ED.drawing=false;ED.cropHandle=null;}
+function nastavPomerOreze(w,h){ED.cropRatioW=w;ED.cropRatioH=h;if(w>0&&h>0)ED.cropH=ED.cropW*(h/w);kresliOrezOverlay();}
+function potvrditOrez(){
+    const ctx=ED.ctx,c=ED.canvas;
+    const x=Math.max(0,Math.round(ED.cropX)),y=Math.max(0,Math.round(ED.cropY));
+    const w=Math.min(c.width-x,Math.round(ED.cropW)),h=Math.min(c.height-y,Math.round(ED.cropH));
+    if(w<10||h<10){toast('Ořez je příliš malý');return;}
+    prekreslitVse();
+    const id=ctx.getImageData(x,y,w,h);c.width=w;c.height=h;ctx.putImageData(id,0,0);
+    ED.objects=[];ED.selectedIdx=-1;ED.baseImageData=ctx.getImageData(0,0,w,h);
+    ED.cropMode=false;nastavNastroj('pen');ulozitHistorii();toast('✂️ Ořez proveden');
 }
 
 /* ── Uložit a zavřít ── */
-function ulozitZEditoruAZavrit() {
-    // Reset CSS transform před exportem
-    ED.canvas.style.transform = '';
-    ED.canvas.style.width     = '';
-    ED.canvas.style.height    = '';
-
-    const dataUrl = ED.canvas.toDataURL('image/jpeg', 0.92);
-    fotky[ED.idx].src = dataUrl;
-
-    const pu = document.getElementById(`pu-${ED.idx}`);
-    if (pu) {
+function ulozitZEditoruAZavrit(){
+    prekreslitVse();
+    const dataUrl=ED.canvas.toDataURL('image/jpeg',0.92);
+    fotky[ED.idx].src=dataUrl;
+    const pu=document.getElementById(`pu-${ED.idx}`);
+    if(pu){
         pu.classList.add('has-image');
-        pu.innerHTML = `<input type="file" accept="image/*" onchange="nacistFotku(${ED.idx})">
-            <img id="pp-${ED.idx}" alt="foto">
-            <button class="img-edit-btn" onclick="otevritEditor(${ED.idx})">✏️</button>
-            <button class="img-remove" onclick="smazatFotku(event,${ED.idx})">✕</button>`;
-        document.getElementById(`pp-${ED.idx}`).src = dataUrl;
+        pu.innerHTML=`<input type="file" accept="image/*" onchange="nacistFotku(${ED.idx})"><img id="pp-${ED.idx}" alt="foto"><button class="img-edit-btn" onclick="otevritEditor(${ED.idx})">✏️</button><button class="img-remove" onclick="smazatFotku(event,${ED.idx})">✕</button>`;
+        document.getElementById(`pp-${ED.idx}`).src=dataUrl;
     }
-    update();
-    zavritEditor();
-    toast('✅ Fotka uložena');
+    update();zavritEditor();toast('✅ Fotka uložena');
 }
-
-function zavritEditor() {
-    ED.canvas.style.transform = '';
-    ED.canvas.style.width     = '';
-    ED.canvas.style.height    = '';
-    document.getElementById('editor-overlay').classList.remove('show');
-    odpojitEditorEventy();
-}
+function zavritEditor(){document.getElementById('editor-overlay').classList.remove('show');odpojitEditorEventy();}
 
 /* ── Eventy ── */
-function pripojitEditorEventy() {
-    const c = ED.canvas;
-    c.addEventListener('mousedown',  zacitKreslit,  {passive:false});
-    c.addEventListener('mousemove',  kreslit,       {passive:false});
-    c.addEventListener('mouseup',    ukonciKreslit, {passive:false});
-    c.addEventListener('mouseleave', ukonciKreslit, {passive:false});
-    c.addEventListener('touchstart', zacitKreslit,  {passive:false});
-    c.addEventListener('touchmove',  kreslit,       {passive:false});
-    c.addEventListener('touchend',   ukonciKreslit, {passive:false});
+function pripojitEditorEventy(){
+    const c=ED.canvas;
+    c.addEventListener('mousedown',zacitKreslit,{passive:false});c.addEventListener('mousemove',kreslit,{passive:false});c.addEventListener('mouseup',ukonciKreslit,{passive:false});c.addEventListener('mouseleave',ukonciKreslit,{passive:false});
+    c.addEventListener('touchstart',zacitKreslit,{passive:false});c.addEventListener('touchmove',kreslit,{passive:false});c.addEventListener('touchend',ukonciKreslit,{passive:false});
 }
-
-function odpojitEditorEventy() {
-    const c = ED.canvas;
-    c.removeEventListener('mousedown',  zacitKreslit);
-    c.removeEventListener('mousemove',  kreslit);
-    c.removeEventListener('mouseup',    ukonciKreslit);
-    c.removeEventListener('mouseleave', ukonciKreslit);
-    c.removeEventListener('touchstart', zacitKreslit);
-    c.removeEventListener('touchmove',  kreslit);
-    c.removeEventListener('touchend',   ukonciKreslit);
+function odpojitEditorEventy(){
+    const c=ED.canvas;
+    c.removeEventListener('mousedown',zacitKreslit);c.removeEventListener('mousemove',kreslit);c.removeEventListener('mouseup',ukonciKreslit);c.removeEventListener('mouseleave',ukonciKreslit);
+    c.removeEventListener('touchstart',zacitKreslit);c.removeEventListener('touchmove',kreslit);c.removeEventListener('touchend',ukonciKreslit);
 }
 
 /* ══════════════════════════════════════════════════════════
-   SDÍLENÍ / EXPORT
+   EXPORT / SDÍLENÍ
 ══════════════════════════════════════════════════════════ */
-function sestavitHTMLObsah(docHTML, cislo) {
-    const barvaTitulku = typ==='wi' ? '#ffaa00' : '#cc0000';
-    return `<!DOCTYPE html>
-<html lang="cs">
-<head>
-<meta charset="UTF-8">
-<title>Quality Alert ${esc(cislo)}</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { background:white; font-family:Arial,sans-serif; }
-#doc-wrapper { background:white; }
-.doc-page1 { font-family:Arial,sans-serif; font-size:9pt; color:#000; background:white; width:210mm; height:297mm; max-height:297mm; padding:8mm; display:flex; flex-direction:column; box-sizing:border-box; overflow:hidden; }
-.doc-page2 { font-family:Arial,sans-serif; font-size:9pt; color:#000; background:white; width:210mm; min-height:297mm; padding:8mm; display:flex; flex-direction:column; box-sizing:border-box; }
-.doc-page-footer { text-align:center; font-size:7pt; font-weight:600; padding:2px 0; border-top:1px solid #ccc; margin-top:2px; flex-shrink:0; }
-.doc-page2-title { font-size:8pt; color:#cc0000; font-weight:700; padding:4px 0 8px; display:block; flex-shrink:0; }
-.sig-table { width:100%; border-collapse:collapse; font-size:8pt; flex:1; }
-.sig-table th { background:#2c2c2c; color:white; padding:5px 6px; text-align:center; border:1px solid #000; font-weight:700; }
-.sig-table td { border:1px solid #000; padding:0; height:8.5mm; }
-.doc-top { display:grid; grid-template-columns:100px 1fr auto; align-items:stretch; margin-bottom:2px; border:1px solid #ddd; overflow:hidden; flex-shrink:0; }
-.doc-logo-box { background:white; padding:6px 8px; display:flex; align-items:center; justify-content:center; border-right:1px solid #ddd; }
-.doc-title-center { background:${barvaTitulku}; display:flex; align-items:center; justify-content:center; padding:6px; }
-.doc-title-main { font-size:20pt; font-weight:900; color:white; letter-spacing:2px; font-family:Arial,sans-serif; }
-.doc-num-box { background:#000; color:white; padding:5px 8px; text-align:center; min-width:65px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.doc-num-label { font-size:6pt; letter-spacing:1px; color:#aaa; font-weight:600; }
-.doc-num-val { font-size:11pt; font-weight:900; color:white; white-space:nowrap; }
-.doc-info-section { border:1px solid #bbb; margin-bottom:2px; flex-shrink:0; }
-.doc-info-row { display:grid; border-bottom:1px solid #bbb; }
-.doc-info-row:last-child { border-bottom:none; }
-.doc-info-row-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
-.doc-info-row-5 { grid-template-columns:1fr 1fr 1fr 1fr 1fr; }
-.doc-info-cell { border-right:1px solid #bbb; overflow:hidden; }
-.doc-info-cell:last-child { border-right:none; }
-.doc-cell-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
-.doc-cell-val { font-size:9pt; font-weight:700; color:#000; padding:2px 5px 3px; background:#fff; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-.doc-typqa-section { display:grid; grid-template-columns:1fr auto; border:1px solid #bbb; margin-bottom:2px; flex-shrink:0; }
-.doc-typqa-left { border-right:1px solid #bbb; }
-.doc-typqa-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
-.doc-typqa-items { display:flex; gap:3px; flex-wrap:wrap; padding:3px 5px; }
-.doc-typqa-item { border:1.5px solid #999; padding:2px 6px; font-size:6pt; font-weight:700; color:#666; text-transform:uppercase; border-radius:2px; }
-.doc-typqa-item.active { background:#cc0000; color:white; border-color:#cc0000; }
-.doc-defect-section { border:1px solid #bbb; margin-bottom:2px; overflow:hidden; flex-shrink:0; }
-.doc-defect-label { background:#cc0000; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
-.doc-defect-val { display:flex; align-items:center; gap:5px; padding:3px 7px 4px; background:#fdf0ed; }
-.doc-defect-icon { font-size:12pt; color:#cc0000; flex-shrink:0; }
-.doc-defect-text { font-size:13pt; font-weight:900; color:#000; }
-.doc-control-section { border:1px solid #bbb; margin-bottom:2px; overflow:hidden; flex-shrink:0; }
-.doc-control-label { background:#1a4a8a; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
-.doc-control-val { font-size:11pt; font-weight:700; color:#000; padding:5px 7px 6px; line-height:1.5; background:#ffff00; white-space:pre-wrap; }
-.doc-imgs-wrap { flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
-.doc-imgs { flex:1; min-height:0; display:grid; gap:3px; overflow:hidden; }
-.doc-img-cell { display:flex; flex-direction:column; overflow:hidden; min-height:0; }
-.qa-cell-ok { border:2px solid #009900; }
-.qa-cell-nok { border:2px solid #cc0000; }
-.wi-cell { border:2px solid #ffaa00; }
-.doc-img-header { padding:2px 4px; font-size:8pt; font-weight:900; text-align:center; flex-shrink:0; }
-.doc-img-body { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; padding:2px; overflow:hidden; }
-.doc-img-body img { max-width:100%; max-height:100%; object-fit:contain; display:block; width:100%; height:100%; }
-.doc-img-placeholder-icon { font-size:24pt; color:#ccc; }
-.doc-footer { display:grid; grid-template-columns:1fr 1fr 1fr; border:1px solid #bbb; overflow:hidden; flex-shrink:0; margin-top:auto; margin-bottom:3px; }
-.doc-footer-cell { border-right:1px solid #bbb; }
-.doc-footer-cell:last-child { border-right:none; }
-.doc-footer-label { background:#2c2c2c; color:#fff; font-size:6pt; font-weight:700; text-transform:uppercase; padding:2px 5px; display:block; }
-.doc-footer-val { font-size:9pt; font-weight:700; color:#000; padding:2px 5px 3px; min-height:3mm; background:#fff; }
-@media print {
-  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
-  @page { size:A4 portrait; margin:0; }
-  html,body { width:210mm; height:297mm; margin:0; padding:0; background:white; }
-  .doc-page1 { width:210mm !important; height:297mm !important; max-height:297mm !important; padding:7mm !important; overflow:hidden !important; page-break-after:always !important; display:flex !important; flex-direction:column !important; box-sizing:border-box !important; }
-  .doc-page2 { width:210mm !important; height:297mm !important; padding:7mm !important; page-break-before:always !important; display:flex !important; flex-direction:column !important; box-sizing:border-box !important; }
-  .doc-imgs-wrap { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; display:flex !important; flex-direction:column !important; }
-  .doc-imgs { flex:1 1 0 !important; min-height:0 !important; display:grid !important; }
-  .doc-img-cell { overflow:hidden !important; min-height:0 !important; display:flex !important; flex-direction:column !important; }
-  .doc-img-body { flex:1 1 0 !important; min-height:0 !important; overflow:hidden !important; display:flex !important; align-items:center !important; justify-content:center !important; }
-  .doc-img-body img { max-width:100% !important; max-height:100% !important; width:auto !important; height:auto !important; object-fit:contain !important; }
-  .doc-footer { flex-shrink:0 !important; margin-top:auto !important; }
-  .sig-table { flex:1 !important; }
-  .sig-table td { height:8.5mm !important; }
+function sestavitHTMLObsah(docHTML,cislo){
+    const bt=typ==='wi'?'#ffaa00':'#cc0000';
+    return`<!DOCTYPE html><html lang="cs"><head><meta charset="UTF-8"><title>Quality Alert ${esc(cislo)}</title><style>
+*{margin:0;padding:0;box-sizing:border-box;}html,body{background:white;font-family:Arial,sans-serif;}#doc-wrapper{background:white;}
+.doc-page1{font-family:Arial,sans-serif;font-size:9pt;color:#000;background:white;width:210mm;height:297mm;max-height:297mm;padding:8mm;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;}
+.doc-page2{font-family:Arial,sans-serif;font-size:9pt;color:#000;background:white;width:210mm;min-height:297mm;padding:8mm;display:flex;flex-direction:column;box-sizing:border-box;}
+.doc-page-footer{text-align:center;font-size:7pt;font-weight:600;padding:2px 0;border-top:1px solid #ccc;margin-top:2px;flex-shrink:0;}
+.doc-page2-title{font-size:8pt;color:#cc0000;font-weight:700;padding:4px 0 8px;display:block;flex-shrink:0;}
+.sig-table{width:100%;border-collapse:collapse;font-size:8pt;flex:1;}.sig-table th{background:#2c2c2c;color:white;padding:5px 6px;text-align:center;border:1px solid #000;font-weight:700;}.sig-table td{border:1px solid #000;padding:0;height:8.5mm;}
+.doc-top{display:grid;grid-template-columns:100px 1fr auto;align-items:stretch;margin-bottom:2px;border:1px solid #ddd;overflow:hidden;flex-shrink:0;}
+.doc-logo-box{background:white;padding:6px 8px;display:flex;align-items:center;justify-content:center;border-right:1px solid #ddd;}
+.doc-title-center{background:${bt};display:flex;align-items:center;justify-content:center;padding:6px;}
+.doc-title-main{font-size:20pt;font-weight:900;color:white;letter-spacing:2px;font-family:Arial,sans-serif;}
+.doc-num-box{background:#000;color:white;padding:5px 8px;text-align:center;min-width:65px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.doc-num-label{font-size:6pt;letter-spacing:1px;color:#aaa;font-weight:600;}.doc-num-val{font-size:11pt;font-weight:900;color:white;white-space:nowrap;}
+.doc-info-section{border:1px solid #bbb;margin-bottom:2px;flex-shrink:0;}.doc-info-row{display:grid;border-bottom:1px solid #bbb;}.doc-info-row:last-child{border-bottom:none;}.doc-info-row-4{grid-template-columns:1fr 1fr 1fr 1fr;}.doc-info-row-5{grid-template-columns:1fr 1fr 1fr 1fr 1fr;}
+.doc-info-cell{border-right:1px solid #bbb;overflow:hidden;}.doc-info-cell:last-child{border-right:none;}.doc-cell-label{background:#2c2c2c;color:#fff;font-size:6pt;font-weight:700;text-transform:uppercase;padding:2px 5px;display:block;}.doc-cell-val{font-size:9pt;font-weight:700;color:#000;padding:2px 5px 3px;background:#fff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.doc-typqa-section{display:grid;grid-template-columns:1fr auto;border:1px solid #bbb;margin-bottom:2px;flex-shrink:0;}.doc-typqa-left{border-right:1px solid #bbb;}.doc-typqa-label{background:#2c2c2c;color:#fff;font-size:6pt;font-weight:700;text-transform:uppercase;padding:2px 5px;display:block;}.doc-typqa-items{display:flex;gap:3px;flex-wrap:wrap;padding:3px 5px;}.doc-typqa-item{border:1.5px solid #999;padding:2px 6px;font-size:6pt;font-weight:700;color:#666;text-transform:uppercase;border-radius:2px;}.doc-typqa-item.active{background:#cc0000;color:white;border-color:#cc0000;}
+.doc-defect-section{border:1px solid #bbb;margin-bottom:2px;overflow:hidden;flex-shrink:0;}.doc-defect-label{background:#cc0000;color:#fff;font-size:6pt;font-weight:700;text-transform:uppercase;padding:2px 5px;display:block;}.doc-defect-val{display:flex;align-items:center;gap:5px;padding:3px 7px 4px;background:#fdf0ed;}.doc-defect-icon{font-size:12pt;color:#cc0000;flex-shrink:0;}.doc-defect-text{font-size:13pt;font-weight:900;color:#000;}
+.doc-control-section{border:1px solid #bbb;margin-bottom:2px;overflow:hidden;flex-shrink:0;}.doc-control-label{background:#1a4a8a;color:#fff;font-size:6pt;font-weight:700;text-transform:uppercase;padding:2px 5px;display:block;}.doc-control-val{font-size:11pt;font-weight:700;color:#000;padding:5px 7px 6px;line-height:1.5;background:#ffff00;white-space:pre-wrap;}
+.doc-imgs-wrap{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}.doc-imgs{flex:1;min-height:0;display:grid;gap:3px;overflow:hidden;}.doc-img-cell{display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+.qa-cell-ok{border:2px solid #009900;}.qa-cell-nok{border:2px solid #cc0000;}.wi-cell{border:2px solid #ffaa00;}
+.doc-img-header{padding:2px 4px;font-size:8pt;font-weight:900;text-align:center;flex-shrink:0;}.doc-img-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:2px;overflow:hidden;}.doc-img-body img{max-width:100%;max-height:100%;object-fit:contain;display:block;width:100%;height:100%;}.doc-img-placeholder-icon{font-size:24pt;color:#ccc;}
+.doc-footer{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #bbb;overflow:hidden;flex-shrink:0;margin-top:auto;margin-bottom:3px;}.doc-footer-cell{border-right:1px solid #bbb;}.doc-footer-cell:last-child{border-right:none;}.doc-footer-label{background:#2c2c2c;color:#fff;font-size:6pt;font-weight:700;text-transform:uppercase;padding:2px 5px;display:block;}.doc-footer-val{font-size:9pt;font-weight:700;color:#000;padding:2px 5px 3px;min-height:3mm;background:#fff;}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}@page{size:A4 portrait;margin:0;}html,body{width:210mm;height:297mm;margin:0;padding:0;background:white;}
+.doc-page1{width:210mm!important;height:297mm!important;max-height:297mm!important;padding:7mm!important;overflow:hidden!important;page-break-after:always!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;}
+.doc-page2{width:210mm!important;height:297mm!important;padding:7mm!important;page-break-before:always!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;}
+.doc-imgs-wrap{flex:1 1 0!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}.doc-imgs{flex:1 1 0!important;min-height:0!important;display:grid!important;}.doc-img-cell{overflow:hidden!important;min-height:0!important;display:flex!important;flex-direction:column!important;}.doc-img-body{flex:1 1 0!important;min-height:0!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;}.doc-img-body img{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain!important;}
+.doc-footer{flex-shrink:0!important;margin-top:auto!important;}.sig-table{flex:1!important;}.sig-table td{height:8.5mm!important;}}
+</style></head><body>${docHTML}</body></html>`;
 }
-</style>
-</head>
-<body>${docHTML}</body>
-</html>`;
+function stahnoutJakoSoubor(blob,nazev){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=nazev;document.body.appendChild(a);try{a.click();toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P',3500);}finally{document.body.removeChild(a);URL.revokeObjectURL(url);}}
+function stahnoutHTML(){
+    oznacitChyby();const chyby=ziskatChyby();if(chyby.length){toast(`⚠️ Chybí: ${chyby.join(', ')}`,4000);setTimeout(()=>zobrazit('form',document.getElementById('tab-form')),500);return;}
+    update();setTimeout(()=>{const cislo=(document.getElementById('f-number')||{}).value||'dokument';const datum=new Date().toISOString().split('T')[0];const html=sestavitHTMLObsah(document.getElementById('doc-wrapper').outerHTML,cislo);const blob=new Blob([html],{type:'text/html;charset=utf-8'});stahnoutJakoSoubor(blob,`QA_${cislo}_${datum}.html`);},150);
 }
-
-function stahnoutJakoSoubor(blob, nazev) {
-    const url = URL.createObjectURL(blob);
-    const a   = document.createElement('a');
-    a.href=url; a.download=nazev;
-    document.body.appendChild(a);
-    try { a.click(); toast('✅ Dokument stažen! Otevři na PC v Edge → Ctrl+P',3500); }
-    finally { document.body.removeChild(a); URL.revokeObjectURL(url); }
+function sestavitSouborProSdileni(){update();const cislo=(document.getElementById('f-number')||{}).value||'dokument';const datum=new Date().toISOString().split('T')[0];const nazev=`QA_${cislo}_${datum}.html`;const html=sestavitHTMLObsah(document.getElementById('doc-wrapper').outerHTML,cislo);const blob=new Blob([html],{type:'text/html;charset=utf-8'});const file=new File([blob],nazev,{type:'text/html'});return{blob,file,nazev};}
+function otevritSdileni(){document.getElementById('modal-share').classList.add('show');}
+function zavritModal(e){if(e&&e.target!==document.getElementById('modal-share'))return;document.getElementById('modal-share').classList.remove('show');}
+async function sdiletSystemem(){document.getElementById('modal-share').classList.remove('show');const{blob,file,nazev}=sestavitSouborProSdileni();if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:sestavitPredmet(),files:[file]});toast('✅ Sdíleno!');return;}catch(e){if(e.name==='AbortError')return;}}stahnoutJakoSoubor(blob,nazev);}
+function zobrazitEmailForm(){document.getElementById('modal-share').classList.remove('show');document.getElementById('email-app-vyber').style.display='block';document.getElementById('email-fields').style.display='none';document.getElementById('email-subject').value=sestavitPredmet();document.getElementById('email-to').value='';document.getElementById('email-cc').value='';document.getElementById('email-to').classList.remove('error');_emailApp=null;setTimeout(()=>document.getElementById('modal-email').classList.add('show'),200);}
+function zavritEmailModal(e){if(e&&e.target!==document.getElementById('modal-email'))return;document.getElementById('modal-email').classList.remove('show');document.getElementById('email-to').classList.remove('error');_emailApp=null;}
+function zpetNaVyberAplikace(){document.getElementById('email-fields').style.display='none';document.getElementById('email-app-vyber').style.display='block';_emailApp=null;}
+function otevritOutlook(){_emailApp='outlook';document.getElementById('email-fields-nadpis').textContent='📧 Otevře Microsoft Outlook';document.getElementById('btn-odeslat-email').textContent='Otevřít Outlook →';document.getElementById('email-app-vyber').style.display='none';document.getElementById('email-fields').style.display='block';setTimeout(()=>document.getElementById('email-to').focus(),300);}
+function otevritGmail(){_emailApp='gmail';document.getElementById('email-fields-nadpis').textContent='📧 Otevře Gmail aplikaci';document.getElementById('btn-odeslat-email').textContent='Otevřít Gmail →';document.getElementById('email-app-vyber').style.display='none';document.getElementById('email-fields').style.display='block';setTimeout(()=>document.getElementById('email-to').focus(),300);}
+function otevritMailto(){_emailApp='mailto';document.getElementById('email-fields-nadpis').textContent='📨 Otevře výchozí emailovou aplikaci';document.getElementById('btn-odeslat-email').textContent='Otevřít email →';document.getElementById('email-app-vyber').style.display='none';document.getElementById('email-fields').style.display='block';setTimeout(()=>document.getElementById('email-to').focus(),300);}
+function odeslat(){
+    const toInput=document.getElementById('email-to');const to=toInput.value.trim();const cc=document.getElementById('email-cc').value.trim();const subject=document.getElementById('email-subject').value.trim();
+    if(!to){toInput.classList.add('error');toInput.focus();toast('⚠️ Zadej emailovou adresu příjemce',3000);return;}toInput.classList.remove('error');
+    const body=sestavitShrnuti();let url;
+    if(_emailApp==='gmail')url=`googlegmail://co?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    else if(_emailApp==='outlook')url=`ms-outlook://compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    else{let mailto=`mailto:${encodeURIComponent(to)}`;const params=[];if(cc)params.push(`cc=${encodeURIComponent(cc)}`);if(subject)params.push(`subject=${encodeURIComponent(subject)}`);params.push(`body=${encodeURIComponent(body)}`);if(params.length)mailto+='?'+params.join('&');url=mailto;}
+    const start=Date.now();window.location.href=url;
+    if(_emailApp!=='mailto')setTimeout(()=>{if(document.visibilityState==='visible'&&Date.now()-start<2500)toast(`⚠️ ${_emailApp==='gmail'?'Gmail':'Outlook'} není nainstalován`,4000);},2000);
+    document.getElementById('modal-email').classList.remove('show');toast(`📧 Otevírám ${_emailApp==='gmail'?'Gmail':_emailApp==='outlook'?'Outlook':'email'}...`,2500);
 }
-
-function stahnoutHTML() {
-    oznacitChyby();
-    const chyby = ziskatChyby();
-    if (chyby.length) {
-        toast(`⚠️ Chybí: ${chyby.join(', ')} — přejdi na Formulář`,4000);
-        setTimeout(()=>zobrazit('form',document.getElementById('tab-form')),500);
-        return;
-    }
-    update();
-    setTimeout(()=>{
-        const cislo=(document.getElementById('f-number')||{}).value||'dokument';
-        const datum=new Date().toISOString().split('T')[0];
-        const html=sestavitHTMLObsah(document.getElementById('doc-wrapper').outerHTML,cislo);
-        const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-        stahnoutJakoSoubor(blob,`QA_${cislo}_${datum}.html`);
-    },150);
-}
-
-function sestavitSouborProSdileni() {
-    update();
-    const cislo=(document.getElementById('f-number')||{}).value||'dokument';
-    const datum=new Date().toISOString().split('T')[0];
-    const nazev=`QA_${cislo}_${datum}.html`;
-    const html=sestavitHTMLObsah(document.getElementById('doc-wrapper').outerHTML,cislo);
-    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-    const file=new File([blob],nazev,{type:'text/html'});
-    return {blob,file,nazev};
-}
-
-function otevritSdileni() { document.getElementById('modal-share').classList.add('show'); }
-
-function zavritModal(e) {
-    if (e&&e.target!==document.getElementById('modal-share')) return;
-    document.getElementById('modal-share').classList.remove('show');
-}
-
-async function sdiletSystemem() {
-    document.getElementById('modal-share').classList.remove('show');
-    const {blob,file,nazev}=sestavitSouborProSdileni();
-    if (navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})) {
-        try { await navigator.share({title:sestavitPredmet(),files:[file]}); toast('✅ Sdíleno!'); return; }
-        catch(e) { if (e.name==='AbortError') return; }
-    }
-    stahnoutJakoSoubor(blob,nazev);
-}
-
-function zobrazitEmailForm() {
-    document.getElementById('modal-share').classList.remove('show');
-    document.getElementById('email-app-vyber').style.display='block';
-    document.getElementById('email-fields').style.display='none';
-    document.getElementById('email-subject').value=sestavitPredmet();
-    document.getElementById('email-to').value='';
-    document.getElementById('email-cc').value='';
-    document.getElementById('email-to').classList.remove('error');
-    _emailApp=null;
-    setTimeout(()=>document.getElementById('modal-email').classList.add('show'),200);
-}
-
-function zavritEmailModal(e) {
-    if (e&&e.target!==document.getElementById('modal-email')) return;
-    document.getElementById('modal-email').classList.remove('show');
-    document.getElementById('email-to').classList.remove('error');
-    _emailApp=null;
-}
-
-function zpetNaVyberAplikace() {
-    document.getElementById('email-fields').style.display='none';
-    document.getElementById('email-app-vyber').style.display='block';
-    _emailApp=null;
-}
-
-function otevritOutlook() {
-    _emailApp='outlook';
-    document.getElementById('email-fields-nadpis').textContent='📧 Otevře Microsoft Outlook';
-    document.getElementById('btn-odeslat-email').textContent='Otevřít Outlook →';
-    document.getElementById('email-app-vyber').style.display='none';
-    document.getElementById('email-fields').style.display='block';
-    setTimeout(()=>document.getElementById('email-to').focus(),300);
-}
-
-function otevritGmail() {
-    _emailApp='gmail';
-    document.getElementById('email-fields-nadpis').textContent='📧 Otevře Gmail aplikaci';
-    document.getElementById('btn-odeslat-email').textContent='Otevřít Gmail →';
-    document.getElementById('email-app-vyber').style.display='none';
-    document.getElementById('email-fields').style.display='block';
-    setTimeout(()=>document.getElementById('email-to').focus(),300);
-}
-
-function otevritMailto() {
-    _emailApp='mailto';
-    document.getElementById('email-fields-nadpis').textContent='📨 Otevře výchozí emailovou aplikaci';
-    document.getElementById('btn-odeslat-email').textContent='Otevřít email →';
-    document.getElementById('email-app-vyber').style.display='none';
-    document.getElementById('email-fields').style.display='block';
-    setTimeout(()=>document.getElementById('email-to').focus(),300);
-}
-
-function odeslat() {
-    const toInput=document.getElementById('email-to');
-    const to=toInput.value.trim();
-    const cc=document.getElementById('email-cc').value.trim();
-    const subject=document.getElementById('email-subject').value.trim();
-    if (!to) { toInput.classList.add('error'); toInput.focus(); toast('⚠️ Zadej emailovou adresu příjemce',3000); return; }
-    toInput.classList.remove('error');
-    const body=sestavitShrnuti();
-    let url;
-    if (_emailApp==='gmail') {
-        url=`googlegmail://co?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    } else if (_emailApp==='outlook') {
-        url=`ms-outlook://compose?to=${encodeURIComponent(to)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    } else {
-        let mailto=`mailto:${encodeURIComponent(to)}`;
-        const params=[];
-        if (cc) params.push(`cc=${encodeURIComponent(cc)}`);
-        if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
-        params.push(`body=${encodeURIComponent(body)}`);
-        if (params.length) mailto+='?'+params.join('&');
-        url=mailto;
-    }
-    const start=Date.now();
-    window.location.href=url;
-    if (_emailApp!=='mailto') {
-        setTimeout(()=>{
-            if (document.visibilityState==='visible'&&Date.now()-start<2500) {
-                toast(`⚠️ ${_emailApp==='gmail'?'Gmail':'Outlook'} není nainstalován`,4000);
-            }
-        },2000);
-    }
-    document.getElementById('modal-email').classList.remove('show');
-    toast(`📧 Otevírám ${_emailApp==='gmail'?'Gmail':_emailApp==='outlook'?'Outlook':'email'}...`,2500);
-}
-
-async function sdiletSouborZEmailu() {
-    document.getElementById('modal-email').classList.remove('show');
-    const {blob,file,nazev}=sestavitSouborProSdileni();
-    if (navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})) {
-        try { await navigator.share({title:sestavitPredmet(),files:[file]}); toast('✅ Sdíleno!'); return; }
-        catch(e) { if (e.name==='AbortError') return; }
-    }
-    stahnoutJakoSoubor(blob,nazev);
-    toast('📥 Soubor stažen – přilož ho ručně do emailu',4000);
-}
-
-function kopirovatShrnutiZModalu() {
-    document.getElementById('modal-share').classList.remove('show');
-    kopirovatShrnuti();
-}
-
-function sestavitShrnuti() {
-    const g=id=>(document.getElementById(id)||{}).value||'';
-    const label=typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';
-    const cislo=g('f-number');
-    const dnes=new Date().toLocaleDateString('cs-CZ');
-    const radek='━'.repeat(42);
-    const tenky='─'.repeat(42);
-    const radky=[];
-    radky.push(radek);
-    radky.push(`  🔴 ${label}${cislo?`  |  Nº ${cislo}`:''}`);
-    radky.push(radek);
-    radky.push('');
-    radky.push('📋 INFORMACE O DOKUMENTU');
-    radky.push(tenky);
-    if (g('f-customer')) radky.push(`  Proces:        ${g('f-customer')}`);
-    if (g('f-project'))  radky.push(`  Projekt:       ${g('f-project')}`);
-    if (g('f-pracoviste')) radky.push(`  Pracoviště:    ${g('f-pracoviste')}`);
-    if (g('f-dil'))      radky.push(`  Díl:           ${g('f-dil')}`);
-    radky.push('');
-    radky.push('📅 PLATNOST');
-    radky.push(tenky);
-    radky.push(`  Datum vystavení: ${fmtDatum(g('f-datum'))||dnes}`);
-    if (g('f-pocatek')||g('f-konec')) radky.push(`  Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);
-    if (g('f-vydal')) radky.push(`  Vydal:  ${g('f-vydal')}`);
-    if (g('f-autor')) radky.push(`  Autor:  ${g('f-autor')}`);
-    if (g('f-duvod')) radky.push(`  Důvod:  ${g('f-duvod')}`);
-    radky.push('');
-    radky.push(typ==='wi'?'📝 NÁZEV INSTRUKCE':'⚠️  POPIS DEFEKTU');
-    radky.push(tenky);
-    radky.push(g('f-defect')?`  ${g('f-defect')}`:'  (nevyplněno)');
-    radky.push('');
-    radky.push(typ==='wi'?'🔧 PRACOVNÍ POSTUP':'🔍 POPIS KONTROLY');
-    radky.push(tenky);
-    if (g('f-control')) g('f-control').split('\n').forEach(r=>radky.push(`  ${r}`));
-    else radky.push('  (nevyplněno)');
-    radky.push('');
-    radky.push(radek);
-    radky.push(`  ✍️  Podpis QA:        ${g('f-podpisqa')||'—'}`);
-    radky.push(`  🏭  Schválení výroby: ${g('f-schvaleni')||'—'}`);
-    radky.push(radek);
-    radky.push('');
-    radky.push(`Vygenerováno aplikací Quality Alert v5.8.1`);
-    radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project')||'G2x/G8x'}`);
+async function sdiletSouborZEmailu(){document.getElementById('modal-email').classList.remove('show');const{blob,file,nazev}=sestavitSouborProSdileni();if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:sestavitPredmet(),files:[file]});toast('✅ Sdíleno!');return;}catch(e){if(e.name==='AbortError')return;}}stahnoutJakoSoubor(blob,nazev);toast('📥 Soubor stažen – přilož ho ručně do emailu',4000);}
+function kopirovatShrnutiZModalu(){document.getElementById('modal-share').classList.remove('show');kopirovatShrnuti();}
+function sestavitShrnuti(){
+    const g=id=>(document.getElementById(id)||{}).value||'';const label=typ==='wi'?'PRACOVNÍ INSTRUKCE':'QUALITY ALERT';const cislo=g('f-number');const dnes=new Date().toLocaleDateString('cs-CZ');const radek='━'.repeat(42);const tenky='─'.repeat(42);const radky=[];
+    radky.push(radek);radky.push(`  🔴 ${label}${cislo?`  |  Nº ${cislo}`:''}`);radky.push(radek);radky.push('');radky.push('📋 INFORMACE O DOKUMENTU');radky.push(tenky);
+    if(g('f-customer'))radky.push(`  Proces:     ${g('f-customer')}`);if(g('f-project'))radky.push(`  Projekt:    ${g('f-project')}`);if(g('f-pracoviste'))radky.push(`  Pracoviště: ${g('f-pracoviste')}`);if(g('f-dil'))radky.push(`  Díl:        ${g('f-dil')}`);
+    radky.push('');radky.push('📅 PLATNOST');radky.push(tenky);radky.push(`  Datum: ${fmtDatum(g('f-datum'))||dnes}`);if(g('f-pocatek')||g('f-konec'))radky.push(`  Platnost: ${fmtDatum(g('f-pocatek'))} – ${fmtDatum(g('f-konec'))}`);if(g('f-vydal'))radky.push(`  Vydal: ${g('f-vydal')}`);if(g('f-autor'))radky.push(`  Autor: ${g('f-autor')}`);if(g('f-duvod'))radky.push(`  Důvod: ${g('f-duvod')}`);
+    radky.push('');radky.push(typ==='wi'?'📝 NÁZEV INSTRUKCE':'⚠️  POPIS DEFEKTU');radky.push(tenky);radky.push(g('f-defect')?`  ${g('f-defect')}`:'  (nevyplněno)');
+    radky.push('');radky.push(typ==='wi'?'🔧 PRACOVNÍ POSTUP':'🔍 POPIS KONTROLY');radky.push(tenky);if(g('f-control'))g('f-control').split('\n').forEach(r=>radky.push(`  ${r}`));else radky.push('  (nevyplněno)');
+    radky.push('');radky.push(radek);radky.push(`  ✍️  Podpis QA:        ${g('f-podpisqa')||'—'}`);radky.push(`  🏭  Schválení výroby: ${g('f-schvaleni')||'—'}`);radky.push(radek);radky.push('');radky.push(`Vygenerováno aplikací Quality Alert v5.9.0`);radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project')||'G2x/G8x'}`);
     return radky.join('\n');
 }
-
-function sestavitPredmet() {
-    const cislo=(document.getElementById('f-number')||{}).value||'';
-    const defekt=(document.getElementById('f-defect')||{}).value||'';
-    return `[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;
-}
-
-async function kopirovatShrnuti() {
+function sestavitPredmet(){const cislo=(document.getElementById('f-number')||{}).value||'';const defekt=(document.getElementById('f-defect')||{}).value||'';return`[${typ==='wi'?'WI':'QA'}] ${cislo}${defekt?' – '+defekt:''}`;}
+async function kopirovatShrnuti(){
     const text=sestavitShrnuti();
-    try { await navigator.clipboard.writeText(text); toast('✅ Shrnutí zkopírováno!'); }
-    catch(e) {
-        const ta=document.createElement('textarea');
-        ta.value=text; ta.style.cssText='position:fixed;opacity:0;';
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); toast('✅ Shrnutí zkopírováno!'); }
-        catch(_) { toast('❌ Kopírování se nezdařilo',3000); }
-        document.body.removeChild(ta);
-    }
+    try{await navigator.clipboard.writeText(text);toast('✅ Shrnutí zkopírováno!');}
+    catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('✅ Shrnutí zkopírováno!');}catch(_){toast('❌ Kopírování se nezdařilo',3000);}document.body.removeChild(ta);}
 }
 </script>
 </body>
