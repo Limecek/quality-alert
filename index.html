@@ -386,7 +386,7 @@
     <div><h1>🔴 Quality <span>Alert</span></h1></div>
     <div style="display:flex;align-items:center;gap:10px;">
         <div class="save-indicator" id="save-indicator"><div class="save-dot"></div><span id="save-label">Uloženo</span></div>
-        <div class="version-badge">v5.7.2</div>
+        <div class="version-badge">v5.7.3</div>
     </div>
 </div>
 
@@ -449,7 +449,8 @@
         <div class="form-row">
             <span class="form-label">Počet fotek</span>
             <select class="form-input" id="photo-count" onchange="sestavitFotky(true)">
-                <option value="2">2 fotky</option>
+                <option value="1">1 fotka</option>
+                <option value="2" selected>2 fotky</option>
                 <option value="3">3 fotky</option>
                 <option value="4">4 fotky</option>
                 <option value="5">5 fotek</option>
@@ -620,10 +621,10 @@
     </div>
     <div class="card">
         <div class="card-header">ℹ️ O aplikaci</div>
-        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.2</span></div>
+        <div class="form-row"><span class="form-label">Verze</span><span class="form-input" style="text-align:right;color:#aaa;">5.7.3</span></div>
         <div class="form-row"><span class="form-label">Projekt</span><span class="form-input" style="text-align:right;color:#aaa;">BMW G2x/G8x</span></div>
         <div class="form-row"><span class="form-label">Firma</span><span class="form-input" style="text-align:right;color:#aaa;">Lear Corporation</span></div>
-        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">22. 7. 2026</span></div>
+        <div class="form-row"><span class="form-label">Poslední změna</span><span class="form-input" style="text-align:right;color:#aaa;">23. 7. 2026</span></div>
     </div>
     <button class="gen-btn" style="background:#3a3a3c;margin-top:0;" onclick="vymazat()">🗑️ Vymazat formulář</button>
 </div>
@@ -757,6 +758,7 @@
     let _timer = null;
     let _timerInd = null;
     let _emailApp = null;
+    let _povolReload = false;
     const KLIC = 'qa-form-v5';
 
     function indikator(stav) {
@@ -843,7 +845,9 @@
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#x27;');
+            .replace(/'/g, '&#x27;')
+            .replace(/\n/g, '&#10;')
+            .replace(/\r/g, '&#13;');
     }
 
     function toast(msg, ms=2500) {
@@ -879,11 +883,13 @@
 
     function vychoziNazev(i, t, n) {
         if (t === 'qa') {
+            if (n === 1) return 'Foto';
             if (n === 2) return i === 0 ? 'OK' : 'NOK';
             if (i === 0) return 'OK';
             if (i === n-1) return 'NOK';
             return `Detail ${i}`;
         }
+        if (n === 1) return 'Krok 1';
         return `Krok ${i+1}`;
     }
 
@@ -895,6 +901,7 @@
     }
 
     function gridLayout(n) {
+        if (n === 1) return {sl:1, ra:1};
         if (n === 2) return {sl:2, ra:1};
         if (n === 3) return {sl:3, ra:1};
         if (n === 4) return {sl:2, ra:2};
@@ -1029,6 +1036,9 @@
         const f   = inp && inp.files[0];
         if (!f) return;
         const mb = (f.size / 1024 / 1024).toFixed(1);
+        if (parseFloat(mb) > 3) {
+            toast(`⚠️ Velká fotka (${mb} MB) – soubor bude velký`, 4000);
+        }
         const r  = new FileReader();
         r.onload = e => {
             fotky[i].src = e.target.result;
@@ -1130,11 +1140,13 @@
 
     function vymazat() {
         if (!confirm('Opravdu chceš vymazat celý formulář?')) return;
+        _povolReload = true;
         try { localStorage.removeItem(KLIC); } catch(_) {}
         location.reload();
     }
 
     window.addEventListener('beforeunload', (e) => {
+        if (_povolReload) return;
         const cislo = document.getElementById('f-number')?.value;
         if (cislo && cislo.trim()) {
             e.preventDefault();
@@ -1362,14 +1374,12 @@ html, body { background:white; font-family:Arial,sans-serif; }
         setTimeout(() => document.getElementById('email-to').focus(), 300);
     }
 
-    // ── Odeslat – bez validace emailu ──────────────────────────────
     function odeslat() {
         const toInput = document.getElementById('email-to');
         const to      = toInput.value.trim();
         const cc      = document.getElementById('email-cc').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
 
-        // Pouze kontrola že pole není prázdné
         if (!to) {
             toInput.classList.add('error');
             toInput.focus();
@@ -1488,7 +1498,7 @@ html, body { background:white; font-family:Arial,sans-serif; }
         radky.push(`  🏭  Schválení výroby:   ${g('f-schvaleni') || '—'}`);
         radky.push(radek);
         radky.push('');
-        radky.push(`Vygenerováno aplikací Quality Alert v5.7.2`);
+        radky.push(`Vygenerováno aplikací Quality Alert v5.7.3`);
         radky.push(`${dnes}  |  Lear Corporation  |  BMW ${g('f-project') || 'G2x/G8x'}`);
         return radky.join('\n');
     }
